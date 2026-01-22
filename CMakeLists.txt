@@ -11,20 +11,9 @@ set(PROJECT_SOURCE_FILES
 include_directories(source)
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_FILES})
 
-# Add GLFW library
-add_subdirectory(thirdparty/glfw-3.4 "${CMAKE_CURRENT_BINARY_DIR}/glfw_build")
-include_directories(thirdparty/glfw-3.4/include)
+add_subdirectory(engine "${CMAKE_CURRENT_BINARY_DIR}/engine_build")
 
-# Add Glew library
-add_compile_definitions(GLEW_NO_GLU)
-set(BUILD_UTILS OFF CACHE BOOL "utilities" FORCE)
-add_subdirectory(thirdparty/glew/build/cmake "${CMAKE_CURRENT_BINARY_DIR}/glew_build")
-include_directories(thirdparty/glew/include)
-set_property(TARGET glew_s PROPERTY FOLDER GLEW)
-set_property(TARGET glew PROPERTY FOLDER GLEW)
-
-# Link all thirdparty libraries
+# Link engine library
 target_link_libraries(${PROJECT_NAME} 
-    glfw 
-    glew_s
+    Engine
 )
