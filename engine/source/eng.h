@@ -4,5 +4,6 @@
 
 #include "Application.h"
 #include "Engine.h"
+#include "input/InputManager.h"
 
 #endif // ENG_H

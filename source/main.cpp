@@ -4,7 +4,7 @@
 int main(int argc, char* argv[])
 {
 	Game* game = new Game();
-	eng::Engine engine;
+	eng::Engine& engine = eng::Engine::GetInstance();
 	engine.SetApplication(game);
 
 	if (engine.Init(1280, 720))

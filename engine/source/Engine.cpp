@@ -8,6 +8,34 @@
 
 namespace eng
 {
+	/// <summary>
+	/// This function is called by GLFW when a key event occurs.
+	/// </summary>
+	/// <param name="window"></param>
+	/// <param name="key"></param>
+	/// <param name="scancode"></param>
+	/// <param name="action"></param>
+	/// <param name="mods"></param>
+	void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+	{
+		Engine& engine = Engine::GetInstance();
+		InputManager& inputManager = engine.GetInputManager();
+		if (action == GLFW_PRESS)
+		{
+			inputManager.SetKeyPressed(key, true);
+		}
+		else if (action == GLFW_RELEASE)
+		{
+			inputManager.SetKeyPressed(key, false);
+		}
+	}
+
+	Engine& Engine::GetInstance()
+	{
+		static Engine instance;
+		return instance;
+	}
+
 	bool Engine::Init(int width, int height)
 	{
 		if (!m_Application)
@@ -24,6 +52,7 @@ namespace eng
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+		// Create window
 		m_Window = glfwCreateWindow(width, height, "GameDevEngine", nullptr, nullptr);
 
 		if (m_Window == nullptr)
@@ -32,6 +61,9 @@ namespace eng
 			glfwTerminate();
 			return false;
 		}
+
+		// set key callback
+		glfwSetKeyCallback(m_Window, keyCallback);
 
 		glfwMakeContextCurrent(m_Window);
 
@@ -86,5 +118,10 @@ namespace eng
 	Application* Engine::GetApplication()
 	{
 		return m_Application.get();
+	}
+
+	InputManager& Engine::GetInputManager() noexcept
+	{
+		return m_InputManager;
 	}
 }
