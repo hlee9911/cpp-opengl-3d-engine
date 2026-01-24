@@ -1,0 +1,48 @@
+#include "graphics/ShaderProgram.h"
+
+namespace eng
+{
+	ShaderProgram::ShaderProgram(GLuint shaderProgramID) noexcept :
+		m_ShaderProgramID(shaderProgramID)
+	{
+
+	}
+
+	ShaderProgram::~ShaderProgram() noexcept
+	{
+		glDeleteProgram(m_ShaderProgramID);
+	}
+
+	void ShaderProgram::Bind()
+	{
+		glUseProgram(m_ShaderProgramID);
+	}
+
+	/// <summary>
+	/// Gets the location of a uniform variable in the shader program.
+	/// </summary>
+	/// <param name="name"></param>
+	/// <returns></returns>
+	GLint eng::ShaderProgram::GetUniformLocation(const std::string& name)
+	{
+		auto it = m_UniformLocationCache.find(name);
+		if (it != m_UniformLocationCache.end())
+		{
+			return it->second;
+		}
+		GLint location = glGetUniformLocation(m_ShaderProgramID, name.c_str());
+		m_UniformLocationCache[name] = location;
+		return location;
+	}
+
+	/// <summary>
+	/// Sets the value of a float uniform variable in the shader program.
+	/// </summary>
+	/// <param name="name"></param>
+	/// <param name="value"></param>
+	void ShaderProgram::SetUniform(const std::string& name, float value)
+	{
+		auto location = GetUniformLocation(name);
+		glUniform1f(location, value);
+	}
+}

@@ -124,4 +124,9 @@ namespace eng
 	{
 		return m_InputManager;
 	}
+
+	GraphicsAPI& Engine::GetGraphicsAPI() noexcept
+	{
+		return m_GraphicsAPI;
+	}
 }

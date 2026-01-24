@@ -3,6 +3,8 @@
 #define ENGINE_H
 
 #include "input/InputManager.h"
+#include "graphics/GraphicsAPI.h"
+
 #include <memory>
 #include <chrono>
 
@@ -34,12 +36,14 @@ namespace eng
 		Application* GetApplication();
 		
 		InputManager& GetInputManager() noexcept;
+		GraphicsAPI& GetGraphicsAPI() noexcept;
 
 	private:
 		std::unique_ptr<Application> m_Application;
 		std::chrono::steady_clock::time_point m_LastFrameTime;
 		GLFWwindow* m_Window = nullptr;
 		InputManager m_InputManager;
+		GraphicsAPI m_GraphicsAPI;
 	};
 }
 

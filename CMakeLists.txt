@@ -9,9 +9,12 @@ set(PROJECT_SOURCE_FILES
   source/Game.h
   source/Game.cpp
 )
+
+include_directories(engine/thirdparty/glew/include)
+
 # Add the application
 include_directories(source)
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_FILES})
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_FILES} "source/Game.h")
 
 add_subdirectory(engine "${CMAKE_CURRENT_BINARY_DIR}/engine_build")
 include_directories(engine/source)
