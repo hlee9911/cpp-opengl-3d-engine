@@ -1,5 +1,6 @@
 #include "graphics/GraphicsAPI.h"
 #include "graphics/ShaderProgram.h"
+#include "render/Material.h"
 
 #include <iostream>
 
@@ -88,6 +89,13 @@ namespace eng
 	/// <param name="shaderProgram"></param>
 	void GraphicsAPI::BindShaderProgram(ShaderProgram* shaderProgram)
 	{
+		if (!shaderProgram) return;
 		shaderProgram->Bind();
+	}
+
+	void GraphicsAPI::BindMaterial(Material* material)
+	{
+		if (!material) return;
+		material->Bind();
 	}
 }
