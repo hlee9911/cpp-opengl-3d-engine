@@ -4,6 +4,7 @@
 
 #include "input/InputManager.h"
 #include "graphics/GraphicsAPI.h"
+#include "render/RenderQueue.h"
 
 #include <memory>
 #include <chrono>
@@ -37,6 +38,7 @@ namespace eng
 		
 		InputManager& GetInputManager() noexcept;
 		GraphicsAPI& GetGraphicsAPI() noexcept;
+		RenderQueue& GetRenderQueue() noexcept;
 
 	private:
 		std::unique_ptr<Application> m_Application;
@@ -44,6 +46,7 @@ namespace eng
 		GLFWwindow* m_Window = nullptr;
 		InputManager m_InputManager;
 		GraphicsAPI m_GraphicsAPI;
+		RenderQueue m_RenderQueue;
 	};
 }
 

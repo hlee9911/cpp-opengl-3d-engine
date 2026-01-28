@@ -23,6 +23,9 @@ namespace eng
 
 		GLuint CreateVertexBuffer(const std::vector<float>& verticies);
 		GLuint CreateIndexBuffer(const std::vector<uint32_t>& indicies);
+
+		void SetClearColor(float r, float g, float b, float a);
+		void ClearBuffers();
 	
 		void BindShaderProgram(ShaderProgram* shaderProgram);
 		void BindMaterial(Material* material);

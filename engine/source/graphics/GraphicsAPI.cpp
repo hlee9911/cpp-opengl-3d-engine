@@ -110,6 +110,16 @@ namespace eng
 		return EBO;
 	}
 
+	void GraphicsAPI::SetClearColor(float r, float g, float b, float a)
+	{
+		glClearColor(r, g, b, a);
+	}
+
+	void GraphicsAPI::ClearBuffers()
+	{
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
+
 	/// <summary>
 	/// This function binds the given shader program for use in rendering.
 	/// </summary>

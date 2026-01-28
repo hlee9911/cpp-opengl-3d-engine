@@ -94,6 +94,13 @@ namespace eng
 			// Update application
 			m_Application->Update(deltaTime);
 		
+			// Clear screen and buffers
+			m_GraphicsAPI.SetClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+			m_GraphicsAPI.ClearBuffers();
+
+			// Draw render queue
+			m_RenderQueue.Draw(m_GraphicsAPI);
+
 			// Swap buffers and render
 			glfwSwapBuffers(m_Window);
 		}
@@ -128,5 +135,10 @@ namespace eng
 	GraphicsAPI& Engine::GetGraphicsAPI() noexcept
 	{
 		return m_GraphicsAPI;
+	}
+
+	RenderQueue& Engine::GetRenderQueue() noexcept
+	{
+		return m_RenderQueue;
 	}
 }

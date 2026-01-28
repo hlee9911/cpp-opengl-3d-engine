@@ -16,6 +16,8 @@ public:
 private:
 	eng::Material m_Material;
 	std::unique_ptr<eng::Mesh> m_Mesh;
+	float m_OffsetX = 0.0f;
+	float m_OffsetY = 0.0f;
 };
 
 #endif // GAME_H

@@ -13,10 +13,12 @@ bool Game::Init()
 
 		out vec3 vColor;
 
+		uniform vec2 uOffset;
+
         void main()
         {
 			vColor = color;
-            gl_Position = vec4(position.x, position.y, position.z, 1.0);
+            gl_Position = vec4(position.x + uOffset.x, position.y + uOffset.y, position.z, 1.0);
         }
     )";
 
@@ -80,10 +82,36 @@ void Game::Update(float deltaTime)
 	// std::cout << "Current Delta Time: " << deltaTime << " seconds" << std::endl;
 	auto& input = eng::Engine::GetInstance().GetInputManager();
 
+	// horizontal movement
+	if (input.IsKeyPressed(GLFW_KEY_A))
+	{
+		m_OffsetX -= 0.5f * deltaTime;
+	}
+	else if (input.IsKeyPressed(GLFW_KEY_D))
+	{
+		m_OffsetX += 0.5f * deltaTime;
+	}
+
+	// vertical movement
 	if (input.IsKeyPressed(GLFW_KEY_W))
 	{
-		std::cout << "W key is pressed." << std::endl;
+		m_OffsetY += 0.5f * deltaTime;
 	}
+	else if (input.IsKeyPressed(GLFW_KEY_S))
+	{
+		m_OffsetY -= 0.5f * deltaTime;
+	}
+
+	// Update material parameters
+	m_Material.SetFloatParam("uOffset", m_OffsetX, m_OffsetY);
+
+	eng::RenderCommand command;
+	command.material = &m_Material;
+	command.mesh = m_Mesh.get();
+
+	// Render Queue to organize the draw calls and submit the command during update
+	auto& renderQueue = eng::Engine::GetInstance().GetRenderQueue();
+	renderQueue.Submit(command);
 }
 
 void Game::Destroy()
