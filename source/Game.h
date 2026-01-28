@@ -4,6 +4,8 @@
 
 #include <eng.h>
 
+#include <memory>
+
 class Game : public eng::Application
 {
 public:
@@ -13,6 +15,13 @@ public:
 
 private:
 	eng::Material m_Material;
+	std::unique_ptr<eng::Mesh> m_Mesh;
 };
 
 #endif // GAME_H
+
+// In summary
+// Shader Program defines how pixels are rendered using shaders.
+// Material stores the shader and uniform values
+// Mesh holds the geometry data (vertices, indices) for rendering.
+// The GraphicsAPI provides unified access to create and manage these resources.

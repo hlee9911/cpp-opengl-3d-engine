@@ -37,6 +37,41 @@ bool Game::Init()
 		vertexShaderSource, fragmentShaderSource);
 	m_Material.SetShaderProgram(shaderProgram); // set the shader program to the material, and its ready for rendering
 
+	std::vector<float> verticies = 
+	{
+		// positions        // colors
+		 0.5f,  0.5f, 0.0f,  1.0f, 0.0f, 0.0f,
+		 -0.5f, 0.5f, 0.0f,  0.0f, 1.0f, 0.0f,
+		 -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,
+		 0.5f, -0.5f, 0.0f,  1.0f, 1.0f, 0.0f,
+	};
+
+	std::vector<unsigned int> indicies = 
+	{
+		0, 1, 2,
+		0, 2, 3
+	};
+
+	eng::VertexLayout vertexLayout;
+
+	// Position
+	vertexLayout.elements.push_back({ 
+		0, 3, GL_FLOAT, 0 // index, size, type, offset
+	});
+	// Color
+	vertexLayout.elements.push_back({ 
+		1, 3, GL_FLOAT, sizeof(float) * 3 // index, size, type, offset
+	});
+	// Stride
+	vertexLayout.stride = sizeof(float) * 6; // 3 position + 3 color
+	
+	// Create mesh 
+	m_Mesh = std::make_unique<eng::Mesh>(
+		vertexLayout,
+		verticies,
+		indicies
+	);
+
 	return true;
 }
 
