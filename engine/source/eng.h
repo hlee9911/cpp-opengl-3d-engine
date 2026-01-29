@@ -11,5 +11,7 @@
 #include "render/Material.h"
 #include "render/Mesh.h"
 #include "render/RenderQueue.h"
+#include "scene/GameObject.h"
+#include "scene/Scene.h"
 
 #endif // ENG_H
