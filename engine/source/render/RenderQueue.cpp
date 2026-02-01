@@ -2,6 +2,7 @@
 #include "render/Mesh.h"
 #include "render/Material.h"
 #include "graphics/GraphicsAPI.h"
+#include "graphics/ShaderProgram.h"
 
 namespace eng
 {
@@ -15,6 +16,7 @@ namespace eng
 		for (auto& command : m_Commands)
 		{
 			graphicsAPI.BindMaterial(command.material);
+			command.material->GetShaderProgram()->SetUniform("uModel", command.modelMatrix);
 			graphicsAPI.BindMesh(command.mesh);
 			graphicsAPI.DrawMesh(command.mesh);
 		}

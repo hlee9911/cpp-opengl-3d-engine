@@ -1,5 +1,7 @@
 #include "scene/GameObject.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 namespace eng
 {
 	void GameObject::Update(float deltaTime)
@@ -41,5 +43,63 @@ namespace eng
 	void GameObject::MarkForDestroy()
 	{
 		m_IsAlive = false;
+	}
+
+	const glm::vec3& GameObject::GetPosition() const noexcept
+	{
+		return m_Position;
+	}
+
+	void GameObject::SetPosition(const glm::vec3& pos) noexcept
+	{
+		m_Position = pos;
+	}
+
+	const glm::vec3& GameObject::GetRotation() const noexcept
+	{
+		return m_Rotation;
+	}
+
+	void GameObject::SetRotation(const glm::vec3& rot) noexcept
+	{
+		m_Rotation = rot;
+	}
+
+	const glm::vec3& GameObject::GetScale() const noexcept
+	{
+		return m_Scale;
+	}
+
+	void GameObject::SetScale(const glm::vec3& scale) noexcept
+	{
+		m_Scale = scale;
+	}
+
+	glm::mat4 GameObject::GetLocalTransform() const
+	{
+		// identity matrix
+		glm::mat4 mat = glm::mat4(1.0f);
+
+		// Translation
+		mat = glm::translate(mat, m_Position);
+
+		// Rotation
+		mat = glm::rotate(mat, m_Rotation.x, glm::vec3(1.0f, 0.0f, 0.0f)); // X-axis
+		mat = glm::rotate(mat, m_Rotation.y, glm::vec3(0.0f, 1.0f, 0.0f)); // Y-axis
+		mat = glm::rotate(mat, m_Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f)); // Z-axis
+
+		// Scale
+		mat = glm::scale(mat, m_Scale);
+		
+		return mat;
+	}
+
+	glm::mat4 GameObject::GetWorldTransform() const
+	{
+		if (m_Parent)
+		{
+			return m_Parent->GetWorldTransform() * GetLocalTransform();
+		}
+		return GetLocalTransform();
 	}
 }

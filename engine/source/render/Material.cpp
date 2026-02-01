@@ -3,6 +3,11 @@
 
 namespace eng
 {
+	ShaderProgram* Material::GetShaderProgram() noexcept
+	{
+		return m_ShaderProgram.get();
+	}
+
 	void Material::SetShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram) noexcept
 	{
 		m_ShaderProgram = shaderProgram;

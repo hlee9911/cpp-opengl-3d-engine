@@ -12,12 +12,12 @@ TestObject::TestObject() noexcept
 
 		out vec3 vColor;
 
-		uniform vec2 uOffset;
+		uniform mat4 uModel;
 
         void main()
         {
 			vColor = color;
-            gl_Position = vec4(position.x + uOffset.x, position.y + uOffset.y, position.z, 1.0);
+            gl_Position = uModel * vec4(position, 1.0);
         }
     )";
 
@@ -78,35 +78,34 @@ void TestObject::Update(float deltaTime)
 {
 	eng::GameObject::Update(deltaTime);
 
-	// std::cout << "Current Delta Time: " << deltaTime << " seconds" << std::endl;
+	auto position = GetPosition();
 	auto& input = eng::Engine::GetInstance().GetInputManager();
 
 	// horizontal movement
 	if (input.IsKeyPressed(GLFW_KEY_A))
 	{
-		m_OffsetX -= 0.5f * deltaTime;
+		position.x -= 0.5f * deltaTime;
 	}
 	else if (input.IsKeyPressed(GLFW_KEY_D))
 	{
-		m_OffsetX += 0.5f * deltaTime;
+		position.x += 0.5f * deltaTime;
 	}
 
 	// vertical movement
 	if (input.IsKeyPressed(GLFW_KEY_W))
 	{
-		m_OffsetY += 0.5f * deltaTime;
+		position.y += 0.5f * deltaTime;
 	}
 	else if (input.IsKeyPressed(GLFW_KEY_S))
 	{
-		m_OffsetY -= 0.5f * deltaTime;
+		position.y -= 0.5f * deltaTime;
 	}
-
-	// Update material parameters
-	m_Material.SetFloatParam("uOffset", m_OffsetX, m_OffsetY);
+	SetPosition(position);
 
 	eng::RenderCommand command;
 	command.material = &m_Material;
 	command.mesh = m_Mesh.get();
+	command.modelMatrix = GetWorldTransform();
 
 	// Render Queue to organize the draw calls and submit the command during update
 	auto& renderQueue = eng::Engine::GetInstance().GetRenderQueue();

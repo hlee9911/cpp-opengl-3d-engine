@@ -2,6 +2,8 @@
 #ifndef RENDERQUEUE_H
 #define RENDERQUEUE_H
 
+#include <glm/mat4x4.hpp>
+
 #include <vector>
 
 namespace eng
@@ -14,6 +16,7 @@ namespace eng
 	{
 		Mesh* mesh = nullptr;
 		Material* material = nullptr;
+		glm::mat4 modelMatrix = glm::mat4(0.0f);
 	};
 
 	class RenderQueue

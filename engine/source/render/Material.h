@@ -13,11 +13,13 @@ namespace eng
 	class Material
 	{
 	public:
+		ShaderProgram* GetShaderProgram() noexcept;
 		void SetShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram) noexcept;
 		void SetFloatParam(const std::string& name, float value) noexcept;
 		void SetFloatParam(const std::string& name, float v0, float v1) noexcept;
 
 		void Bind();
+
 
 	private:
 		std::shared_ptr<ShaderProgram> m_ShaderProgram;
