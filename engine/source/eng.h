@@ -14,5 +14,7 @@
 #include "render/RenderQueue.h"
 #include "scene/GameObject.h"
 #include "scene/Scene.h"
+#include "scene/Component.h"
+#include "scene/components/MeshComponent.h"
 
 #endif // ENG_H

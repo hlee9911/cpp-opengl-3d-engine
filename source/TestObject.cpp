@@ -36,7 +36,9 @@ TestObject::TestObject() noexcept
 	auto& graphicsAPI = eng::Engine::GetInstance().GetGraphicsAPI();
 	auto shaderProgram = graphicsAPI.CreateShaderProgram(
 		vertexShaderSource, fragmentShaderSource);
-	m_Material.SetShaderProgram(shaderProgram); // set the shader program to the material, and its ready for rendering
+
+	auto material = std::make_shared<eng::Material>();
+	material->SetShaderProgram(shaderProgram); // set the shader program to the material, and its ready for rendering
 
 	std::vector<float> verticies =
 	{
@@ -67,11 +69,14 @@ TestObject::TestObject() noexcept
 	vertexLayout.stride = sizeof(float) * 6; // 3 position + 3 color
 
 	// Create mesh 
-	m_Mesh = std::make_shared<eng::Mesh>(
+	auto mesh = std::make_shared<eng::Mesh>(
 		vertexLayout,
 		verticies,
 		indicies
 	);
+
+	// new mesh component
+	AddComponenet(new eng::MeshComponent(material, mesh));
 }
 
 void TestObject::Update(float deltaTime)
@@ -101,13 +106,4 @@ void TestObject::Update(float deltaTime)
 		position.y -= 0.5f * deltaTime;
 	}
 	SetPosition(position);
-
-	eng::RenderCommand command;
-	command.material = &m_Material;
-	command.mesh = m_Mesh.get();
-	command.modelMatrix = GetWorldTransform();
-
-	// Render Queue to organize the draw calls and submit the command during update
-	auto& renderQueue = eng::Engine::GetInstance().GetRenderQueue();
-	renderQueue.Submit(command);
 }

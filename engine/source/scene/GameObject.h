@@ -2,6 +2,9 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
+#include "scene/Component.h"
+#include "Core.h"
+
 #include <string>
 #include <vector>
 #include <memory>
@@ -25,6 +28,8 @@ namespace eng
 
 		void MarkForDestroy();
 
+		void AddComponenet(Component* component);
+
 		const glm::vec3& GetPosition() const noexcept;
 		void SetPosition(const glm::vec3& pos) noexcept;
 
@@ -44,6 +49,7 @@ namespace eng
 		std::string m_Name;
 		GameObject* m_Parent = nullptr;
 		std::vector<std::unique_ptr<GameObject>> m_Children;
+		List<unique<Component>> m_Components;
 		bool m_IsAlive = true;
 		glm::vec3 m_Position = glm::vec3(0.0f);
 		glm::vec3 m_Rotation = glm::vec3(0.0f);
