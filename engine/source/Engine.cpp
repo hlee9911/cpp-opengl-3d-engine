@@ -98,8 +98,19 @@ namespace eng
 			m_GraphicsAPI.SetClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 			m_GraphicsAPI.ClearBuffers();
 
+			// Collect current camera data
+			CameraData cameraData;
+
+			if (m_CurrentScene)
+			{
+				if (auto cameraObject = m_CurrentScene->GetMainCamera())
+				{
+					// TODO: logic for matrices
+				}
+			}
+
 			// Draw render queue
-			m_RenderQueue.Draw(m_GraphicsAPI);
+			m_RenderQueue.Draw(m_GraphicsAPI, cameraData);
 
 			// Swap buffers and render
 			glfwSwapBuffers(m_Window);

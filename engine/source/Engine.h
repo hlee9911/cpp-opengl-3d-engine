@@ -5,6 +5,8 @@
 #include "input/InputManager.h"
 #include "graphics/GraphicsAPI.h"
 #include "render/RenderQueue.h"
+#include "scene/Scene.h"
+#include "Core.h"
 
 #include <memory>
 #include <chrono>
@@ -40,6 +42,9 @@ namespace eng
 		GraphicsAPI& GetGraphicsAPI() noexcept;
 		RenderQueue& GetRenderQueue() noexcept;
 
+		void SetScene(Scene* scene) noexcept { m_CurrentScene.reset(scene); }
+		Scene* GetScene() const noexcept { return m_CurrentScene.get(); }
+
 	private:
 		std::unique_ptr<Application> m_Application;
 		std::chrono::steady_clock::time_point m_LastFrameTime;
@@ -47,6 +52,7 @@ namespace eng
 		InputManager m_InputManager;
 		GraphicsAPI m_GraphicsAPI;
 		RenderQueue m_RenderQueue;
+		unique<Scene> m_CurrentScene;
 	};
 }
 

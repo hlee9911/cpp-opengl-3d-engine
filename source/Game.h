@@ -29,3 +29,7 @@ private:
 // Material stores the shader and uniform values
 // Mesh holds the geometry data (vertices, indices) for rendering.
 // The GraphicsAPI provides unified access to create and manage these resources.
+
+// Model transforms local space into world spce
+// View transforms world spce into camera space (as if moving the world), view is inverse
+// Projection transform camera space into the screen space // maps 3d to 2d

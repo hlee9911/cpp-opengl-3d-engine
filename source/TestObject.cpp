@@ -13,11 +13,13 @@ TestObject::TestObject() noexcept
 		out vec3 vColor;
 
 		uniform mat4 uModel;
+		uniform mat4 uView;
+		uniform mat4 uProjection;
 
         void main()
         {
 			vColor = color;
-            gl_Position = uModel * vec4(position, 1.0);
+            gl_Position = uProjection * uView * uModel * vec4(position, 1.0);
         }
     )";
 
