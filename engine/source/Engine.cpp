@@ -1,5 +1,8 @@
 #include "Engine.h"
 #include "Application.h"
+#include "scene/GameObject.h"
+#include "scene/Component.h"
+#include "scene/components/CameraComponent.h"
 
 #include <iostream>
 
@@ -101,11 +104,22 @@ namespace eng
 			// Collect current camera data
 			CameraData cameraData;
 
+			int width = 0;
+			int height = 0;
+			glfwGetWindowSize(m_Window, &width, &height);
+			float aspect = static_cast<float>(width) / static_cast<float>(height);
+
 			if (m_CurrentScene)
 			{
 				if (auto cameraObject = m_CurrentScene->GetMainCamera())
 				{
-					// TODO: logic for matrices
+					// logic for matrices
+					auto cameraComponent = cameraObject->GetComponent<CameraComponent>();
+					if (cameraComponent)
+					{
+						cameraData.viewMatrix = cameraComponent->GetViewMatrix();
+						cameraData.projectionMatrix = cameraComponent->GetProjectionMatrix(aspect);
+					}
 				}
 			}
 

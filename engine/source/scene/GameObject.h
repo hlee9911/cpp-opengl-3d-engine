@@ -29,6 +29,21 @@ namespace eng
 		void MarkForDestroy();
 
 		void AddComponenet(Component* component);
+		template<typename T, typename = typename std::enable_if_t<std::is_base_of_v<Component, T>>>
+		T* GetComponent()
+		{
+			size_t typeId = Component::StaticTypeId<T>();
+
+			for (auto& component : m_Components)
+			{
+				// runtime Id is generated the same wy for every type
+				if (component->GetTypeId() == typeId) // if IDs match, we found the component we want
+				{
+					return static_cast<T*>(component.get());
+				}
+			}
+			return nullptr;
+		}
 
 		const glm::vec3& GetPosition() const noexcept;
 		void SetPosition(const glm::vec3& pos) noexcept;

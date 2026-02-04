@@ -19,7 +19,7 @@ private:
 	float m_OffsetX = 0.0f;
 	float m_OffsetY = 0.0f;*/
 
-	eng::Scene m_Scene;
+	eng::Scene* m_Scene = nullptr;
 };
 
 #endif // GAME_H
@@ -33,3 +33,9 @@ private:
 // Model transforms local space into world spce
 // View transforms world spce into camera space (as if moving the world), view is inverse
 // Projection transform camera space into the screen space // maps 3d to 2d
+
+// Camera only renders only between the near and far planes
+// forms view frustum
+// Near Plane is the closest visible distance
+// Far Plane is the farthest visible distance
+// Aspect Ratio: Width / Height and affects horizontal scaling

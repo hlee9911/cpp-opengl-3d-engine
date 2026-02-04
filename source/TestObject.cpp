@@ -21,7 +21,7 @@ TestObject::TestObject() noexcept
 			vColor = color;
             gl_Position = uProjection * uView * uModel * vec4(position, 1.0);
         }
-    )";
+    )"; // mvp chain (uProjection * uView * uModel)
 
 	std::string fragmentShaderSource = R"(
         #version 330 core

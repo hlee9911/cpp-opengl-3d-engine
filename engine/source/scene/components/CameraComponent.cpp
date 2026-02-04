@@ -1,6 +1,8 @@
 #include "scene/components/CameraComponent.h"
 #include "scene/GameObject.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 namespace eng
 {
 	void CameraComponent::Update(float deltaTime)
@@ -13,10 +15,9 @@ namespace eng
 		return glm::inverse(m_Owner->GetWorldTransform());
 	}
 
-	glm::mat4 CameraComponent::GetProjectionMatrix() const
+	glm::mat4 CameraComponent::GetProjectionMatrix(float aspect) const
 	{
-		// TODO: Will modify this later on
-		return glm::mat4(1.0f);
+		return glm::perspective(glm::radians(m_FOV), aspect, m_NearPlane, m_FarPlane);
 	}
 
 

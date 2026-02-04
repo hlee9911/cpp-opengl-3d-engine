@@ -12,6 +12,8 @@ namespace eng
 
 	class MeshComponent : public Component
 	{
+		COMPONENT(MeshComponent)
+
 	public:
 		MeshComponent(const shared<Material>& material, const shared<Mesh>& mesh) noexcept;
 		void Update(float deltaTime) override;
