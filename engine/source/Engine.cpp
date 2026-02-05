@@ -19,10 +19,11 @@ namespace eng
 	/// <param name="scancode"></param>
 	/// <param name="action"></param>
 	/// <param name="mods"></param>
-	void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+	void keyCallback(GLFWwindow* window, int key, int scancode, int action, int _)
 	{
 		Engine& engine = Engine::GetInstance();
 		InputManager& inputManager = engine.GetInputManager();
+
 		if (action == GLFW_PRESS)
 		{
 			inputManager.SetKeyPressed(key, true);
@@ -31,6 +32,32 @@ namespace eng
 		{
 			inputManager.SetKeyPressed(key, false);
 		}
+	}
+
+	void mouseButtonCallback(GLFWwindow* window, int button, int action, int _)
+	{
+		Engine& engine = Engine::GetInstance();
+		InputManager& inputManager = engine.GetInputManager();
+
+		if (action == GLFW_PRESS)
+		{
+			inputManager.SetMouseButtonPressed(button, true);
+		}
+		else if (action == GLFW_RELEASE)
+		{
+			inputManager.SetMouseButtonPressed(button, false);
+		}
+	}
+
+	void cursorPositionCallback(GLFWwindow* window, double xpos, double ypos)
+	{
+		Engine& engine = Engine::GetInstance();
+		InputManager& inputManager = engine.GetInputManager();
+
+		inputManager.SetMousePositionOld(inputManager.GetMousePositionCurrent());
+
+		glm::vec2 currentPos(static_cast<float>(xpos), static_cast<float>(ypos));
+		inputManager.SetMousePositionCurrent(currentPos);
 	}
 
 	Engine& Engine::GetInstance()
@@ -65,8 +92,10 @@ namespace eng
 			return false;
 		}
 
-		// set key callback
+		// set keys, mouse button, and mouse cursor callback
 		glfwSetKeyCallback(m_Window, keyCallback);
+		glfwSetMouseButtonCallback(m_Window, mouseButtonCallback);
+		glfwSetCursorPosCallback(m_Window, cursorPositionCallback);
 
 		glfwMakeContextCurrent(m_Window);
 
@@ -128,6 +157,9 @@ namespace eng
 
 			// Swap buffers and render
 			glfwSwapBuffers(m_Window);
+
+			// before we move onto the nextframe, we set the current mouse position to the old one
+			m_InputManager.SetMousePositionOld(m_InputManager.GetMousePositionCurrent());
 		}
 	}
 

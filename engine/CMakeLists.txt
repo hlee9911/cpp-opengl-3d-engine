@@ -35,6 +35,8 @@ set(PROJECT_SOURCE_FILES
 	source/scene/components/MeshComponent.cpp
 	source/scene/components/CameraComponent.h
 	source/scene/components/CameraComponent.cpp
+	source/scene/components/PlayerControllerComponent.h
+	source/scene/components/PlayerControllerComponent.cpp
 )
 
 # Group files according to files organization

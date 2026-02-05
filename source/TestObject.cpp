@@ -85,6 +85,9 @@ void TestObject::Update(float deltaTime)
 {
 	eng::GameObject::Update(deltaTime);
 
+
+	// deprecated for now
+#if 0
 	auto position = GetPosition();
 	auto& input = eng::Engine::GetInstance().GetInputManager();
 
@@ -108,4 +111,5 @@ void TestObject::Update(float deltaTime)
 		position.y -= 0.5f * deltaTime;
 	}
 	SetPosition(position);
+#endif
 }
