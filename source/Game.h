@@ -39,3 +39,16 @@ private:
 // Near Plane is the closest visible distance
 // Far Plane is the farthest visible distance
 // Aspect Ratio: Width / Height and affects horizontal scaling
+
+// Z-buffer
+// Invisible grayscale image, the sme size as your screen
+// for every pixel you draw, it stores the depth, how far that pixel is from the camera
+// when draawing the next object, the GPU compares its depth against whats already stored
+// if its farther, it gets hidden
+// with the depth testing, the GPU knows the sphere is behind and hides it correctly
+// by default, in OpenGL, the z-buffer is disbled, so we need to enable it
+
+// Quaternion
+// A quaternion has four components: x, y, z, and w
+// orientation is one value not three separate angles
+// this avoids rotation-order issue entirely

@@ -66,12 +66,12 @@ namespace eng
 		m_Position = pos;
 	}
 
-	const glm::vec3& GameObject::GetRotation() const noexcept
+	const glm::quat& GameObject::GetRotation() const noexcept
 	{
 		return m_Rotation;
 	}
 
-	void GameObject::SetRotation(const glm::vec3& rot) noexcept
+	void GameObject::SetRotation(const glm::quat& rot) noexcept
 	{
 		m_Rotation = rot;
 	}
@@ -95,9 +95,11 @@ namespace eng
 		mat = glm::translate(mat, m_Position);
 
 		// Rotation
-		mat = glm::rotate(mat, m_Rotation.x, glm::vec3(1.0f, 0.0f, 0.0f)); // X-axis
-		mat = glm::rotate(mat, m_Rotation.y, glm::vec3(0.0f, 1.0f, 0.0f)); // Y-axis
-		mat = glm::rotate(mat, m_Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f)); // Z-axis
+		//mat = glm::rotate(mat, m_Rotation.x, glm::vec3(1.0f, 0.0f, 0.0f)); // X-axis
+		//mat = glm::rotate(mat, m_Rotation.y, glm::vec3(0.0f, 1.0f, 0.0f)); // Y-axis
+		//mat = glm::rotate(mat, m_Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f)); // Z-axis
+		// Use single entity called quaternion instead of three different angles
+		mat = mat * glm::mat4_cast(m_Rotation);
 
 		// Scale
 		mat = glm::scale(mat, m_Scale);

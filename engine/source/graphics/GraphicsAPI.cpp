@@ -7,6 +7,14 @@
 
 namespace eng
 {
+	bool GraphicsAPI::Init()
+	{
+		// enable the z buffer
+		glEnable(GL_DEPTH_TEST);
+
+		return true;
+	}
+
 	/// <summary>
 	/// This function creates a shader program from vertex and fragment shader source code.
 	/// and returns a shared pointer to the created ShaderProgram object.
@@ -117,7 +125,8 @@ namespace eng
 
 	void GraphicsAPI::ClearBuffers()
 	{
-		glClear(GL_COLOR_BUFFER_BIT);
+		// need to clear the color buffer and the depth buffer as well
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
 	/// <summary>

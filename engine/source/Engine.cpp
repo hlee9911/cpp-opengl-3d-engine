@@ -106,6 +106,7 @@ namespace eng
 			return false;
 		}
 
+		m_GraphicsAPI.Init();
 		return m_Application->Init();
 	}
 
