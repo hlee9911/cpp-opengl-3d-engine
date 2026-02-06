@@ -6,6 +6,8 @@
 
 #include <vector>
 
+#include "Core.h"
+
 namespace eng
 {
 	class Mesh;
@@ -32,7 +34,7 @@ namespace eng
 		void Draw(GraphicsAPI& graphicsAPI, const CameraData& cameraData);
 
 	private:
-		std::vector<RenderCommand> m_Commands;
+		List<RenderCommand> m_Commands;
 	};
 }
 

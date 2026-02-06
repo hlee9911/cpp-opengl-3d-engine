@@ -46,7 +46,7 @@ namespace eng
 		Scene* GetScene() const noexcept { return m_CurrentScene.get(); }
 
 	private:
-		std::unique_ptr<Application> m_Application;
+		unique<Application> m_Application;
 		std::chrono::steady_clock::time_point m_LastFrameTime;
 		GLFWwindow* m_Window = nullptr;
 		InputManager m_InputManager;

@@ -6,6 +6,8 @@
 #include <unordered_map>
 #include <string>
 
+#include "Core.h"
+
 namespace eng
 {
 	class ShaderProgram;
@@ -14,7 +16,7 @@ namespace eng
 	{
 	public:
 		ShaderProgram* GetShaderProgram() noexcept;
-		void SetShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram) noexcept;
+		void SetShaderProgram(const shared<ShaderProgram>& shaderProgram) noexcept;
 		void SetFloatParam(const std::string& name, float value) noexcept;
 		void SetFloatParam(const std::string& name, float v0, float v1) noexcept;
 
@@ -22,9 +24,9 @@ namespace eng
 
 
 	private:
-		std::shared_ptr<ShaderProgram> m_ShaderProgram;
-		std::unordered_map<std::string, float> m_FloatParams;
-		std::unordered_map<std::string, std::pair<float, float>> m_Float2Params;
+		shared<ShaderProgram> m_ShaderProgram;
+		Dictionary<std::string, float> m_FloatParams;
+		Dictionary<std::string, std::pair<float, float>> m_Float2Params;
 	};
 }
 

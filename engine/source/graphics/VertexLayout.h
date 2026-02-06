@@ -7,6 +7,8 @@
 #include <vector>
 #include <stdint.h>
 
+#include "Core.h"
+
 namespace eng
 {
 	struct VertexElement
@@ -19,7 +21,7 @@ namespace eng
 	
 	struct VertexLayout
 	{
-		std::vector<VertexElement> elements;
+		List<VertexElement> elements;
 		uint32_t stride = 0; // Total size of the single vertex in bytes
 	};
 }

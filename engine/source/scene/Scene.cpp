@@ -49,7 +49,7 @@ namespace eng
 				auto it = std::find_if(
 					currentParent->m_Children.begin(),
 					currentParent->m_Children.end(),
-					[obj](const std::unique_ptr<GameObject>& el)
+					[obj](const unique<GameObject>& el)
 					{
 						return el.get() == obj;
 					}
@@ -72,7 +72,7 @@ namespace eng
 				auto it = std::find_if(
 					m_GameObjects.begin(),
 					m_GameObjects.end(),
-					[obj](const std::unique_ptr<GameObject>& el)
+					[obj](const unique<GameObject>& el)
 					{
 						return el.get() == obj;
 					}
@@ -81,7 +81,7 @@ namespace eng
 				// object is not found in the scene root, so it must be newly created
 				if (it == m_GameObjects.end())
 				{
-					std::unique_ptr<GameObject> objHolder(obj);
+					unique<GameObject> objHolder(obj);
 					m_GameObjects.push_back(std::move(objHolder));
 					result = true;
 				}
@@ -95,7 +95,7 @@ namespace eng
 				auto it = std::find_if(
 					currentParent->m_Children.begin(),
 					currentParent->m_Children.end(),
-					[obj](const std::unique_ptr<GameObject>& el)
+					[obj](const unique<GameObject>& el)
 					{
 						return el.get() == obj;
 					}
@@ -135,7 +135,7 @@ namespace eng
 				auto it = std::find_if(
 					m_GameObjects.begin(),
 					m_GameObjects.end(),
-					[obj](const std::unique_ptr<GameObject>& el)
+					[obj](const unique<GameObject>& el)
 					{
 						return el.get() == obj;
 					}
@@ -144,7 +144,7 @@ namespace eng
 				// The object has been just created
 				if (it == m_GameObjects.end())
 				{
-					std::unique_ptr<GameObject> objHolder(obj);
+					unique<GameObject> objHolder(obj);
 					parent->m_Children.push_back(std::move(objHolder));
 					obj->m_Parent = parent;
 					result = true;

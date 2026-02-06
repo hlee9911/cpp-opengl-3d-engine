@@ -7,6 +7,7 @@
 #include <memory>
 
 #include "scene/GameObject.h"
+#include "Core.h"
 
 namespace eng
 {
@@ -41,7 +42,7 @@ namespace eng
 		GameObject* GetMainCamera() const noexcept { return m_MainCamera; }
 
 	private:
-		std::vector<std::unique_ptr<GameObject>> m_GameObjects;
+		List<unique<GameObject>> m_GameObjects;
 		GameObject* m_MainCamera = nullptr;
 	};
 }

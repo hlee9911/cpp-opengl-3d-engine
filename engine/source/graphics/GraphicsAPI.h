@@ -8,6 +8,8 @@
 #include <vector>
 #include <string>
 
+#include "Core.h"
+
 namespace eng
 {
 	class ShaderProgram;
@@ -18,7 +20,7 @@ namespace eng
 	{
 	public:
 		bool Init();
-		std::shared_ptr<ShaderProgram> CreateShaderProgram(
+		shared<ShaderProgram> CreateShaderProgram(
 			const std::string& vertexSource, 
 			const std::string& fragmentSource);
 

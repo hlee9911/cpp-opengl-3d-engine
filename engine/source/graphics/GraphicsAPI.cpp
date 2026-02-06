@@ -22,7 +22,7 @@ namespace eng
 	/// <param name="vertexSource"></param>
 	/// <param name="fragmentSource"></param>
 	/// <returns></returns>
-	std::shared_ptr<ShaderProgram> GraphicsAPI::CreateShaderProgram(
+	shared<ShaderProgram> GraphicsAPI::CreateShaderProgram(
 		const std::string& vertexSource, 
 		const std::string& fragmentSource)
 	{

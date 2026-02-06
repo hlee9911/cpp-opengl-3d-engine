@@ -6,6 +6,8 @@
 
 #include <memory>
 
+#include "Core.h"
+
 class Game : public eng::Application
 {
 public:

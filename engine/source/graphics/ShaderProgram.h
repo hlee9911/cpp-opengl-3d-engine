@@ -8,6 +8,8 @@
 #include <string>
 #include <unordered_map>
 
+#include "Core.h"
+
 namespace eng
 {
 	class ShaderProgram
@@ -29,7 +31,7 @@ namespace eng
 		void SetUniform(const std::string& name, const glm::mat4& mat);
 
 	private:
-		std::unordered_map<std::string, GLint> m_UniformLocationCache;
+		Dictionary<std::string, GLint> m_UniformLocationCache;
 		GLuint m_ShaderProgramID = 0;
 	};
 }

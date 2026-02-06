@@ -64,7 +64,7 @@ namespace eng
 	private:
 		std::string m_Name;
 		GameObject* m_Parent = nullptr;
-		std::vector<std::unique_ptr<GameObject>> m_Children;
+		List<unique<GameObject>> m_Children;
 		List<unique<Component>> m_Components;
 		bool m_IsAlive = true;
 		glm::vec3 m_Position = glm::vec3(0.0f);

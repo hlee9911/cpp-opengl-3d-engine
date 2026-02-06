@@ -8,7 +8,7 @@ namespace eng
 		return m_ShaderProgram.get();
 	}
 
-	void Material::SetShaderProgram(const std::shared_ptr<ShaderProgram>& shaderProgram) noexcept
+	void Material::SetShaderProgram(const shared<ShaderProgram>& shaderProgram) noexcept
 	{
 		m_ShaderProgram = shaderProgram;
 	}

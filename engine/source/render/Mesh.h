@@ -5,6 +5,7 @@
 #include <GL/glew.h>
 
 #include "graphics/VertexLayout.h"
+#include "Core.h"
 
 namespace eng
 {
@@ -12,10 +13,10 @@ namespace eng
 	{
 	public:
 		Mesh(const VertexLayout& layout,
-			 const std::vector<float>& verticies,
-			 const std::vector<uint32_t>& indicies) noexcept;
+			 const List<float>& verticies,
+			 const List<uint32_t>& indicies) noexcept;
 		Mesh(const VertexLayout&& layout,
-			 const std::vector<float>&& verticies) noexcept;
+			 const List<float>&& verticies) noexcept;
 
 		Mesh(const Mesh&) noexcept = delete;
 		Mesh& operator=(const Mesh&) noexcept = delete;

@@ -5,8 +5,8 @@
 namespace eng
 {
 	Mesh::Mesh(const VertexLayout& layout, 
-		const std::vector<float>& verticies, 
-		const std::vector<uint32_t>& indicies) noexcept
+		const List<float>& verticies,
+		const List<uint32_t>& indicies) noexcept
 	{
 		m_VertexLayout = layout;
 
@@ -49,7 +49,7 @@ namespace eng
 	}
 
 	Mesh::Mesh(const VertexLayout&& layout, 
-		const std::vector<float>&& verticies) noexcept
+		const List<float>&& verticies) noexcept
 	{
 		m_VertexLayout = layout;
 
