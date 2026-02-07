@@ -18,5 +18,6 @@
 #include "scene/components/MeshComponent.h"
 #include "scene/components/CameraComponent.h"
 #include "scene/components/PlayerControllerComponent.h"
+#include "source/io/FileSystem.h"
 
 #endif // ENG_H

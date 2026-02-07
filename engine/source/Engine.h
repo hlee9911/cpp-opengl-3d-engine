@@ -6,6 +6,7 @@
 #include "graphics/GraphicsAPI.h"
 #include "render/RenderQueue.h"
 #include "scene/Scene.h"
+#include "io/FileSystem.h"
 #include "Core.h"
 
 #include <memory>
@@ -41,6 +42,7 @@ namespace eng
 		InputManager& GetInputManager() noexcept;
 		GraphicsAPI& GetGraphicsAPI() noexcept;
 		RenderQueue& GetRenderQueue() noexcept;
+		FileSystem& GetFileSystem() noexcept;
 
 		void SetScene(Scene* scene) noexcept { m_CurrentScene.reset(scene); }
 		Scene* GetScene() const noexcept { return m_CurrentScene.get(); }
@@ -52,6 +54,7 @@ namespace eng
 		InputManager m_InputManager;
 		GraphicsAPI m_GraphicsAPI;
 		RenderQueue m_RenderQueue;
+		FileSystem m_FileSystem;
 		unique<Scene> m_CurrentScene;
 	};
 }

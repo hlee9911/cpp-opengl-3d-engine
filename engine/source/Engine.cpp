@@ -199,4 +199,9 @@ namespace eng
 	{
 		return m_RenderQueue;
 	}
+
+	FileSystem& Engine::GetFileSystem() noexcept
+	{
+		return m_FileSystem;
+	}
 }
