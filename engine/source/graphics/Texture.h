@@ -3,6 +3,9 @@
 #define TEXTURE_H
 
 #include <GL/glew.h>
+#include <string>
+
+#include "Core.h"
 
 namespace eng
 {
@@ -12,6 +15,9 @@ namespace eng
 		Texture(int width, int height, int numChannels, unsigned char* data) noexcept;
 		~Texture() noexcept;
 		GLuint GetID() const noexcept { return m_TextureID; }
+		void Init(int width, int height, int numChannels, unsigned char* data);
+
+		static shared<Texture> Load(const std::string& path);
 
 	private:
 		int m_Width = 0;
