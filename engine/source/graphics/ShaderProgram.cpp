@@ -1,4 +1,5 @@
 #include "graphics/ShaderProgram.h"
+#include "graphics/Texture.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -18,6 +19,7 @@ namespace eng
 	void ShaderProgram::Bind()
 	{
 		glUseProgram(m_ShaderProgramID);
+		m_CurrentTextureUnit = 0;
 	}
 
 	/// <summary>
@@ -58,5 +60,16 @@ namespace eng
 	{
 		auto location = GetUniformLocation(name);
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat));
+	}
+
+	void ShaderProgram::SetTexture(const std::string& name, Texture* texture)
+	{
+		auto location = GetUniformLocation(name);
+		
+		// unitIndex is the slot and the location is the uniform
+		glActiveTexture(GL_TEXTURE0 + m_CurrentTextureUnit);
+		glBindTexture(GL_TEXTURE_2D, texture->GetID());
+		glUniform1i(location, m_CurrentTextureUnit);
+		++m_CurrentTextureUnit;
 	}
 }

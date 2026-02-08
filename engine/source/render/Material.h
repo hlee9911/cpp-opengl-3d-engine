@@ -11,6 +11,7 @@
 namespace eng
 {
 	class ShaderProgram;
+	class Texture;
 
 	class Material
 	{
@@ -19,14 +20,15 @@ namespace eng
 		void SetShaderProgram(const shared<ShaderProgram>& shaderProgram) noexcept;
 		void SetFloatParam(const std::string& name, float value) noexcept;
 		void SetFloatParam(const std::string& name, float v0, float v1) noexcept;
+		void SetTextureParam(const std::string& name, const shared<Texture>& texture);
 
 		void Bind();
-
 
 	private:
 		shared<ShaderProgram> m_ShaderProgram;
 		Dictionary<std::string, float> m_FloatParams;
 		Dictionary<std::string, std::pair<float, float>> m_Float2Params;
+		Dictionary<std::string, shared<Texture>> m_Textures;
 	};
 }
 
