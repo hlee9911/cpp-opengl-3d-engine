@@ -12,7 +12,7 @@
 namespace eng
 {
 	/// <summary>
-	/// This function is called by GLFW when a key event occurs.
+	/// This function is called by GLFW when a key event occurs
 	/// </summary>
 	/// <param name="window"></param>
 	/// <param name="key"></param>
@@ -34,6 +34,13 @@ namespace eng
 		}
 	}
 
+	/// <summary>
+	/// This function is caleed by GLFW when mouse button event occurs
+	/// </summary>
+	/// <param name="window"></param>
+	/// <param name="button"></param>
+	/// <param name="action"></param>
+	/// <param name="_"></param>
 	void mouseButtonCallback(GLFWwindow* window, int button, int action, int _)
 	{
 		Engine& engine = Engine::GetInstance();
@@ -49,6 +56,12 @@ namespace eng
 		}
 	}
 
+	/// <summary>
+	/// This function is called by GLFW when mouse position changes
+	/// </summary>
+	/// <param name="window"></param>
+	/// <param name="xpos"></param>
+	/// <param name="ypos"></param>
 	void cursorPositionCallback(GLFWwindow* window, double xpos, double ypos)
 	{
 		Engine& engine = Engine::GetInstance();

@@ -24,6 +24,8 @@ namespace eng
 
 		void Bind();
 
+		static shared<Material> Load(const std::string& path);
+
 	private:
 		shared<ShaderProgram> m_ShaderProgram;
 		Dictionary<std::string, float> m_FloatParams;
