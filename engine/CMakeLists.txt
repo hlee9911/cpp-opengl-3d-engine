@@ -87,6 +87,8 @@ include_directories(thirdparty/stb_image)
 
 include_directories(thirdparty/json)
 
+include_directories(thirdparty/cgltf)
+
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_BINARY_DIR})
 
 # Link all thirdparty libraries

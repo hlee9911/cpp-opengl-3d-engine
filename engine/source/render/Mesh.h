@@ -3,6 +3,7 @@
 #define MESH_H
 
 #include <GL/glew.h>
+#include <string>
 
 #include "graphics/VertexLayout.h"
 #include "Core.h"
@@ -15,14 +16,16 @@ namespace eng
 		Mesh(const VertexLayout& layout,
 			 const List<float>& verticies,
 			 const List<uint32_t>& indicies) noexcept;
-		Mesh(const VertexLayout&& layout,
-			 const List<float>&& verticies) noexcept;
+		Mesh(const VertexLayout& layout,
+			 const List<float>& verticies) noexcept;
 
 		Mesh(const Mesh&) noexcept = delete;
 		Mesh& operator=(const Mesh&) noexcept = delete;
 
 		void Bind();
 		void Draw();
+
+		static shared<Mesh> Load(const std::string& path);
 
 	private:
 		VertexLayout m_VertexLayout;
