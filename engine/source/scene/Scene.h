@@ -8,6 +8,7 @@
 
 #include "scene/GameObject.h"
 #include "Core.h"
+#include "Common.h"
 
 namespace eng
 {
@@ -40,6 +41,11 @@ namespace eng
 
 		void SetMainCamera(GameObject* camera) noexcept { m_MainCamera = camera; }
 		GameObject* GetMainCamera() const noexcept { return m_MainCamera; }
+
+		List<LightData> CollectLights();
+
+	private:
+		void CollectLightsRecursive(GameObject* obj, List<LightData>& out);
 
 	private:
 		List<unique<GameObject>> m_GameObjects;

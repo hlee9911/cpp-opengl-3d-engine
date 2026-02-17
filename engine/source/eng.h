@@ -5,6 +5,7 @@
 #include "Application.h"
 #include "Engine.h"
 #include "Core.h"
+#include "Common.h"
 #include "input/InputManager.h"
 #include "graphics/ShaderProgram.h"
 #include "graphics/GraphicsAPI.h"
@@ -19,6 +20,7 @@
 #include "scene/components/MeshComponent.h"
 #include "scene/components/CameraComponent.h"
 #include "scene/components/PlayerControllerComponent.h"
+#include "scene/components/LightComponent.h"
 #include "source/io/FileSystem.h"
 
 #endif // ENG_H

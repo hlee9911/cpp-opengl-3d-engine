@@ -18,6 +18,7 @@ set(PROJECT_SOURCE_FILES
 	source/Application.cpp
 	source/Core.h
 	source/Core.cpp
+	source/Common.h
 	source/input/InputManager.h
 	source/input/InputManager.cpp
 	source/graphics/ShaderProgram.h
@@ -46,6 +47,8 @@ set(PROJECT_SOURCE_FILES
 	source/scene/components/CameraComponent.cpp
 	source/scene/components/PlayerControllerComponent.h
 	source/scene/components/PlayerControllerComponent.cpp
+	source/scene/components/LightComponent.h
+	source/scene/components/LightComponent.cpp
 	source/io/FileSystem.h
 	source/io/FileSystem.cpp
 )

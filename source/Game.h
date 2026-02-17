@@ -54,3 +54,7 @@ private:
 // A quaternion has four components: x, y, z, and w
 // orientation is one value not three separate angles
 // this avoids rotation-order issue entirely
+
+// Lighting
+// lightDir = normalize(lightPos - fragPos);
+// float diffuseFactor = dot(normal, lightDir);

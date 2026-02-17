@@ -28,7 +28,7 @@ namespace eng
 
 			// rotation around X axis
 			float xAngle = -deltaY * m_Sensitivity * deltaTime;
-			glm::vec3 right = rotation * glm::vec3(1.0f, 0.0f, 0.0f); // gives teh camera's current local right direction
+			glm::vec3 right = rotation * glm::vec3(1.0f, 0.0f, 0.0f); // gives the camera's current local right direction
 			glm::quat xRot = glm::angleAxis(xAngle, right);
 			// rotation.x -= deltaY * m_Sensitivity * deltaTime;
 

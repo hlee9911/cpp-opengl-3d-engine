@@ -146,6 +146,7 @@ namespace eng
 
 			// Collect current camera data
 			CameraData cameraData;
+			List<LightData> lights;
 
 			int width = 0;
 			int height = 0;
@@ -164,10 +165,12 @@ namespace eng
 						cameraData.projectionMatrix = cameraComponent->GetProjectionMatrix(aspect);
 					}
 				}
+
+				lights = m_CurrentScene->CollectLights();
 			}
 
 			// Draw render queue
-			m_RenderQueue.Draw(m_GraphicsAPI, cameraData);
+			m_RenderQueue.Draw(m_GraphicsAPI, cameraData, lights);
 
 			// Swap buffers and render
 			glfwSwapBuffers(m_Window);

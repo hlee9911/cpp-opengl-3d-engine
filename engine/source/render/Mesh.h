@@ -25,6 +25,7 @@ namespace eng
 		void Bind();
 		void Draw();
 
+		static shared<Mesh> CreateCube();
 		static shared<Mesh> Load(const std::string& path);
 
 	private:

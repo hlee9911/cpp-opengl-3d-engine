@@ -1,4 +1,5 @@
 #include "scene/Scene.h"
+#include "scene/components/LightComponent.h"
 
 namespace eng
 {
@@ -178,5 +179,31 @@ namespace eng
 		}
 
 		return result;
+	}
+
+	List<LightData> Scene::CollectLights()
+	{
+		List<LightData> lights;
+		for (auto& obj : m_GameObjects)
+		{
+			CollectLightsRecursive(obj.get(), lights);
+		}
+		return lights;
+	}
+
+	void Scene::CollectLightsRecursive(GameObject* obj, List<LightData>& out)
+	{
+		if (auto light = obj->GetComponent<LightComponent>())
+		{
+			LightData data;
+			data.color = light->GetColor();
+			data.position = obj->GetWorldPosition();
+			out.push_back(data);
+		}
+
+		for (auto& child : obj->m_Children)
+		{
+			CollectLightsRecursive(child.get(), out);
+		}
 	}
 }

@@ -6,6 +6,7 @@
 
 #include <vector>
 
+#include "Common.h"
 #include "Core.h"
 
 namespace eng
@@ -21,17 +22,11 @@ namespace eng
 		glm::mat4 modelMatrix = glm::mat4(0.0f);
 	};
 
-	struct CameraData
-	{
-		glm::mat4 viewMatrix;
-		glm::mat4 projectionMatrix;
-	};
-
 	class RenderQueue
 	{
 	public:
 		void Submit(const RenderCommand& command);
-		void Draw(GraphicsAPI& graphicsAPI, const CameraData& cameraData);
+		void Draw(GraphicsAPI& graphicsAPI, const CameraData& cameraData, const List<LightData>& lights);
 
 	private:
 		List<RenderCommand> m_Commands;
