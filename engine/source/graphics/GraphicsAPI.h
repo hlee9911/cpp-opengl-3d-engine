@@ -24,6 +24,8 @@ namespace eng
 			const std::string& vertexSource, 
 			const std::string& fragmentSource);
 
+		const shared<ShaderProgram>& GetDefaultShaderProgram();
+
 		GLuint CreateVertexBuffer(const std::vector<float>& verticies);
 		GLuint CreateIndexBuffer(const std::vector<uint32_t>& indicies);
 
@@ -34,6 +36,9 @@ namespace eng
 		void BindMaterial(Material* material);
 		void BindMesh(Mesh* mesh);
 		void DrawMesh(Mesh* mesh);
+
+	private:
+		shared<ShaderProgram> m_DefaultShaderProgram;
 	};
 }
 

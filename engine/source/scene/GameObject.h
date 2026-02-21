@@ -15,6 +15,8 @@
 
 namespace eng
 {
+	class Scene;
+
 	class GameObject
 	{
 	public:
@@ -25,6 +27,10 @@ namespace eng
 		void SetName(const std::string& name) noexcept;
 
 		GameObject* GetParent() noexcept;
+		bool SetParent(GameObject* parent);
+
+		Scene* GetScene() noexcept { return m_Scene; }
+
 		bool IsAlive() const noexcept;
 
 		void MarkForDestroy();
@@ -59,12 +65,15 @@ namespace eng
 		glm::mat4 GetLocalTransform() const;
 		glm::mat4 GetWorldTransform() const;
 
+		static GameObject* LoadGLTF(const std::string& path);
+
 	protected:
 		GameObject() noexcept = default;
 
 	private:
 		std::string m_Name;
 		GameObject* m_Parent = nullptr;
+		Scene* m_Scene = nullptr;
 		List<unique<GameObject>> m_Children;
 		List<unique<Component>> m_Components;
 		bool m_IsAlive = true;

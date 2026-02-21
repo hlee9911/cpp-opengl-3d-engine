@@ -2,8 +2,8 @@
 #include "graphics/GraphicsAPI.h"
 #include "Engine.h"
 
-#define CGLTF_IMPLEMENTATION
-#include <cgltf.h>
+//#define CGLTF_IMPLEMENTATION
+//#include <cgltf.h>
 
 namespace eng
 {
@@ -219,6 +219,8 @@ namespace eng
 		return result;
 	}
 
+	// deprecated for now
+#if 0
 	shared<Mesh> Mesh::Load(const std::string& path)
 	{
 		auto contents = Engine::GetInstance().GetFileSystem().LoadAssetFileText(path);
@@ -378,4 +380,5 @@ namespace eng
 
 		return result;
 	}
+#endif
 }

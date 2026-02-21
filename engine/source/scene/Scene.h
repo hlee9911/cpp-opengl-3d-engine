@@ -33,6 +33,7 @@ namespace eng
 		{
 			auto gameObject = new T();
 			gameObject->SetName(name);
+			gameObject->m_Scene = this;
 			SetParent(gameObject, parent);
 			return gameObject;
 		}

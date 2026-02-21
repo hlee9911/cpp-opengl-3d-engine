@@ -26,7 +26,7 @@ namespace eng
 		void Draw();
 
 		static shared<Mesh> CreateCube();
-		static shared<Mesh> Load(const std::string& path);
+		// static shared<Mesh> Load(const std::string& path);
 
 	private:
 		VertexLayout m_VertexLayout;
