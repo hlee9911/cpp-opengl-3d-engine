@@ -27,7 +27,17 @@ namespace eng
 		glGenTextures(1, &m_TextureID); // create texture
 		glBindTexture(GL_TEXTURE_2D, m_TextureID); // actviate the texture
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Width, m_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		GLint internalFormat = GL_RGB;
+		GLenum format = GL_RGB;
+
+		if (numChannels == 4)
+		{
+			internalFormat = GL_RGBA;
+			format = GL_RGBA;
+		}
+
+		// specify the texture data, and its format
+		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_Width, m_Height, 0, format, GL_UNSIGNED_BYTE, data);
 
 		glGenerateMipmap(GL_TEXTURE_2D); // mipmaps are smaller version of the same texture down to 1 x 1
 
@@ -63,5 +73,22 @@ namespace eng
 		}
 
 		return result;
+	}
+
+	///////////////////// TextureManager Implementation /////////////////////
+
+	/// <summary>
+	/// Ensures that a texture is loaded only once. If the texture at the given path has already been loaded, it returns the cached version.
+	/// </summary>
+	/// <param name="path"></param>
+	/// <returns></returns>
+	shared<Texture> TextureManager::GetOrLoadTexture(const std::string& path)
+	{
+		auto it = m_Textures.find(path);
+		if (it != m_Textures.end()) return it->second; // if texture already loaded, return it
+
+		auto texture = Texture::Load(path);
+		m_Textures[path] = texture; // cache the loaded texture
+		return texture;
 	}
 }

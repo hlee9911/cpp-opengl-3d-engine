@@ -25,6 +25,15 @@ namespace eng
 		int m_NumChannels = 0;
 		GLuint m_TextureID = 0;
 	};
+
+	class TextureManager
+	{
+	public:
+		shared<Texture> GetOrLoadTexture(const std::string& path);
+
+	private:
+		Dictionary<std::string, shared<Texture>> m_Textures;
+	};
 }
 
 #endif // TEXTURE_H

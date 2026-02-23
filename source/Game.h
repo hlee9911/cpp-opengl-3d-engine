@@ -58,3 +58,8 @@ private:
 // Lighting
 // lightDir = normalize(lightPos - fragPos);
 // float diffuseFactor = dot(normal, lightDir);
+
+// Specular lighting
+// Specular gives shiny reflections at certain angles, 
+// it depends on the view direction as well as the light direction
+

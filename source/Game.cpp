@@ -155,8 +155,13 @@ bool Game::Init()
 	// auto suzanneObj = m_Scene->CreateGameObject("Suzanne");
 	// suzanneObj->AddComponenet(new eng::MeshComponent(suzanneMaterial, suzanneMesh));
 
-	auto suzanneObj = eng::GameObject::LoadGLTF("models/Suzanne.gltf");
+	auto suzanneObj = eng::GameObject::LoadGLTF("models/suzanne/Suzanne.gltf");
 	suzanneObj->SetPosition(glm::vec3(0.0f, 0.0f, -5.0f));
+
+	auto gun = eng::GameObject::LoadGLTF("models/sten_gunmachine_carbine/scene.gltf");
+	gun->SetParent(camera);
+	gun->SetPosition(glm::vec3(0.75f, -0.5f, -0.75f));
+	gun->SetScale(glm::vec3(-1.0f, 1.0f, 1.0f)); // scaling by -1 on the x axis to flip the model, since it's facing the wrong way
 
 	auto light = m_Scene->CreateGameObject("Light");
 	auto lightComp = new eng::LightComponent();

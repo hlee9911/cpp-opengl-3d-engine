@@ -4,6 +4,7 @@
 
 #include "input/InputManager.h"
 #include "graphics/GraphicsAPI.h"
+#include "graphics/Texture.h"
 #include "render/RenderQueue.h"
 #include "scene/Scene.h"
 #include "io/FileSystem.h"
@@ -43,6 +44,7 @@ namespace eng
 		GraphicsAPI& GetGraphicsAPI() noexcept;
 		RenderQueue& GetRenderQueue() noexcept;
 		FileSystem& GetFileSystem() noexcept;
+		TextureManager& GetTextureManager() noexcept;
 
 		void SetScene(Scene* scene) noexcept { m_CurrentScene.reset(scene); }
 		Scene* GetScene() const noexcept { return m_CurrentScene.get(); }
@@ -55,6 +57,7 @@ namespace eng
 		GraphicsAPI m_GraphicsAPI;
 		RenderQueue m_RenderQueue;
 		FileSystem m_FileSystem;
+		TextureManager m_TextureManager;
 		unique<Scene> m_CurrentScene;
 	};
 }
