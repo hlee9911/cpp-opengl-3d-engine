@@ -35,6 +35,9 @@ namespace eng
 
 		void MarkForDestroy();
 
+		void SetActive(bool active) noexcept { m_Active = active; }
+		bool IsActive() const noexcept { return m_Active; }
+
 		void AddComponenet(Component* component);
 		template<typename T, typename = typename std::enable_if_t<std::is_base_of_v<Component, T>>>
 		T* GetComponent()
@@ -52,6 +55,8 @@ namespace eng
 			return nullptr;
 		}
 
+		GameObject* FindChildByName(const std::string& name);
+		
 		const glm::vec3& GetPosition() const noexcept;
 		glm::vec3 GetWorldPosition() const;
 		void SetPosition(const glm::vec3& pos) noexcept;
@@ -80,6 +85,7 @@ namespace eng
 		glm::vec3 m_Position = glm::vec3(0.0f);
 		glm::quat m_Rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 		glm::vec3 m_Scale = glm::vec3(1.0f);
+		bool m_Active = true;
 
 		friend class Scene;
 	};

@@ -1,5 +1,6 @@
 #include "scene/GameObject.h"
 #include "scene/components/MeshComponent.h"
+#include "scene/components/AnimationComponent.h"
 #include "graphics/VertexLayout.h"
 #include "graphics/Texture.h"
 #include "render/Material.h"
@@ -20,6 +21,8 @@ namespace eng
 {
 	void GameObject::Update(float deltaTime)
 	{
+		if (!m_Active) return;
+
 		for (auto& component : m_Components)
 		{
 			component->Update(deltaTime);
@@ -76,6 +79,22 @@ namespace eng
 		component->m_Owner = this;
 	}
 
+	GameObject* GameObject::FindChildByName(const std::string& name)
+	{
+		if (m_Name == name) return this;
+
+		// recursively search in children
+		for (auto& child : m_Children)
+		{
+			if (auto res = child->FindChildByName(name))
+			{
+				return res;
+			}
+		}
+
+		return nullptr;
+	}
+
 	const glm::vec3& GameObject::GetPosition() const noexcept
 	{
 		return m_Position;
@@ -121,9 +140,6 @@ namespace eng
 		mat = glm::translate(mat, m_Position);
 
 		// Rotation
-		//mat = glm::rotate(mat, m_Rotation.x, glm::vec3(1.0f, 0.0f, 0.0f)); // X-axis
-		//mat = glm::rotate(mat, m_Rotation.y, glm::vec3(0.0f, 1.0f, 0.0f)); // Y-axis
-		//mat = glm::rotate(mat, m_Rotation.z, glm::vec3(0.0f, 0.0f, 1.0f)); // Z-axis
 		// Use single entity called quaternion instead of three different angles
 		mat = mat * glm::mat4_cast(m_Rotation);
 
@@ -374,6 +390,54 @@ namespace eng
 		}
 	}
 
+	auto ReadScalar = [](cgltf_accessor* acc, cgltf_size index)
+	{
+		float res = 0.0f;
+		cgltf_accessor_read_float(acc, index, &res, 1);
+		return  res;
+	};
+
+	auto ReadVec3 = [](cgltf_accessor* acc, cgltf_size index)
+	{
+		glm::vec3 res;
+		cgltf_accessor_read_float(acc, index, glm::value_ptr(res), 3);
+		return res;
+	};
+
+	auto ReadQuat = [](cgltf_accessor* acc, cgltf_size index)
+	{
+		float res[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+		cgltf_accessor_read_float(acc, index, res, 4);
+		return glm::quat(res[3], res[0], res[1], res[2]);
+	};
+
+	auto ReadTimes = [](cgltf_accessor* acc, List<float>& outTimes)
+	{
+		outTimes.resize(acc->count);
+		for (cgltf_size i = 0; i < acc->count; ++i)
+		{
+			outTimes[i] = ReadScalar(acc, i);
+		}
+	};
+
+	auto ReadOutputVec3 = [](cgltf_accessor* acc, List<glm::vec3>& outValues)
+	{
+		outValues.resize(acc->count);
+		for (cgltf_size i = 0; i < acc->count; ++i)
+		{
+			outValues[i] = ReadVec3(acc, i);
+		}
+	};
+
+	auto ReadOutputQuat = [](cgltf_accessor* acc, List<glm::quat>& outValues)
+	{
+		outValues.resize(acc->count);
+		for (cgltf_size i = 0; i < acc->count; ++i)
+		{
+			outValues[i] = ReadQuat(acc, i);
+		}
+	};
+
 	/// <summary>
 	/// Load entire glTF scene from the specified file and create a GameObject hierarchy representing it.
 	/// </summary>
@@ -414,6 +478,112 @@ namespace eng
 		{
 			auto node = scene->nodes[i];
 			ParseGLTFNode(node, resultObject, relativeFolderPath);
+		}
+
+		List<shared<AnimationClip>> clips;
+		for (cgltf_size ai = 0; ai < data->animations_count; ++ai)
+		{
+			auto& anim = data->animations[ai];
+
+			auto clip = std::make_shared<AnimationClip>();
+			clip->name = anim.name ? anim.name : "noname";
+			clip->duration = 0.0f;
+
+			Dictionary<cgltf_node*, size_t> trackIndexOf;
+
+			auto GetOrCreateTrack = [&](cgltf_node* node) -> TransformTrack&
+				{
+					// find track for this node, if it doesn't exist, create a new one
+					auto it = trackIndexOf.find(node);
+					if (it != trackIndexOf.end())
+					{
+						return clip->tracks[it->second];
+					}
+
+					// if not found, create a new track for this node
+					TransformTrack track;
+					track.targetName = node->name;
+					clip->tracks.push_back(track);
+					size_t idx = clip->tracks.size() - 1;
+					trackIndexOf[node] = idx;
+					return clip->tracks[idx];
+				};
+
+			// iterate through channels to read keyframe data
+			for (cgltf_size ci = 0; ci < anim.channels_count; ++ci)
+			{
+				auto& channel = anim.channels[ci];
+				auto sampler = channel.sampler;
+
+				if (!channel.target_node || !sampler || !sampler->input || !sampler->output) continue;
+
+				List<float> times;
+				ReadTimes(sampler->input, times);
+
+				auto& track = GetOrCreateTrack(channel.target_node);
+
+				// manages three different animations types: translation, rotation, and scale
+				switch (channel.target_path)
+				{
+					case cgltf_animation_path_type_translation:
+					{
+						List<glm::vec3> values;
+						ReadOutputVec3(sampler->output, values);
+						track.positions.resize(times.size());
+						// times and values should have the same count, but we check times.size() just in case
+						for (size_t i = 0; i < times.size(); ++i)
+						{
+							track.positions[i].time = times[i];
+							track.positions[i].value = values[i];
+						}
+					}
+						break;
+					case cgltf_animation_path_type_rotation:
+					{
+						List<glm::quat> values;
+						ReadOutputQuat(sampler->output, values);
+						track.rotations.resize(times.size());
+						// times and values should have the same count, but we check times.size() just in case
+						for (size_t i = 0; i < times.size(); ++i)
+						{
+							track.rotations[i].time = times[i];
+							track.rotations[i].value = values[i];
+						}
+					}
+						break;
+					case cgltf_animation_path_type_scale:
+					{
+						List<glm::vec3> values;
+						ReadOutputVec3(sampler->output, values);
+						track.scales.resize(times.size());
+						// times and values should have the same count, but we check times.size() just in case
+						for (size_t i = 0; i < times.size(); ++i)
+						{
+							track.scales[i].time = times[i];
+							track.scales[i].value = values[i];
+						}
+					}
+						break;
+					default:
+						break;
+				}
+
+				// update clip duration based on the last keyframe time
+				clip->duration = std::max(clip->duration, times.back());
+			}
+
+			clips.push_back(std::move(clip));
+		}
+
+		// if we have any animation clips, create an AnimationComponent and register the clips
+		if (!clips.empty())
+		{
+			auto animComponent = new AnimationComponent();
+			resultObject->AddComponenet(animComponent);
+			for (auto& clip : clips)
+			{
+				animComponent->RegisterClip(clip->name, clip);
+			}
 		}
 
 		cgltf_free(data);
