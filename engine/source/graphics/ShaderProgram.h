@@ -1,6 +1,4 @@
 #pragma once
-#ifndef SHADERPROGRAM_H
-#define SHADERPROGRAM_H
 
 #include <GL/glew.h>
 #include <glm/mat4x4.hpp>
@@ -40,5 +38,3 @@ namespace eng
 		int m_CurrentTextureUnit = 0;
 	};
 }
-
-#endif // SHADERPROGRAM_H

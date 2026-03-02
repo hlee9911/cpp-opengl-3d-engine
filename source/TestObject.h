@@ -1,6 +1,4 @@
 #pragma once
-#ifndef TESTOBJECT_H
-#define TESTOBJECT_H
 
 #include <eng.h>
 
@@ -14,5 +12,3 @@ public:
 private:
 	
 };
-
-#endif // TESTOBJECT_H

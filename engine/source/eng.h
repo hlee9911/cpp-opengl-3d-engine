@@ -1,6 +1,4 @@
 #pragma once
-#ifndef ENG_H
-#define ENG_H
 
 #include "Application.h"
 #include "Engine.h"
@@ -23,5 +21,3 @@
 #include "scene/components/LightComponent.h"
 #include "scene/components/AnimationComponent.h"
 #include "source/io/FileSystem.h"
-
-#endif // ENG_H

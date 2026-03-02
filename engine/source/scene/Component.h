@@ -1,6 +1,4 @@
 #pragma once
-#ifndef COMPONENT_H
-#define COMPONENT_H
 
 namespace eng
 {
@@ -38,5 +36,3 @@ public: \
 	static size_t TypeId() { return Component::StaticTypeId<ComponentClass>(); } \
 	size_t GetTypeId() const override { return TypeId(); }
 }
-
-#endif // COMPONENT_H

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef COMMON_H
-#define COMMON_H
 
 #include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
@@ -20,5 +18,3 @@ namespace eng
 		glm::vec3 position;
 	};
 }
-
-#endif // COMMON_H

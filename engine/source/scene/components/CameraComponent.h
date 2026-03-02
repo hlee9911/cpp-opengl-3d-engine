@@ -1,6 +1,4 @@
 #pragma once
-#ifndef CAMERACOMPONENT_H
-#define CAMERACOMPONENT_H
 
 #include "scene/Component.h"
 
@@ -24,5 +22,3 @@ namespace eng
 		float m_FarPlane = 1000.0f;
 	};
 }
-
-#endif // CAMERACOMPONENT_H

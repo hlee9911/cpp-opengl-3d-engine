@@ -1,6 +1,4 @@
 #pragma once
-#ifndef TEXTURE_H
-#define TEXTURE_H
 
 #include <GL/glew.h>
 #include <string>
@@ -35,5 +33,3 @@ namespace eng
 		Dictionary<std::string, shared<Texture>> m_Textures;
 	};
 }
-
-#endif // TEXTURE_H

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef GAME_H
-#define GAME_H
 
 #include <eng.h>
 
@@ -23,8 +21,6 @@ private:
 
 	eng::Scene* m_Scene = nullptr;
 };
-
-#endif // GAME_H
 
 // In summary
 // Shader Program defines how pixels are rendered using shaders.

@@ -1,6 +1,4 @@
 #pragma once
-#ifndef MATERIAL_H
-#define MATERIAL_H
 
 #include <memory>
 #include <unordered_map>
@@ -33,5 +31,3 @@ namespace eng
 		Dictionary<std::string, shared<Texture>> m_Textures;
 	};
 }
-
-#endif // MATERIAL_H

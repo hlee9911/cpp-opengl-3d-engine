@@ -1,6 +1,4 @@
 #pragma once
-#ifndef GRAPHICSAPI_H
-#define GRAPHICSAPI_H
 
 #include <GL/glew.h>
 
@@ -41,5 +39,3 @@ namespace eng
 		shared<ShaderProgram> m_DefaultShaderProgram;
 	};
 }
-
-#endif // GRAPHICSAPI_H

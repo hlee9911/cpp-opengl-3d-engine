@@ -1,6 +1,4 @@
 #pragma once
-#ifndef VERTEXLAYOUT_H
-#define VERTEXLAYOUT_H
 
 #include <GL/glew.h>
 
@@ -30,5 +28,3 @@ namespace eng
 		uint32_t stride = 0; // Total size of the single vertex in bytes
 	};
 }
-
-#endif //VERTEXLAYOUT_H

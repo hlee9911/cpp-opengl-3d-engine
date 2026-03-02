@@ -1,6 +1,4 @@
 #pragma once
-#ifndef GAMEOBJECT_H
-#define GAMEOBJECT_H
 
 #include "scene/Component.h"
 #include "Core.h"
@@ -90,5 +88,3 @@ namespace eng
 		friend class Scene;
 	};
 }
-
-#endif // GAMEOBJECT_H

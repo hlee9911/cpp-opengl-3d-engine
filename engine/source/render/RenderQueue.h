@@ -1,6 +1,4 @@
 #pragma once
-#ifndef RENDERQUEUE_H
-#define RENDERQUEUE_H
 
 #include <glm/mat4x4.hpp>
 
@@ -32,5 +30,3 @@ namespace eng
 		List<RenderCommand> m_Commands;
 	};
 }
-
-#endif // RENDERQUEUE_H

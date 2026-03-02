@@ -1,6 +1,4 @@
 #pragma once
-#ifndef APPLICATION_H
-#define APPLICATION_H
 
 namespace eng
 {
@@ -19,5 +17,3 @@ namespace eng
 		bool m_NeedsToBeClosed = false;
 	};
 }
-
-#endif // APPLICATION_H

@@ -1,6 +1,4 @@
 #pragma once;
-#ifndef ENGINE_H
-#define ENGINE_H
 
 #include "input/InputManager.h"
 #include "graphics/GraphicsAPI.h"
@@ -61,5 +59,3 @@ namespace eng
 		unique<Scene> m_CurrentScene;
 	};
 }
-
-#endif // ENGINE_H

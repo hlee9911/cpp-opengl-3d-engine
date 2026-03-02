@@ -1,6 +1,4 @@
 #pragma once
-#ifndef MESHCOMPONENT_H
-#define MESHCOMPONENT_H
 
 #include "Core.h"
 #include "scene/Component.h"
@@ -23,5 +21,3 @@ namespace eng
 		shared<Mesh> m_Mesh;
 	};
 }
-
-#endif //MESHCOMPONENT_H

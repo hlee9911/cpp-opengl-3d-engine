@@ -1,6 +1,4 @@
 #pragma once
-#ifndef FILESYSTEM_H
-#define FILESYSTEM_H
 
 #include <filesystem>
 
@@ -17,5 +15,3 @@ namespace eng
 		std::string LoadAssetFileText(const std::string& relativePath);
 	};
 }
-
-#endif // FILESYSTEM_H

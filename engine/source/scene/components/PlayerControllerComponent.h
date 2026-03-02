@@ -1,6 +1,4 @@
 #pragma once
-#ifndef PLAYERCONTROLLERCOMPONENT_H
-#define PLAYERCONTROLLERCOMPONENT_H
 
 #include "scene/Component.h"
 
@@ -18,5 +16,3 @@ namespace eng
 		float m_MoveSpeed = 3.0f;
 	};
 }
-
-#endif // PLAYERCONTROLLERCOMPONENT_H

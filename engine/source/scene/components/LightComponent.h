@@ -1,6 +1,4 @@
 #pragma once
-#ifndef LIGHTCOMPONENT_H
-#define LIGHTCOMPONENT_H
 
 #include "Core.h"
 #include "scene/Component.h"
@@ -23,5 +21,3 @@ namespace eng
 		glm::vec3 m_Color = glm::vec3(1.0f);
 	};
 }
-
-#endif // LIGHTCOMPONENT_H

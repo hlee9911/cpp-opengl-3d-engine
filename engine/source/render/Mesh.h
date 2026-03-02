@@ -1,6 +1,4 @@
 #pragma once
-#ifndef MESH_H
-#define MESH_H
 
 #include <GL/glew.h>
 #include <string>
@@ -38,5 +36,3 @@ namespace eng
 		size_t m_IndexCount = 0;
 	};
 }
-
-#endif // MESH_H

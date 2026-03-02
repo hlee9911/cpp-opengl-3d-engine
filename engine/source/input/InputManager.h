@@ -1,6 +1,4 @@
 #pragma once;
-#ifndef INPUTMANAGER_H
-#define INPUTMANAGER_H
 
 #include <glm/vec2.hpp>
 
@@ -39,5 +37,3 @@ namespace eng
 		friend class Engine;
 	};
 }
-
-#endif // INPUTMANAGER_H

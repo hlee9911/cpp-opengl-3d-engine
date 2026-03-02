@@ -1,6 +1,4 @@
 #pragma once
-#ifndef SCENE_H
-#define SCENE_H
 
 #include <vector>
 #include <string>
@@ -53,5 +51,3 @@ namespace eng
 		GameObject* m_MainCamera = nullptr;
 	};
 }
-
-#endif // SCENE_H
