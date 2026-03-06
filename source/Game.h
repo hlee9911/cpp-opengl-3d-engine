@@ -59,3 +59,11 @@ private:
 // Specular gives shiny reflections at certain angles, 
 // it depends on the view direction as well as the light direction
 
+// RigidBody
+// RigidBody represents an object in the physics world
+// It combines shape, mass, and friction properties to simulate realistic movement and interactions
+// It also manages the object's transform and motion state
+// Rigidbody comes in three types: 
+// Static (immovable = environments), 
+// Dynamic (fully simulated = simulated objects), 
+// Kinematic (moved by code, but can affect dynamic objects e.g. moving platforms, elevators, player character capsule = scripted motion)	

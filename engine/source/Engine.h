@@ -6,6 +6,7 @@
 #include "render/RenderQueue.h"
 #include "scene/Scene.h"
 #include "io/FileSystem.h"
+#include "physics/PhysicsManager.h"
 #include "Core.h"
 
 #include <memory>
@@ -43,6 +44,7 @@ namespace eng
 		RenderQueue& GetRenderQueue() noexcept;
 		FileSystem& GetFileSystem() noexcept;
 		TextureManager& GetTextureManager() noexcept;
+		PhysicsManager& GetPhysicsManager() noexcept;
 
 		void SetScene(Scene* scene) noexcept { m_CurrentScene.reset(scene); }
 		Scene* GetScene() const noexcept { return m_CurrentScene.get(); }
@@ -56,6 +58,7 @@ namespace eng
 		RenderQueue m_RenderQueue;
 		FileSystem m_FileSystem;
 		TextureManager m_TextureManager;
+		PhysicsManager m_PhysicsManager;
 		unique<Scene> m_CurrentScene;
 	};
 }

@@ -75,8 +75,11 @@ namespace eng
 
 	void GameObject::AddComponenet(Component* component)
 	{
+		if (!component) return;
+
 		m_Components.emplace_back(component);
 		component->m_Owner = this;
+		component->Init();
 	}
 
 	GameObject* GameObject::FindChildByName(const std::string& name)

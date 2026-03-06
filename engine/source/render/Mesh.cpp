@@ -105,47 +105,48 @@ namespace eng
 		}
 	}
 
-	shared<Mesh> Mesh::CreateCube()
+	shared<Mesh> Mesh::CreateBox(const glm::vec3& extents)
 	{
+		const glm::vec3 half = extents * 0.5f;
 		std::vector<float> verticies =
 		{
 
 			// Front face
 			// positions        // colors		    // uvs		// normals
-			0.5f,  0.5f, 0.5f,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-			-0.5f, 0.5f, 0.5f,  0.0f, 1.0f, 0.0f,  0.0f, 1.0f,	0.0f, 0.0f, 1.0f,
-			-0.5f, -0.5f, 0.5f,  0.0f, 0.0f, 1.0f, 0.0f, 0.0f,	0.0f, 0.0f, 1.0f,
-			0.5f, -0.5f, 0.5f,  1.0f, 1.0f, 0.0f,  1.0f, 0.0f,	0.0f, 0.0f, 1.0f,
+			half.x,  half.y, half.z,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
+			-half.x, half.y, half.z,  0.0f, 1.0f, 0.0f,  0.0f, 1.0f,	0.0f, 0.0f, 1.0f,
+			-half.x, -half.y, half.z,  0.0f, 0.0f, 1.0f, 0.0f, 0.0f,	0.0f, 0.0f, 1.0f,
+			half.x, -half.y, half.z,  1.0f, 1.0f, 0.0f,  1.0f, 0.0f,	0.0f, 0.0f, 1.0f,
 
 			// Top face
-			0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
-			-0.5f, 0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  0.0f, 1.0f,  0.0f, 1.0f, 0.0f,
-			-0.5f, 0.5f, 0.5f,  0.0f, 0.0f, 1.0f,   0.0f, 0.0f,  0.0f, 1.0f, 0.0f,
-			 0.5f, 0.5f, 0.5f,  1.0f, 1.0f, 0.0f,   1.0f, 0.0f,  0.0f, 1.0f, 0.0f,
+			half.x,  half.y, -half.z,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
+			-half.x, half.y, -half.z,  0.0f, 1.0f, 0.0f,  0.0f, 1.0f,  0.0f, 1.0f, 0.0f,
+			-half.x, half.y, half.z,  0.0f, 0.0f, 1.0f,   0.0f, 0.0f,  0.0f, 1.0f, 0.0f,
+			half.x, half.y, half.z,  1.0f, 1.0f, 0.0f,   1.0f, 0.0f,  0.0f, 1.0f, 0.0f,
 
 			 // Right face
-			 0.5f,  0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
-			 0.5f, 0.5f, 0.5f,  0.0f, 1.0f, 0.0f,    0.0f, 1.0f,  1.0f, 0.0f, 0.0f,
-			 0.5f, -0.5f, 0.5f,  0.0f, 0.0f, 1.0f,   0.0f, 0.0f,  1.0f, 0.0f, 0.0f,
-			 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  1.0f, 0.0f,  1.0f, 0.0f, 0.0f,
+			 half.x,  half.y, -half.z,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
+			 half.x, half.y, half.z,  0.0f, 1.0f, 0.0f,    0.0f, 1.0f,  1.0f, 0.0f, 0.0f,
+			 half.x, -half.y, half.z,  0.0f, 0.0f, 1.0f,   0.0f, 0.0f,  1.0f, 0.0f, 0.0f,
+			 half.x, -half.y, -half.z,  1.0f, 1.0f, 0.0f,  1.0f, 0.0f,  1.0f, 0.0f, 0.0f,
 
 			 // Left face
-			 -0.5f, 0.5f, 0.5f,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f,  -1.0f, 0.0f, 0.0f,
-			 -0.5f, 0.5f, -0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f,  -1.0f, 0.0f, 0.0f,
-			 -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,  -1.0f, 0.0f, 0.0f,
-			 -0.5f, -0.5f, 0.5f,  1.0f, 1.0f, 0.0f, 1.0f, 0.0f,  -1.0f, 0.0f, 0.0f,
+			 -half.x, half.y, half.z,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f,  -1.0f, 0.0f, 0.0f,
+			 -half.x, half.y, -half.z,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f,  -1.0f, 0.0f, 0.0f,
+			 -half.x, -half.y, -half.z, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,  -1.0f, 0.0f, 0.0f,
+			 -half.x, -half.y, half.z,  1.0f, 1.0f, 0.0f, 1.0f, 0.0f,  -1.0f, 0.0f, 0.0f,
 
 			 // Bottom face
-			 0.5f, -0.5f, 0.5f,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f,  0.0f, -1.0f, 0.0f,
-			 -0.5f, -0.5f, 0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f,  0.0f, -1.0f, 0.0f,
-			 -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,  0.0f, -1.0f, 0.0f,
-			 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 1.0f, 0.0f,  0.0f, -1.0f, 0.0f,
+			 half.x, -half.y, half.z,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f,  0.0f, -1.0f, 0.0f,
+			 -half.x, -half.y, half.z,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f,  0.0f, -1.0f, 0.0f,
+			 -half.x, -half.y, -half.z, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,  0.0f, -1.0f, 0.0f,
+			 half.x, -half.y, -half.z,  1.0f, 1.0f, 0.0f, 1.0f, 0.0f,  0.0f, -1.0f, 0.0f,
 
 			 // Back face
-			 -0.5f, 0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f,  0.0f, 0.0f, -1.0f,
-			 0.5f, 0.5f, -0.5f,  0.0f, 1.0f, 0.0f,   0.0f, 1.0f,  0.0f, 0.0f, -1.0f,
-			 0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 1.0f,   0.0f, 0.0f,  0.0f, 0.0f, -1.0f,
-			 -0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.0f, 1.0f, 0.0f,  0.0f, 0.0f, -1.0f,
+			 -half.x, half.y, -half.z,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f,  0.0f, 0.0f, -1.0f,
+			 half.x, half.y, -half.z,  0.0f, 1.0f, 0.0f,   0.0f, 1.0f,  0.0f, 0.0f, -1.0f,
+			 half.x, -half.y, -half.z, 0.0f, 0.0f, 1.0f,   0.0f, 0.0f,  0.0f, 0.0f, -1.0f,
+			 -half.x, -half.y, -half.z,  1.0f, 1.0f, 0.0f, 1.0f, 0.0f,  0.0f, 0.0f, -1.0f,
 		};
 
 		std::vector<unsigned int> indicies =

@@ -2,6 +2,7 @@
 
 #include <GL/glew.h>
 #include <string>
+#include <glm/vec3.hpp>
 
 #include "graphics/VertexLayout.h"
 #include "Core.h"
@@ -23,7 +24,7 @@ namespace eng
 		void Bind();
 		void Draw();
 
-		static shared<Mesh> CreateCube();
+		static shared<Mesh> CreateBox(const glm::vec3& extents = glm::vec3(1.0f));
 		// static shared<Mesh> Load(const std::string& path);
 
 	private:

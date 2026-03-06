@@ -132,7 +132,7 @@ bool Game::Init()
 	//	indicies
 	//);
 	
-	auto mesh = eng::Mesh::CreateCube();
+	auto mesh = eng::Mesh::CreateBox();
 
 	//auto objectA = m_Scene->CreateGameObject("ObjectA");
 	//objectA->AddComponenet(new eng::MeshComponent(material, mesh));
@@ -183,6 +183,39 @@ bool Game::Init()
 	lightComp->SetColor(glm::vec3(1.0f));
 	light->AddComponenet(lightComp);
 	light->SetPosition(glm::vec3(0.0f, 5.0f, 0.0f));
+	
+	// Create a ground plane
+	auto ground = m_Scene->CreateGameObject("Ground");
+	ground->SetPosition(glm::vec3(0.0f, -5.0f, 0.0f));
+
+	glm::vec3 groundExtents(20.0f, 2.0f, 20.0f);
+	auto groundMesh = eng::Mesh::CreateBox(groundExtents);
+	ground->AddComponenet(new eng::MeshComponent(material, groundMesh));
+
+	auto groundCollider = std::make_shared<eng::BoxCollider>(groundExtents);
+	auto groundBody = std::make_shared<eng::RigidBody>(
+		eng::BodyType::Static, 
+		groundCollider,
+		0.0f, // mass
+		0.5f  // friction
+	);
+	ground->AddComponenet(new eng::PhysicsComponent(groundBody));
+
+	// Create a dynamic cube
+	auto boxObj = m_Scene->CreateGameObject("FallingBox");
+	boxObj->AddComponenet(new eng::MeshComponent(material, mesh));
+	boxObj->SetPosition(glm::vec3(0.0f, 2.0f, 2.0f));
+	boxObj->SetRotation(glm::quat(glm::vec3(1.0f, 2.0f, 0.0f)));
+	auto boxCollider = std::make_shared<eng::BoxCollider>(glm::vec3(1.0f));
+	auto boxBody = std::make_shared<eng::RigidBody>(
+		eng::BodyType::Dynamic,
+		boxCollider,
+		5.0f, // mass
+		0.5f  // friction
+	);
+	boxObj->AddComponenet(new eng::PhysicsComponent(boxBody));
+	
+	camera->SetPosition(glm::vec3(0.0f, 1.0f, 7.0f));
 
 	return true;
 }
