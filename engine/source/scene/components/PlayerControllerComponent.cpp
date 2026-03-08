@@ -8,12 +8,18 @@
 
 namespace eng
 {
+	void PlayerControllerComponent::Init()
+	{
+		m_KinematicController = std::make_unique<KinematicCharacterController>(0.4f, 1.2f);
+	}
+
 	void PlayerControllerComponent::Update(float deltaTime)
 	{
 		auto& inputManager = Engine::GetInstance().GetInputManager();
 		auto rotation = m_Owner->GetRotation(); // Yaw uses y-axis and Pitch uses the x-axis
 
-		if (inputManager.IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
+		// if (inputManager.IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
+		if (inputManager.IsMousePositionChanged())
 		{
 			const auto& oldPos = inputManager.GetMousePositionOld();
 			const auto& currentPos = inputManager.GetMousePositionCurrent();
@@ -22,18 +28,22 @@ namespace eng
 			float deltaY = currentPos.y - oldPos.y;
 
 			// rotation around Y axis, when moving deltaX, rotate left and right
-			float yAngle = -deltaX * m_Sensitivity * deltaTime;
-			glm::quat yRot = glm::angleAxis(yAngle, glm::vec3(0.0f, 1.0f, 0.0f));
+			float yDeltaAngle = -deltaX * m_Sensitivity * deltaTime;
+			m_yRot += yDeltaAngle;
+			glm::quat yRot = glm::angleAxis(glm::radians(m_yRot), glm::vec3(0.0f, 1.0f, 0.0f));
 			// rotation.y -= deltaX * m_Sensitivity * deltaTime;
 
 			// rotation around X axis
-			float xAngle = -deltaY * m_Sensitivity * deltaTime;
-			glm::vec3 right = rotation * glm::vec3(1.0f, 0.0f, 0.0f); // gives the camera's current local right direction
-			glm::quat xRot = glm::angleAxis(xAngle, right);
+			float xDeltaAngle = -deltaY * m_Sensitivity * deltaTime;
+			m_xRot += xDeltaAngle;
+			m_xRot = std::clamp(m_xRot, -89.0f, 89.0f); // clamp the pitch to prevent flipping
+			glm::quat xRot = glm::angleAxis(glm::radians(m_xRot), glm::vec3(1.0f, 0.0f, 0.0f));
+			// glm::vec3 right = rotation * glm::vec3(1.0f, 0.0f, 0.0f); // gives the camera's current local right direction
 			// rotation.x -= deltaY * m_Sensitivity * deltaTime;
 
-			glm::quat deltaRot = yRot * xRot;
-			rotation = glm::normalize(deltaRot * rotation); // with quaternion, most transform are just quaternion multiplications
+			// glm::quat deltaRot = yRot * xRot;
+			// rotation = glm::normalize(deltaRot * rotation); // with quaternion, most transform are just quaternion multiplications
+			rotation = glm::normalize(yRot * xRot); // with quaternion, most transform are just quaternion multiplications
 
 			m_Owner->SetRotation(rotation);
 		}
@@ -47,27 +57,49 @@ namespace eng
 		glm::vec3 front = rotation * glm::vec3(0.0f, 0.0f, -1.0f);
 		glm::vec3 right = rotation * glm::vec3(1.0f, 0.0f, 0.0f);
 	
-		auto position = m_Owner->GetPosition();
+		// auto position = m_Owner->GetPosition();
+
+		glm::vec3 movement(0.0f);
 
 		// Right/Left movement
 		if (inputManager.IsKeyPressed(GLFW_KEY_A))
 		{
-			position -= right * m_MoveSpeed * deltaTime;
+			// position -= right * m_MoveSpeed * deltaTime;
+			movement -= right;
 		}
 		else if (inputManager.IsKeyPressed(GLFW_KEY_D))
 		{
-			position += right * m_MoveSpeed * deltaTime;
+			// position += right * m_MoveSpeed * deltaTime;
+			movement += right;
 		}
 
 		// Forward/Backward movement
 		if (inputManager.IsKeyPressed(GLFW_KEY_W))
 		{
-			position += front * m_MoveSpeed * deltaTime;
+			// position += front * m_MoveSpeed * deltaTime;
+			movement += front;
 		}
 		else if (inputManager.IsKeyPressed(GLFW_KEY_S))
 		{
-			position -= front * m_MoveSpeed * deltaTime;
+			// position -= front * m_MoveSpeed * deltaTime;
+			movement -= front;
 		}
-		m_Owner->SetPosition(position);
+		// m_Owner->SetPosition(position);
+
+		if (inputManager.IsKeyPressed(GLFW_KEY_SPACE))
+		{
+			m_KinematicController->Jump(glm::vec3(0.0f, 5.0f, 0.0f));
+		}
+		
+		// normalize the movement vector to prevent faster diagonal movement
+		if (glm::dot(movement, movement) > 0)
+		{
+			movement = glm::normalize(movement);
+		}
+		m_KinematicController->Walk(movement * m_MoveSpeed * deltaTime);
+
+		// sync the scene objects position and rotation with the kinematic controller
+		m_Owner->SetPosition(m_KinematicController->GetPosition());
+
 	}
 }

@@ -61,6 +61,8 @@ set(PROJECT_SOURCE_FILES
 	source/physics/Collider.cpp
 	source/physics/RigidBody.h
 	source/physics/RigidBody.cpp
+	source/physics/KinematicCharacterController.h
+	source/physics/KinematicCharacterController.cpp
 )
 
 # Group files according to files organization

@@ -25,3 +25,4 @@
 #include "source/physics/PhysicsManager.h"
 #include "source/physics/Collider.h"
 #include "source/physics/RigidBody.h"
+#include "source/physics/KinematicCharacterController.h"

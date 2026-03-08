@@ -57,6 +57,8 @@ namespace eng
 		void RegisterClip(const std::string& name, const shared<AnimationClip>& clip);
 		void Play(const std::string& name, bool looping = true);
 
+		bool IsPlaying() const noexcept { return m_IsPlaying; }
+
 	private:
 		void BuildBindings();
 

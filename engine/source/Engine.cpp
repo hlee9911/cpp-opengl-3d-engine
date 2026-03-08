@@ -71,6 +71,8 @@ namespace eng
 
 		glm::vec2 currentPos(static_cast<float>(xpos), static_cast<float>(ypos));
 		inputManager.SetMousePositionCurrent(currentPos);
+
+		inputManager.SetMousePositionChanged(true);
 	}
 
 	Engine& Engine::GetInstance()
@@ -110,6 +112,7 @@ namespace eng
 		glfwSetKeyCallback(m_Window, keyCallback);
 		glfwSetMouseButtonCallback(m_Window, mouseButtonCallback);
 		glfwSetCursorPosCallback(m_Window, cursorPositionCallback);
+		glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // hide the cursor and capture it within the window
 
 		glfwMakeContextCurrent(m_Window);
 
@@ -183,7 +186,8 @@ namespace eng
 			glfwSwapBuffers(m_Window);
 
 			// before we move onto the nextframe, we set the current mouse position to the old one
-			m_InputManager.SetMousePositionOld(m_InputManager.GetMousePositionCurrent());
+			// m_InputManager.SetMousePositionOld(m_InputManager.GetMousePositionCurrent());
+			m_InputManager.SetMousePositionChanged(false);
 		}
 	}
 

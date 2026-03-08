@@ -73,7 +73,7 @@ namespace eng
 	protected:
 		GameObject() noexcept = default;
 
-	private:
+	protected:
 		std::string m_Name;
 		GameObject* m_Parent = nullptr;
 		Scene* m_Scene = nullptr;

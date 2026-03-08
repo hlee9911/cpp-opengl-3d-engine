@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "TestObject.h"
 #include "Core.h"
+#include "Player.h"
 
 bool Game::Init()
 {
@@ -10,12 +11,9 @@ bool Game::Init()
 	m_Scene = new eng::Scene();
 	eng::Engine::GetInstance().SetScene(m_Scene);
 
-	auto camera = m_Scene->CreateGameObject("Camera");
-	camera->AddComponenet(new eng::CameraComponent());
-	camera->SetPosition(glm::vec3(0.0f, 0.0f, 2.0f));
-	camera->AddComponenet(new eng::PlayerControllerComponent());
-
-	m_Scene->SetMainCamera(camera);
+	auto player = m_Scene->CreateGameObject<Player>("Player");
+	player->Init();
+	m_Scene->SetMainCamera(player);
 
 	m_Scene->CreateGameObject<TestObject>("TestObject");
 
@@ -158,26 +156,6 @@ bool Game::Init()
 	auto suzanneObj = eng::GameObject::LoadGLTF("models/suzanne/Suzanne.gltf");
 	suzanneObj->SetPosition(glm::vec3(0.0f, 0.0f, -5.0f));
 
-	auto gun = eng::GameObject::LoadGLTF("models/sten_gunmachine_carbine/scene.gltf");
-	gun->SetParent(camera);
-	gun->SetPosition(glm::vec3(0.75f, -0.5f, -0.75f));
-	gun->SetScale(glm::vec3(-1.0f, 1.0f, 1.0f)); // scaling by -1 on the x axis to flip the model, since it's facing the wrong way
-
-	if (auto anim = gun->GetComponent<eng::AnimationComponent>())
-	{
-		if (auto bullet = gun->FindChildByName("bullet_33"))
-		{
-			bullet->SetActive(false);
-		}
-
-		if (auto fire = gun->FindChildByName("BOOM_35"))
-		{
-			fire->SetActive(false);
-		}
-
-		anim->Play("shoot", false);
-	}
-
 	auto light = m_Scene->CreateGameObject("Light");
 	auto lightComp = new eng::LightComponent();
 	lightComp->SetColor(glm::vec3(1.0f));
@@ -215,7 +193,7 @@ bool Game::Init()
 	);
 	boxObj->AddComponenet(new eng::PhysicsComponent(boxBody));
 	
-	camera->SetPosition(glm::vec3(0.0f, 1.0f, 7.0f));
+	// camera->SetPosition(glm::vec3(0.0f, 1.0f, 7.0f));
 
 	return true;
 }
