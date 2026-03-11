@@ -5,6 +5,8 @@ namespace eng
 	class Application
 	{
 	public:
+		virtual ~Application() noexcept = default;
+		virtual void RegisterTypes();
 		virtual bool Init() = 0;
 		// deltaTime in seconds
 		virtual void Update(float deltaTime) = 0;

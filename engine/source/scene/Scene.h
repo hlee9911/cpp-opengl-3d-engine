@@ -4,6 +4,8 @@
 #include <string>
 #include <memory>
 
+#include <nlohmann/json.hpp>
+
 #include "scene/GameObject.h"
 #include "Core.h"
 #include "Common.h"
@@ -13,6 +15,7 @@ namespace eng
 	class Scene 
 	{
 	public:
+		static void RegisterTypes();
 		void Update(float deltaTime);
 		void Clear();
 
@@ -43,8 +46,12 @@ namespace eng
 
 		List<LightData> CollectLights();
 
+		static shared<Scene> Load(const std::string& path);
+
 	private:
 		void CollectLightsRecursive(GameObject* obj, List<LightData>& out);
+
+		void LoadObject(const nlohmann::json& jsonObject, GameObject* parent);
 
 	private:
 		List<unique<GameObject>> m_GameObjects;

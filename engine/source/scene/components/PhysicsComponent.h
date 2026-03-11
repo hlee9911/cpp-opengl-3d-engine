@@ -23,6 +23,8 @@ namespace eng
 		void Init() override;
 		void Update(float deltaTime) override;
 
+		void SetRigidBody(const shared<RigidBody>& body) noexcept { m_RigidBody = body; }
+
 	private:
 		shared<RigidBody> m_RigidBody;
 	};

@@ -114,14 +114,62 @@ namespace eng
 		m_Position = pos;
 	}
 
+	void GameObject::SetWorldPosition(const glm::vec3& pos)
+	{
+		if (m_Parent)
+		{
+			// to set world position, we need to convert it to local position by 
+			// applying inverse of parents world transform
+			glm::mat4 parentWorld = m_Parent->GetWorldTransform();
+			glm::mat4 invParentWorld = glm::inverse(parentWorld);
+			glm::vec4 localPos = invParentWorld * glm::vec4(pos, 1.0f);
+			SetPosition(glm::vec3(localPos) / localPos.w);
+		}
+		else
+		{
+			// otherwise if there's no parent, local and world positions are the same
+			SetPosition(pos);
+		}
+	}
+
 	const glm::quat& GameObject::GetRotation() const noexcept
 	{
 		return m_Rotation;
 	}
 
+	glm::quat GameObject::GetWorldRotation() const
+	{
+		if (m_Parent)
+		{
+			// to get world rotation, we need to combine it with parents world rotation
+			return m_Parent->GetWorldRotation() * m_Rotation;
+		}
+		else
+		{
+			return m_Rotation;
+		}
+	}
+
 	void GameObject::SetRotation(const glm::quat& rot) noexcept
 	{
 		m_Rotation = rot;
+	}
+
+	void GameObject::SetWorldRotation(const glm::quat& rot)
+	{
+		if (m_Parent)
+		{
+			// to set world rotation, we need to convert it to local rotation by 
+			// applying inverse of parents world rotation
+			glm::quat parentWorldRot = m_Parent->GetWorldRotation();
+			glm::quat invParentWorldRot = glm::inverse(parentWorldRot);
+			glm::quat newLocalRot = invParentWorldRot * rot;
+			SetRotation(newLocalRot);
+		}
+		else
+		{
+			SetRotation(rot);
+		}
 	}
 
 	const glm::vec3& GameObject::GetScale() const noexcept

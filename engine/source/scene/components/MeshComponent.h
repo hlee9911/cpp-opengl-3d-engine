@@ -13,8 +13,12 @@ namespace eng
 		COMPONENT(MeshComponent)
 
 	public:
+		MeshComponent() noexcept = default;
 		MeshComponent(const shared<Material>& material, const shared<Mesh>& mesh) noexcept;
 		void Update(float deltaTime) override;
+
+		void SetMaterial(const shared<Material>& material) noexcept { m_Material = material; }
+		void SetMesh(const shared<Mesh>& mesh) noexcept { m_Mesh = mesh; }
 
 	private:
 		shared<Material> m_Material;
