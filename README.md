@@ -42,7 +42,7 @@ The engine currently includes:
 - Material and shader pipeline
 - Scene and GameObject hierarchy
 - FPS-style Camera system
-- Parial physics integration
+- Partial physics integration
 
 
 ## Building
@@ -58,7 +58,6 @@ Build steps:
 ```plaintext
 mkdir build
 cd build
-cmake ..
 cmake -S .. -B .
 ```
 
