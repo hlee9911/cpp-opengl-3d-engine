@@ -99,7 +99,7 @@ namespace eng
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		// Create window
-		m_Window = glfwCreateWindow(width, height, "GameDevEngine", nullptr, nullptr);
+		m_Window = glfwCreateWindow(width, height, "Engine", nullptr, nullptr);
 
 		if (m_Window == nullptr)
 		{
