@@ -4,7 +4,6 @@ A work-in-progress 3D game engine written in modern C++ using OpenGL.
 
 This project explores low-level graphics programming, rendering pipelines, and engine architecture while implementing core engine systems such as scene management, materials, physics integration, and shader-based rendering.
 
----
 
 ## Features
 
@@ -18,7 +17,6 @@ This project explores low-level graphics programming, rendering pipelines, and e
 - Physics integration using Bullet (WIP)
 - JSON-based scene loading
 
----
 
 ## Tech Stack
 
@@ -29,12 +27,11 @@ This project explores low-level graphics programming, rendering pipelines, and e
 
 Third-party libraries used:
 
-- Bullet Physics
+- Bullet Physics Engine
 - cgltf (glTF loader)
 - stb_image (texture loading)
 - nlohmann/json (data serialization)
 
----
 
 ## Engine Systems
 
@@ -47,7 +44,6 @@ The engine currently includes:
 - FPS-style Camera system
 - Parial physics integration
 
----
 
 ## Building
 
@@ -59,9 +55,12 @@ Requirements:
 
 Build steps:
 
+```plaintext
 mkdir build
 cd build
 cmake ..
 cmake -S .. -B .
+```
 
-Note: The project is currently **in development**
+---
+Note: The project is currently **in development**.
