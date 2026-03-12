@@ -4,7 +4,6 @@
 #include <glm/mat4x4.hpp>
 
 #include <string>
-#include <unordered_map>
 
 #include "Core.h"
 

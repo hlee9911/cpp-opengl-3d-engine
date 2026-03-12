@@ -1,11 +1,12 @@
 #pragma once
 
-#include <stdio.h>
+#include <cstdio>
 #include <memory>
 #include <vector>
 #include <map>
 #include <unordered_map>
 #include <unordered_set>
+#include <cstdint>
 
 namespace eng
 {
@@ -19,7 +20,7 @@ namespace eng
 	template <typename T>
 	using weak = std::weak_ptr<T>;
 
-	// basic templates for containers
+	// Container aliases
 	template <typename T>
 	using List = std::vector<T>;
 
@@ -32,10 +33,10 @@ namespace eng
 	template <typename T>
 	using Set = std::unordered_set<T>;
 
-	using uint8 = unsigned char;
+	using uint8 = uint8_t;
 
 	// Simple logging macro, ... means variadic arguments
-	#define LOG(M, ...) printf("[LOG] " M "\n", ##__VA_ARGS__)
-	#define WARN(M, ...) printf("[WARN] " M "\n", ##__VA_ARGS__)
-	#define ERROR(M, ...) printf("[ERROR] " M "\n", ##__VA_ARGS__)
+	#define LOG(M, ...) std::printf("[LOG] " M "\n", ##__VA_ARGS__)
+	#define WARN(M, ...) std::printf("[WARN] " M "\n", ##__VA_ARGS__)
+	#define ERROR(M, ...) std::printf("[ERROR] " M "\n", ##__VA_ARGS__)
 }

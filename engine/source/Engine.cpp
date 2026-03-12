@@ -4,8 +4,6 @@
 #include "scene/Component.h"
 #include "scene/components/CameraComponent.h"
 
-#include <iostream>
-
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 

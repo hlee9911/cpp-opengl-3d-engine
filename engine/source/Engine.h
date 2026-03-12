@@ -9,7 +9,6 @@
 #include "physics/PhysicsManager.h"
 #include "Core.h"
 
-#include <memory>
 #include <chrono>
 
 struct GLFWwindow;
