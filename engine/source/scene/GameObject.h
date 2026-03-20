@@ -19,6 +19,8 @@ namespace eng
 	{
 	public:
 		virtual ~GameObject() noexcept = default;
+		virtual void Init();
+		virtual void LoadProperties(const nlohmann::json& json);
 		virtual void Update(float deltaTime);
 		
 		const std::string& GetName() const noexcept;
@@ -71,7 +73,7 @@ namespace eng
 		glm::mat4 GetLocalTransform() const;
 		glm::mat4 GetWorldTransform() const;
 
-		static GameObject* LoadGLTF(const std::string& path);
+		static GameObject* LoadGLTF(const std::string& path, Scene* gameScene);
 
 	protected:
 		GameObject() noexcept = default;
@@ -90,4 +92,44 @@ namespace eng
 
 		friend class Scene;
 	};
+
+	class ObjectCreatorBase
+	{
+	public:
+		virtual ~ObjectCreatorBase() noexcept = default;
+		virtual GameObject* CreateGameObject() = 0;
+	};
+
+	template<typename T>
+	class ObjectCreator : public ObjectCreatorBase
+	{
+	public:
+		virtual GameObject* CreateGameObject() override
+		{
+			return new T();
+		}
+	};
+
+	// singleton gameobject factory
+	class GameObjectFactory
+	{
+	public:
+		static GameObjectFactory& GetInstance();
+		// registerObject like ComponentFactory
+		template<typename T>
+		void RegisterObject(const std::string& name)
+		{
+			m_Creators.emplace(name, std::make_unique<ObjectCreator<T>>());
+		}
+
+		GameObject* CreateGameObject(const std::string& typeName);
+
+	private:
+		Dictionary<std::string, unique<ObjectCreatorBase>> m_Creators;
+	};
+
+	// helper macro for registering the game object
+#define GAMEOBJECT(ObjectClass) \
+public: \
+	static void Register() { eng::GameObjectFactory::GetInstance().RegisterObject<ObjectClass>(std::string(#ObjectClass)); } // registers the object type in the factory with its class name as the key
 }

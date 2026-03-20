@@ -3,8 +3,17 @@
 #include "Core.h"
 #include "Player.h"
 
+void Game::RegisterTypes()
+{
+	// engine call this during Engine::Init() after engine-side types are registered
+	Player::Register();
+}
+
 bool Game::Init()
 {
+
+// using scene.sc to load scene properties 
+#if 0
 	auto& fs = eng::Engine::GetInstance().GetFileSystem();
 	auto texture = eng::Texture::Load("brick.png");
 
@@ -194,6 +203,11 @@ bool Game::Init()
 	boxObj->AddComponenet(new eng::PhysicsComponent(boxBody));
 	
 	// camera->SetPosition(glm::vec3(0.0f, 1.0f, 7.0f));
+#endif
+	
+	auto scene = eng::Scene::Load("scenes/scene.sc");
+	m_Scene = scene;
+	eng::Engine::GetInstance().SetScene(scene);
 
 	return true;
 }

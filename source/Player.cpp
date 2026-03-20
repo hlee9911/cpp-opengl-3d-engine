@@ -4,6 +4,8 @@
 
 void Player::Init()
 {
+// using scene.sc to load Player properties
+#if 0
 	// Create a camera and attach it to the player
 	// auto camera = m_Scene->CreateGameObject("Camera");
 	AddComponenet(new eng::CameraComponent());
@@ -32,6 +34,22 @@ void Player::Init()
 	}
 
 	m_AnimationComponent = gun->GetComponent<eng::AnimationComponent>();
+#endif
+
+	if (auto bullet = FindChildByName("bullet_33"))
+	{
+		bullet->SetActive(false);
+	}
+
+	if (auto fire = FindChildByName("BOOM_35"))
+	{
+		fire->SetActive(false);
+	}
+
+	if (auto gun = FindChildByName("Gun"))
+	{
+		m_AnimationComponent = gun->GetComponent<eng::AnimationComponent>();
+	}
 }
 
 void Player::Update(float deltaTime)

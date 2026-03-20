@@ -15,7 +15,7 @@ namespace eng
 	class KinematicCharacterController
 	{
 	public:
-		KinematicCharacterController(float radius, float height) noexcept;
+		KinematicCharacterController(float radius, float height, const glm::vec3& position) noexcept;
 		~KinematicCharacterController() noexcept;
 
 		glm::vec3 GetPosition() const;

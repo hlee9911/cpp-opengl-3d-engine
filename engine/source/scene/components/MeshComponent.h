@@ -15,6 +15,7 @@ namespace eng
 	public:
 		MeshComponent() noexcept = default;
 		MeshComponent(const shared<Material>& material, const shared<Mesh>& mesh) noexcept;
+		void LoadProperties(const nlohmann::json& json) override;
 		void Update(float deltaTime) override;
 
 		void SetMaterial(const shared<Material>& material) noexcept { m_Material = material; }

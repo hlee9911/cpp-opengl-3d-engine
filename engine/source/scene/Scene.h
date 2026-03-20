@@ -20,6 +20,8 @@ namespace eng
 		void Clear();
 
 		GameObject* CreateGameObject(const std::string& name, GameObject* parent = nullptr);
+		GameObject* CreateGameObject(const std::string& type, const std::string& name, GameObject* parent = nullptr);
+
 
 		/// <summary>
 		/// This template function creates a GameObject of type T, sets its name, and assigns it to a parent GameObject if provided.

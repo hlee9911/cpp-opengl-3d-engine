@@ -49,6 +49,19 @@ namespace eng
 		return gameObject;
 	}
 
+	// this function will be used to create a object while loading the scene
+	GameObject* Scene::CreateGameObject(const std::string& type, const std::string& name, GameObject* parent)
+	{
+		auto gameObject = GameObjectFactory::GetInstance().CreateGameObject(type);
+		if (gameObject)
+		{
+			gameObject->SetName(name);
+			gameObject->m_Scene = this;
+			SetParent(gameObject, parent);
+		}
+		return gameObject;
+	}
+
 	/// <summary>
 	/// This function sets the parent of a GameObject to another GameObject.
 	/// </summary>
@@ -230,6 +243,19 @@ namespace eng
 			}
 		}
 
+		if (json.contains("camera"))
+		{
+			std::string cameraObjName = json.value("camera", "");
+			for (const auto& child : result->m_GameObjects)
+			{
+				if (auto object = child->FindChildByName(cameraObjName))
+				{
+					result->SetMainCamera(object);
+					break;
+				}
+			}
+		}
+
 		return result;
 	}
 
@@ -263,9 +289,25 @@ namespace eng
 		if (jsonObject.contains("type"))
 		{
 			const std::string type = jsonObject.value("type", "");
+			if (type == "gltf")
+			{
+				// gltf loading
+				std::string path = jsonObject.value("path", "");
+				gameObject = GameObject::LoadGLTF(path, this);
+				if (gameObject)
+				{
+					gameObject->SetParent(parent);
+					gameObject->SetName(name);
+				}
+			}
+			else
+			{
+				gameObject = CreateGameObject(type, name, parent);
+			}
 		}
 		else
 		{
+			// create object
 			gameObject = CreateGameObject(name, parent);
 		}
 
@@ -303,6 +345,9 @@ namespace eng
 			gameObject->SetScale(scale);
 		}
 
+		// load properties
+		gameObject->LoadProperties(jsonObject);
+
 		// load components
 		if (jsonObject.contains("components") && jsonObject["components"].is_array())
 		{
@@ -318,5 +363,18 @@ namespace eng
 				}
 			}
 		}
+
+		// load children recursively
+		if (jsonObject.contains("children") && jsonObject["children"].is_array())
+		{
+			const auto& children = jsonObject["children"];
+			for (const auto& child : children)
+			{
+				LoadObject(child, gameObject);
+			}
+		}
+
+		// for post-load setup
+		gameObject->Init();
 	}
 }

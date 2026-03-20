@@ -7,7 +7,7 @@
 
 namespace eng
 {
-	KinematicCharacterController::KinematicCharacterController(float radius, float height) noexcept
+	KinematicCharacterController::KinematicCharacterController(float radius, float height, const glm::vec3& position) noexcept
 		: m_Radius{ radius },
 		m_Height{ height }
 	{
@@ -18,7 +18,8 @@ namespace eng
 		m_Ghost = std::make_unique<btPairCachingGhostObject>();
 		btTransform start;
 		start.setIdentity();
-		start.setOrigin(btVector3(0.0f, 2.0f, 0.0f));
+		// start.setOrigin(btVector3(0.0f, 2.0f, 0.0f));
+		start.setOrigin(btVector3(position.x, position.y, position.z));
 		m_Ghost->setWorldTransform(start);
 		m_Ghost->setCollisionShape(capsule);
 		m_Ghost->setCollisionFlags(m_Ghost->getCollisionFlags() | btCollisionObject::CF_CHARACTER_OBJECT);

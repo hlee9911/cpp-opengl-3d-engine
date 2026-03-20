@@ -45,7 +45,8 @@ namespace eng
 		TextureManager& GetTextureManager() noexcept;
 		PhysicsManager& GetPhysicsManager() noexcept;
 
-		void SetScene(Scene* scene) noexcept { m_CurrentScene.reset(scene); }
+		// void SetScene(Scene* scene) noexcept { m_CurrentScene.reset(scene); }
+		void SetScene(shared<Scene> scene) noexcept { m_CurrentScene = scene; }
 		Scene* GetScene() const noexcept { return m_CurrentScene.get(); }
 
 	private:
@@ -58,6 +59,6 @@ namespace eng
 		FileSystem m_FileSystem;
 		TextureManager m_TextureManager;
 		PhysicsManager m_PhysicsManager;
-		unique<Scene> m_CurrentScene;
+		shared<Scene> m_CurrentScene;
 	};
 }
