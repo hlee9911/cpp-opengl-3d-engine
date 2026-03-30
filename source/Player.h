@@ -12,5 +12,7 @@ public:
 
 private:
 	eng::AnimationComponent* m_AnimationComponent = nullptr;
+	eng::AudioComponent* m_AudioComponent = nullptr;
+	eng::PlayerControllerComponent* m_PlayerControllerComponent = nullptr;
 };
 

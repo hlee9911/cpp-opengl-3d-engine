@@ -102,4 +102,13 @@ namespace eng
 		m_Owner->SetPosition(m_KinematicController->GetPosition());
 
 	}
+
+	bool PlayerControllerComponent::IsOnGround() const
+	{
+		if (m_KinematicController)
+		{
+			return m_KinematicController->IsOnGround();
+		}
+		return false;
+	}
 }

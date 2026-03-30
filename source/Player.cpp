@@ -50,6 +50,9 @@ void Player::Init()
 	{
 		m_AnimationComponent = gun->GetComponent<eng::AnimationComponent>();
 	}
+
+	m_AudioComponent = GetComponent<eng::AudioComponent>();
+	m_PlayerControllerComponent = GetComponent<eng::PlayerControllerComponent>();
 }
 
 void Player::Update(float deltaTime)
@@ -62,6 +65,53 @@ void Player::Update(float deltaTime)
 		if (m_AnimationComponent && !m_AnimationComponent->IsPlaying())
 		{
 			m_AnimationComponent->Play("shoot", false);
+
+			// if the shoot sound is already playing, stop it and play it again to prevent spamming the sound when shooting rapidly
+			if (m_AudioComponent)
+			{
+				if (m_AudioComponent->IsPlaying("shoot"))
+				{
+					m_AudioComponent->Stop("shoot");
+				}
+				m_AudioComponent->Play("shoot");
+			}
+		}
+	}
+	
+	// play jump sound when space is pressed, but only if it's not already playing to prevent spamming the sound
+	if (input.IsKeyPressed(GLFW_KEY_SPACE) && m_PlayerControllerComponent && m_PlayerControllerComponent->IsOnGround())
+	{
+		if (m_AudioComponent && !m_AudioComponent->IsPlaying("jump"))
+		{
+			m_AudioComponent->Play("jump");
+		}
+	}
+	//else
+	//{
+	//	if (m_AudioComponent && m_AudioComponent->IsPlaying("jump"))
+	//	{
+	//		m_AudioComponent->Stop("jump");
+	//	}
+	//}
+
+	bool walking = input.IsKeyPressed(GLFW_KEY_W) ||
+				   input.IsKeyPressed(GLFW_KEY_A) || 
+				   input.IsKeyPressed(GLFW_KEY_S) || 
+				   input.IsKeyPressed(GLFW_KEY_D);
+
+	// play footstep sound if the player is walking and on the ground, otherwise stop it
+	if (walking && m_PlayerControllerComponent && m_PlayerControllerComponent->IsOnGround())
+	{
+		if (m_AudioComponent && !m_AudioComponent->IsPlaying("step"))
+		{
+			m_AudioComponent->Play("step", true);
+		}
+	}
+	else
+	{
+		if (m_AudioComponent && m_AudioComponent->IsPlaying("step"))
+		{
+			m_AudioComponent->Stop("step");
 		}
 	}
 }

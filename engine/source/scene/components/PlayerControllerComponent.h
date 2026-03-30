@@ -14,6 +14,8 @@ namespace eng
 		void Init() override;
 		void Update(float deltaTime) override;
 
+		bool IsOnGround() const;
+
 	private:
 		float m_Sensitivity = 27.5f;
 		float m_MoveSpeed = 12.5f;

@@ -53,6 +53,10 @@ set(PROJECT_SOURCE_FILES
 	source/scene/components/AnimationComponent.cpp
 	source/scene/components/PhysicsComponent.h
 	source/scene/components/PhysicsComponent.cpp
+	source/scene/components/AudioComponent.h
+	source/scene/components/AudioComponent.cpp
+	source/scene/components/AudioListenerComponent.h
+	source/scene/components/AudioListenerComponent.cpp
 	source/io/FileSystem.h
 	source/io/FileSystem.cpp
 	source/physics/PhysicsManager.h
@@ -63,6 +67,10 @@ set(PROJECT_SOURCE_FILES
 	source/physics/RigidBody.cpp
 	source/physics/KinematicCharacterController.h
 	source/physics/KinematicCharacterController.cpp
+	source/audio/AudioManager.h
+	source/audio/AudioManager.cpp
+	source/audio/Audio.h
+	source/audio/Audio.cpp
 )
 
 # Group files according to files organization
@@ -106,6 +114,31 @@ include_directories(thirdparty/cgltf)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_BINARY_DIR})
 
+#include miniaudio library
+add_library(miniaudio INTERFACE)
+target_include_directories(miniaudio INTERFACE thirdparty/miniaudio)
+
+if(UNIX AND NOT APPLE)
+  target_link_libraries(miniaudio INTERFACE dl pthread m)
+endif()
+
+if(WIN32)
+  target_link_libraries(miniaudio INTERFACE winmm user32 ole32)
+endif()
+
+if(APPLE)
+  find_library(COREAUDIO_FRAMEWORK CoreAudio)
+  find_library(AUDIOTOOLBOX_FRAMEWORK AudioToolbox)
+  find_library(AUDIOUNIT_FRAMEWORK AudioUnit)
+  find_library(COREFOUNDATION_FRAMEWORK CoreFoundation)
+  target_link_libraries(miniaudio INTERFACE
+    ${COREAUDIO_FRAMEWORK}
+    ${AUDIOUNIT_FRAMEWORK}
+    ${AUDIOTOOLBOX_FRAMEWORK}
+    ${COREFOUNDATION_FRAMEWORK}
+  )
+endif()
+
 # Include Bullet as a subdirectory
 option(BUILD_UNIT_TESTS OFF)
 option(BUILD_BULLET2_DEMOS OFF)
@@ -122,6 +155,7 @@ target_link_libraries(${PROJECT_NAME}
 	BulletDynamics
     BulletCollision
     LinearMath
+	miniaudio
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

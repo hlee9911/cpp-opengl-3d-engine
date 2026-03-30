@@ -127,6 +127,7 @@ namespace eng
 
 		m_GraphicsAPI.Init();
 		m_PhysicsManager.Init();
+		m_AudioManager.Init();
 		return m_Application->Init();
 	}
 
@@ -241,5 +242,10 @@ namespace eng
 	PhysicsManager& Engine::GetPhysicsManager() noexcept
 	{
 		return m_PhysicsManager;
+	}
+
+	AudioManager& Engine::GetAudioManager() noexcept
+	{
+		return m_AudioManager;
 	}
 }
