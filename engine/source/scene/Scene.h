@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <utility>
 
 #include <nlohmann/json.hpp>
 
@@ -37,7 +38,14 @@ namespace eng
 			auto gameObject = new T();
 			gameObject->SetName(name);
 			gameObject->m_Scene = this;
-			SetParent(gameObject, parent);
+			if (m_IsUpdating)
+			{
+				m_GameObjectsToAdd.push_back({ gameObject, parent });
+			}
+			else
+			{
+				SetParent(gameObject, parent);
+			}
 			return gameObject;
 		}
 
@@ -57,6 +65,8 @@ namespace eng
 
 	private:
 		List<unique<GameObject>> m_GameObjects;
+		List<std::pair<GameObject*, GameObject*>> m_GameObjectsToAdd;
 		GameObject* m_MainCamera = nullptr;
+		bool m_IsUpdating = false;
 	};
 }

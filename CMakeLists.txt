@@ -12,6 +12,8 @@ set(PROJECT_SOURCE_FILES
   source/TestObject.cpp
   source/Player.h
   source/Player.cpp
+  source/Bullet.h
+  source/Bullet.cpp
 )
 
 include_directories(engine/thirdparty/glew/include)

@@ -33,6 +33,7 @@ namespace eng
 		void BindShaderProgram(ShaderProgram* shaderProgram);
 		void BindMaterial(Material* material);
 		void BindMesh(Mesh* mesh);
+		void UnbindMesh(Mesh* mesh);
 		void DrawMesh(Mesh* mesh);
 
 	private:

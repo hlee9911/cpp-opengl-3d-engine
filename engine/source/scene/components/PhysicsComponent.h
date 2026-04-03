@@ -25,6 +25,7 @@ namespace eng
 		void Update(float deltaTime) override;
 
 		void SetRigidBody(const shared<RigidBody>& body) noexcept { m_RigidBody = body; }
+		const shared<RigidBody>& GetRigidBody() const noexcept { return m_RigidBody; }
 
 	private:
 		shared<RigidBody> m_RigidBody;

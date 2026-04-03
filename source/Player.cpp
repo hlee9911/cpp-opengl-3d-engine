@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Bullet.h"
 
 #include <GLFW/glfw3.h>
 
@@ -75,6 +76,32 @@ void Player::Update(float deltaTime)
 				}
 				m_AudioComponent->Play("shoot");
 			}
+
+			// create a bullet and set its position and direction based on the gun's position and forward direction
+			auto bullet = m_Scene->CreateGameObject<Bullet>("Bullet");
+			auto bulletMaterial = eng::Material::Load("materials/suzanne.mat");
+			float bulletRadius = 0.2f;
+			auto bulletMesh = eng::Mesh::CreateSphere(bulletRadius, 32, 32);
+			bullet->AddComponenet(new eng::MeshComponent(bulletMaterial, bulletMesh));
+
+			glm::vec3 pos = glm::vec3(0.0f);
+			if (auto child = FindChildByName("BOOM_35"))
+			{
+				pos = child->GetWorldPosition();
+			}
+			bullet->SetPosition(pos + m_Rotation * glm::vec3(-0.2f, 0.2f, -1.75f));
+
+			auto bulletCollider = std::make_shared<eng::SphereCollider>(bulletRadius);
+			auto bulletRigidBody = std::make_shared<eng::RigidBody>(
+				eng::BodyType::Dynamic,
+				bulletCollider,
+				10.0f, // mass
+				0.1f // friction
+			);
+			bullet->AddComponenet(new eng::PhysicsComponent(bulletRigidBody));
+
+			glm::vec3 front = m_Rotation * glm::vec3(0.0f, 0.0f, -1.0f);
+			bulletRigidBody->ApplyImpulse(front * 500.0f);
 		}
 	}
 	

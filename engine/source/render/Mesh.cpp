@@ -93,6 +93,11 @@ namespace eng
 		glBindVertexArray(m_VAO);
 	}
 
+	void Mesh::Unbind()
+	{
+		glBindVertexArray(0);
+	}
+
 	void Mesh::Draw()
 	{
 		if (m_IndexCount > 0)
@@ -105,6 +110,12 @@ namespace eng
 		}
 	}
 
+	/// <summary>
+	/// Creates a box mesh with the specified extents (width, height, depth). The box is centered at the origin and 
+	/// extends in both positive and negative directions along each axis based on the extents provided
+	/// </summary>
+	/// <param name="extents"></param>
+	/// <returns></returns>
 	shared<Mesh> Mesh::CreateBox(const glm::vec3& extents)
 	{
 		const glm::vec3 half = extents * 0.5f;
@@ -211,6 +222,115 @@ namespace eng
 		vertexLayout.stride = sizeof(float) * 11; // 3 position + 3 color + 2 uv + 3 normal
 
 		// Create mesh 
+		auto result = std::make_shared<eng::Mesh>(
+			vertexLayout,
+			verticies,
+			indicies
+		);
+
+		return result;
+	}
+
+	/// <summary>
+	/// Creates a UV sphere mesh with the specified radius, number of sectors (longitude) and stacks (latitude)
+	/// </summary>
+	/// <param name="radius"></param>
+	/// <param name="sectors"></param>
+	/// <param name="stacks"></param>
+	/// <returns></returns>
+	shared<Mesh> Mesh::CreateSphere(float radius, int sectors, int stacks)
+	{
+		constexpr float PI = 3.14159265358979323846f;
+
+		List<float> verticies((stacks + 1) * (sectors + 1) * 8);
+		for (int i = 0; i <= stacks; ++i)
+		{
+			float stackAngle = PI / 2.0f - static_cast<float>(i) * (PI / static_cast<float>(stacks)); // From -pi/2 to pi/2
+			float xy = radius * cosf(stackAngle);// x-y plane radius at current stack
+			float z = radius * sinf(stackAngle); // z value at current stack
+
+			for (int j = 0; j <= sectors; ++j)
+			{
+				float sectorAngle = static_cast<float>(j) * (2.0f * PI / static_cast<float>(sectors)); // from 0 to 2pi
+
+				// calculate vertex position
+				float x = xy * cosf(sectorAngle);
+				float y = xy * sinf(sectorAngle);
+
+				size_t vertexStart = (i * (sectors + 1) + j) * 8; // 8 floats per vertex (position, color, uv, normal)
+
+				// position
+				verticies[vertexStart] = x;
+				verticies[vertexStart + 1] = y;
+				verticies[vertexStart + 2] = z;
+
+				// normal (normalized position vector)
+				float length = sqrtf(x * x + y * y + z * z);
+				verticies[vertexStart + 3] = x / length; // normal x
+				verticies[vertexStart + 4] = y / length; // normal y
+				verticies[vertexStart + 5] = z / length; // normal z
+
+				// uv coordinates
+				verticies[vertexStart + 6] = static_cast<float>(j) / static_cast<float>(sectors); // u
+				verticies[vertexStart + 7] = static_cast<float>(i) / static_cast<float>(stacks); // v
+			}
+		}
+		
+		// generate indicies
+		List<unsigned int> indicies;
+		for (int i = 0; i < stacks; ++i)
+		{
+			int k1 = i * (sectors + 1); // beginning of current stack
+			int k2 = k1 + sectors + 1; // beginning of next stack
+
+			for (int j = 0; j < sectors; ++j, ++k1, ++k2)
+			{
+				if (i != 0)
+				{
+					// first triangle
+					indicies.push_back(k1);
+					indicies.push_back(k2);
+					indicies.push_back(k1 + 1);
+				}
+
+				if (i != (stacks - 1))
+				{
+					// second triangle
+					indicies.push_back(k1 + 1);
+					indicies.push_back(k2);
+					indicies.push_back(k2 + 1);
+				}
+			}
+		}
+
+		eng::VertexLayout vertexLayout;
+		
+		// Position
+		vertexLayout.elements.push_back({
+			VertexElement::PositionIndex,
+			3,
+			GL_FLOAT,
+			0 // index, size, type, offset
+		});
+
+		// Normal
+		vertexLayout.elements.push_back({
+			VertexElement::NormalIndex,
+			3,
+			GL_FLOAT,
+			sizeof(float) * 3 // index, size, type, offset
+		});
+
+		// UV
+		vertexLayout.elements.push_back({
+			VertexElement::UVIndex,
+			2,
+			GL_FLOAT,
+			sizeof(float) * 6 // index, size, type, offset
+		});
+
+		vertexLayout.stride = sizeof(float) * 8; // 3 position + 3 normal + 2 uv'
+
 		auto result = std::make_shared<eng::Mesh>(
 			vertexLayout,
 			verticies,

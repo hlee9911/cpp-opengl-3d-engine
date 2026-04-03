@@ -25,6 +25,27 @@ namespace eng
 
 	void Scene::Update(float deltaTime)
 	{
+		// Remove dead objects before updating to avoid iterating over them
+		m_GameObjects.erase(
+			std::remove_if(
+				m_GameObjects.begin(),
+				m_GameObjects.end(),
+				[](auto& obj)
+				{
+					return !obj->IsAlive();
+				}
+			),
+			m_GameObjects.end()
+		);
+
+		// Add new objects that were created during the last update
+		for (auto& obj : m_GameObjectsToAdd)
+		{
+			SetParent(obj.first, obj.second);
+		}
+		m_GameObjectsToAdd.clear();
+
+		m_IsUpdating = true;
 		for (auto it = m_GameObjects.begin(); it != m_GameObjects.end();)
 		{
 			if ((*it)->IsAlive())
@@ -37,6 +58,7 @@ namespace eng
 				it = m_GameObjects.erase(it);
 			}
 		}
+		m_IsUpdating = false;
 	}
 
 	void Scene::Clear()
@@ -49,7 +71,14 @@ namespace eng
 		auto gameObject = new GameObject();
 		gameObject->SetName(name);
 		gameObject->m_Scene = this;
-		SetParent(gameObject, parent);
+		if (m_IsUpdating)
+		{
+			m_GameObjectsToAdd.push_back({ gameObject, parent });
+		}
+		else
+		{
+			SetParent(gameObject, parent);
+		}
 		return gameObject;
 	}
 
@@ -61,7 +90,14 @@ namespace eng
 		{
 			gameObject->SetName(name);
 			gameObject->m_Scene = this;
-			SetParent(gameObject, parent);
+			if (m_IsUpdating)
+			{
+				m_GameObjectsToAdd.push_back({ gameObject, parent });
+			}
+			else
+			{
+				SetParent(gameObject, parent);
+			}
 		}
 		return gameObject;
 	}
