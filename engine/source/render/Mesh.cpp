@@ -121,43 +121,42 @@ namespace eng
 		const glm::vec3 half = extents * 0.5f;
 		std::vector<float> verticies =
 		{
-
 			// Front face
 			// positions        // colors		    // uvs		// normals
-			half.x,  half.y, half.z,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f,  0.0f, 0.0f, 1.0f,
-			-half.x, half.y, half.z,  0.0f, 1.0f, 0.0f,  0.0f, 1.0f,	0.0f, 0.0f, 1.0f,
+			half.x,  half.y, half.z,  1.0f, 0.0f, 0.0f,  extents.x, extents.y,  0.0f, 0.0f, 1.0f,
+			-half.x, half.y, half.z,  0.0f, 1.0f, 0.0f,  0.0f, extents.y,	0.0f, 0.0f, 1.0f,
 			-half.x, -half.y, half.z,  0.0f, 0.0f, 1.0f, 0.0f, 0.0f,	0.0f, 0.0f, 1.0f,
-			half.x, -half.y, half.z,  1.0f, 1.0f, 0.0f,  1.0f, 0.0f,	0.0f, 0.0f, 1.0f,
+			half.x, -half.y, half.z,  1.0f, 1.0f, 0.0f,  extents.x, 0.0f,	0.0f, 0.0f, 1.0f,
 
 			// Top face
-			half.x,  half.y, -half.z,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f,  0.0f, 1.0f, 0.0f,
-			-half.x, half.y, -half.z,  0.0f, 1.0f, 0.0f,  0.0f, 1.0f,  0.0f, 1.0f, 0.0f,
+			half.x,  half.y, -half.z,  1.0f, 0.0f, 0.0f,  extents.x, extents.z,  0.0f, 1.0f, 0.0f,
+			-half.x, half.y, -half.z,  0.0f, 1.0f, 0.0f,  0.0f, extents.z,  0.0f, 1.0f, 0.0f,
 			-half.x, half.y, half.z,  0.0f, 0.0f, 1.0f,   0.0f, 0.0f,  0.0f, 1.0f, 0.0f,
-			half.x, half.y, half.z,  1.0f, 1.0f, 0.0f,   1.0f, 0.0f,  0.0f, 1.0f, 0.0f,
+			half.x, half.y, half.z,  1.0f, 1.0f, 0.0f,   extents.x, 0.0f,  0.0f, 1.0f, 0.0f,
 
 			 // Right face
-			 half.x,  half.y, -half.z,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f,  1.0f, 0.0f, 0.0f,
-			 half.x, half.y, half.z,  0.0f, 1.0f, 0.0f,    0.0f, 1.0f,  1.0f, 0.0f, 0.0f,
+			 half.x,  half.y, -half.z,  1.0f, 0.0f, 0.0f,  extents.z, extents.y,  1.0f, 0.0f, 0.0f,
+			 half.x, half.y, half.z,  0.0f, 1.0f, 0.0f,    0.0f, extents.y,  1.0f, 0.0f, 0.0f,
 			 half.x, -half.y, half.z,  0.0f, 0.0f, 1.0f,   0.0f, 0.0f,  1.0f, 0.0f, 0.0f,
-			 half.x, -half.y, -half.z,  1.0f, 1.0f, 0.0f,  1.0f, 0.0f,  1.0f, 0.0f, 0.0f,
+			 half.x, -half.y, -half.z,  1.0f, 1.0f, 0.0f,  extents.z, 0.0f,  1.0f, 0.0f, 0.0f,
 
 			 // Left face
-			 -half.x, half.y, half.z,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f,  -1.0f, 0.0f, 0.0f,
-			 -half.x, half.y, -half.z,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f,  -1.0f, 0.0f, 0.0f,
+			 -half.x, half.y, half.z,  1.0f, 0.0f, 0.0f,  extents.z, extents.y,  -1.0f, 0.0f, 0.0f,
+			 -half.x, half.y, -half.z,  0.0f, 1.0f, 0.0f, 0.0f, extents.y,  -1.0f, 0.0f, 0.0f,
 			 -half.x, -half.y, -half.z, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,  -1.0f, 0.0f, 0.0f,
-			 -half.x, -half.y, half.z,  1.0f, 1.0f, 0.0f, 1.0f, 0.0f,  -1.0f, 0.0f, 0.0f,
+			 -half.x, -half.y, half.z,  1.0f, 1.0f, 0.0f, extents.z, 0.0f,  -1.0f, 0.0f, 0.0f,
 
 			 // Bottom face
-			 half.x, -half.y, half.z,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f,  0.0f, -1.0f, 0.0f,
-			 -half.x, -half.y, half.z,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f,  0.0f, -1.0f, 0.0f,
+			 half.x, -half.y, half.z,  1.0f, 0.0f, 0.0f,  extents.x, extents.z,  0.0f, -1.0f, 0.0f,
+			 -half.x, -half.y, half.z,  0.0f, 1.0f, 0.0f, 0.0f, extents.z,  0.0f, -1.0f, 0.0f,
 			 -half.x, -half.y, -half.z, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,  0.0f, -1.0f, 0.0f,
-			 half.x, -half.y, -half.z,  1.0f, 1.0f, 0.0f, 1.0f, 0.0f,  0.0f, -1.0f, 0.0f,
+			 half.x, -half.y, -half.z,  1.0f, 1.0f, 0.0f, extents.x, 0.0f,  0.0f, -1.0f, 0.0f,
 
 			 // Back face
-			 -half.x, half.y, -half.z,  1.0f, 0.0f, 0.0f,  1.0f, 1.0f,  0.0f, 0.0f, -1.0f,
-			 half.x, half.y, -half.z,  0.0f, 1.0f, 0.0f,   0.0f, 1.0f,  0.0f, 0.0f, -1.0f,
+			 -half.x, half.y, -half.z,  1.0f, 0.0f, 0.0f,  extents.x, extents.y,  0.0f, 0.0f, -1.0f,
+			 half.x, half.y, -half.z,  0.0f, 1.0f, 0.0f,   0.0f, extents.y,  0.0f, 0.0f, -1.0f,
 			 half.x, -half.y, -half.z, 0.0f, 0.0f, 1.0f,   0.0f, 0.0f,  0.0f, 0.0f, -1.0f,
-			 -half.x, -half.y, -half.z,  1.0f, 1.0f, 0.0f, 1.0f, 0.0f,  0.0f, 0.0f, -1.0f,
+			 -half.x, -half.y, -half.z,  1.0f, 1.0f, 0.0f, extents.x, 0.0f,  0.0f, 0.0f, -1.0f,
 		};
 
 		std::vector<unsigned int> indicies =
@@ -195,28 +194,28 @@ namespace eng
 			3,
 			GL_FLOAT,
 			0 // index, size, type, offset
-			});
+		});
 		// Color
 		vertexLayout.elements.push_back({
 			VertexElement::ColorIndex,
 			3,
 			GL_FLOAT,
 			sizeof(float) * 3 // index, size, type, offset
-			});
+		});
 		// UV
 		vertexLayout.elements.push_back({
 			VertexElement::UVIndex,
 			2,
 			GL_FLOAT,
 			sizeof(float) * 6 // index, size, type, offset
-			});
+		});
 		// Normal
 		vertexLayout.elements.push_back({
 			VertexElement::NormalIndex,
 			3,
 			GL_FLOAT,
 			sizeof(float) * 8 // index, size, type, offset
-			});
+		});
 
 		// Stride
 		vertexLayout.stride = sizeof(float) * 11; // 3 position + 3 color + 2 uv + 3 normal

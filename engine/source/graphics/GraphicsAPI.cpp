@@ -132,7 +132,7 @@ namespace eng
 				struct Light
 				{
 					vec3 color;
-					vec3 position;
+					vec3 direction;
 				};
 
 				uniform Light uLight;
@@ -150,21 +150,26 @@ namespace eng
 				{
 					vec3 norm = normalize(vNormal);
 
-					// diffuse lighting
-					vec3 lightDir = normalize(uLight.position - vFragPos);
+					// diffuse lighting for basic shading
+					vec3 lightDir = normalize(-uLight.direction);
 					float diff = max(dot(norm, lightDir), 0.0);
 					vec3 diffuse = diff * uLight.color;
 
-					// specular lighting
+					// specular lighting for shiny highlights
 					vec3 viewDir = normalize(uCameraPos - vFragPos);
 					vec3 reflectDir = reflect(-lightDir, norm);
 					float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0); // dot(viewDir, reflectDir) measures how much the view direction aligns with the reflection direction, raised to a power for shininess
 					float specularStrength = 0.5;
 					vec3 specular = specularStrength * spec * uLight.color;
 
-					vec3 result = diffuse + specular;
+					// create ambient lighting to ensure the object is visible even without direct light
+					const float ambientStrength = 0.4;
+					vec3 ambient = ambientStrength * uLight.color;
+    
+					vec3 result = diffuse + specular + ambient;
 
 					vec4 texColor = texture(baseColorTexture, vUV);
+
 					FragColor = texColor * vec4(result, 1.0);
 				}
 

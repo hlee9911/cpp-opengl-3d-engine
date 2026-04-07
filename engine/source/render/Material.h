@@ -3,6 +3,7 @@
 #include <memory>
 #include <unordered_map>
 #include <string>
+#include <glm/vec3.hpp>
 
 #include "Core.h"
 
@@ -18,6 +19,7 @@ namespace eng
 		void SetShaderProgram(const shared<ShaderProgram>& shaderProgram) noexcept;
 		void SetFloatParam(const std::string& name, float value) noexcept;
 		void SetFloatParam(const std::string& name, float v0, float v1) noexcept;
+		void SetFloatParam(const std::string& name, const glm::vec3& value) noexcept;
 		void SetTextureParam(const std::string& name, const shared<Texture>& texture);
 
 		void Bind();
@@ -28,6 +30,7 @@ namespace eng
 		shared<ShaderProgram> m_ShaderProgram;
 		Dictionary<std::string, float> m_FloatParams;
 		Dictionary<std::string, std::pair<float, float>> m_Float2Params;
+		Dictionary<std::string, glm::vec3> m_Float3Params;
 		Dictionary<std::string, shared<Texture>> m_Textures;
 	};
 }

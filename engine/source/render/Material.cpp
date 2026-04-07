@@ -27,6 +27,11 @@ namespace eng
 		m_Float2Params[name] = { v0, v1 };
 	}
 
+	void Material::SetFloatParam(const std::string& name, const glm::vec3& value) noexcept
+	{
+		m_Float3Params[name] = value;
+	}
+
 	void Material::SetTextureParam(const std::string& name, const shared<Texture>& texture)
 	{
 		m_Textures[name] = texture;
@@ -49,6 +54,11 @@ namespace eng
 		for (auto& param : m_Float2Params)
 		{
 			m_ShaderProgram->SetUniform(param.first, param.second.first, param.second.second);
+		}
+
+		for (auto& param : m_Float3Params)
+		{
+			m_ShaderProgram->SetUniform(param.first, param.second);
 		}
 
 		for (auto& param : m_Textures)
@@ -115,6 +125,19 @@ namespace eng
 					float v0 = p.value("value0", 0.0f);
 					float v1 = p.value("value1", 0.0f);
 					result->SetFloatParam(name, v0, v1);
+				}
+			}
+
+			// Float3
+			if (paramsObj.contains("float3"))
+			{
+				for (auto& p : paramsObj["float3"])
+				{
+					std::string name = p.value("name", "");
+					float v0 = p.value("value0", 0.0f);
+					float v1 = p.value("value1", 0.0f);
+					float v2 = p.value("value2", 0.0f);
+					result->SetFloatParam(name, glm::vec3(v0, v1, v2));
 				}
 			}
 
