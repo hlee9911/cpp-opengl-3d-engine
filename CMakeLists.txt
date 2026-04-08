@@ -14,6 +14,8 @@ set(PROJECT_SOURCE_FILES
   source/Player.cpp
   source/Bullet.h
   source/Bullet.cpp
+  source/JumpPlatform.h
+  source/JumpPlatform.cpp
 )
 
 include_directories(engine/thirdparty/glew/include)

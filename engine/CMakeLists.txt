@@ -67,6 +67,8 @@ set(PROJECT_SOURCE_FILES
 	source/physics/RigidBody.cpp
 	source/physics/KinematicCharacterController.h
 	source/physics/KinematicCharacterController.cpp
+	source/physics/CollisionObject.h
+	source/physics/CollisionObject.cpp
 	source/audio/AudioManager.h
 	source/audio/AudioManager.cpp
 	source/audio/Audio.h

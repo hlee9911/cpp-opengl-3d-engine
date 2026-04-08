@@ -1,6 +1,7 @@
 #pragma once
 
 #include "physics/Collider.h"
+#include "physics/CollisionObject.h"
 #include "Core.h"
 
 #include <glm/gtc/quaternion.hpp>
@@ -19,7 +20,7 @@ namespace eng
 	/// <summary>
 	/// Represents a rigid body in the physics simulation. It encapsulates a Bullet btRigidBody and provides an interface for setting its properties and synchronizing its transform with a GameObject.
 	/// </summary>
-	class RigidBody
+	class RigidBody : public CollisionObject
 	{
 	public:
 		RigidBody(BodyType type, const shared<Collider>& collider, float mass, float friction) noexcept;

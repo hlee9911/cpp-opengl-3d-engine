@@ -11,6 +11,8 @@ namespace eng
 		: m_Radius{ radius },
 		m_Height{ height }
 	{
+		m_CollisionObjectType = CollisionObjectType::KinematicCharacterController;
+
 		auto world = Engine::GetInstance().GetPhysicsManager().GetWorld();
 
 		auto capsule = new btCapsuleShape(m_Radius, m_Height);
@@ -23,7 +25,10 @@ namespace eng
 		m_Ghost->setWorldTransform(start);
 		m_Ghost->setCollisionShape(capsule);
 		m_Ghost->setCollisionFlags(m_Ghost->getCollisionFlags() | btCollisionObject::CF_CHARACTER_OBJECT);
-	
+		
+		// set user pointer to this CollisionObject for collision callbacks
+		m_Ghost->setUserPointer(this);
+
 		world->getBroadphase()->getOverlappingPairCache()->
 			setInternalGhostPairCallback(new btGhostPairCallback());
 

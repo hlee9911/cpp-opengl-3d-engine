@@ -32,5 +32,7 @@ namespace eng
 		unique<btCollisionDispatcher> m_Dispatcher;
 		unique<btSequentialImpulseConstraintSolver> m_Solver;
 		unique<btDiscreteDynamicsWorld> m_World;
+
+		const float m_Gravity = -9.81f;
 	};
 }

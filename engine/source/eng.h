@@ -28,5 +28,6 @@
 #include "source/physics/Collider.h"
 #include "source/physics/RigidBody.h"
 #include "source/physics/KinematicCharacterController.h"
+#include "source/physics/CollisionObject.h"
 #include "source/audio/AudioManager.h"
 #include "source/audio/Audio.h"

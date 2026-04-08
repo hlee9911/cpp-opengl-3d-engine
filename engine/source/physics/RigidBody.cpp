@@ -13,6 +13,8 @@ namespace eng
 		m_Friction{ friction }
 	{
 		if (!collider) return;
+
+		m_CollisionObjectType = CollisionObjectType::RigidBody;
 		
 		btVector3 inertia(0, 0, 0);
 		if (m_BodyType == BodyType::Dynamic && mass > 0.0f && m_Collider->GetShape())
@@ -34,6 +36,9 @@ namespace eng
 
 		m_Body = std::make_unique<btRigidBody>(info);
 		m_Body->setFriction(friction);
+		
+		// set user pointer to this CollisionObject for collision callbacks
+		m_Body->setUserPointer(this);
 
 		if (m_BodyType == BodyType::Kinematic)
 		{

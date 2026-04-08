@@ -2,11 +2,15 @@
 #include "TestObject.h"
 #include "Core.h"
 #include "Player.h"
+#include "Bullet.h"
+#include "JumpPlatform.h"
 
 void Game::RegisterTypes()
 {
 	// engine call this during Engine::Init() after engine-side types are registered
 	Player::Register();
+	Bullet::Register();
+	JumpPlatform::Register();
 }
 
 bool Game::Init()

@@ -65,6 +65,16 @@ namespace eng
 		Engine& engine = Engine::GetInstance();
 		InputManager& inputManager = engine.GetInputManager();
 
+		if (inputManager.GetMousePositionCurrent() == glm::vec2(0.0f))
+		{
+			// if its the first time we get the mouse position, 
+			// we set both old and current to the same value to prevent a large delta on the first frame
+			glm::vec2 initialPos(static_cast<float>(xpos), static_cast<float>(ypos));
+			inputManager.SetMousePositionOld(initialPos);
+			inputManager.SetMousePositionCurrent(initialPos);
+			return;
+		}
+
 		inputManager.SetMousePositionOld(inputManager.GetMousePositionCurrent());
 
 		glm::vec2 currentPos(static_cast<float>(xpos), static_cast<float>(ypos));
