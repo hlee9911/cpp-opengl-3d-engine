@@ -28,10 +28,6 @@ namespace eng
 			float deltaX = currentPos.x - oldPos.x;
 			float deltaY = currentPos.y - oldPos.y;
 
-			std::cout << "OLD: " << oldPos.x << ", " << oldPos.y << "\n";
-			std::cout << "CUR: " << currentPos.x << ", " << currentPos.y << "\n";
-			std::cout << "DELTA: " << deltaX << ", " << deltaY << "\n";
-
 			// rotation around Y axis, when moving deltaX, rotate left and right
 			float yDeltaAngle = -deltaX * m_Sensitivity * deltaTime;
 			m_yRot += yDeltaAngle;
@@ -41,7 +37,7 @@ namespace eng
 			// rotation around X axis
 			float xDeltaAngle = -deltaY * m_Sensitivity * deltaTime;
 			m_xRot += xDeltaAngle;
-			m_xRot = std::clamp(m_xRot, -89.0f, 89.0f); // clamp the pitch to prevent flipping
+			m_xRot = std::clamp(m_xRot, -80.0f, 80.0f); // clamp the pitch to prevent flipping
 			glm::quat xRot = glm::angleAxis(glm::radians(m_xRot), glm::vec3(1.0f, 0.0f, 0.0f));
 			// glm::vec3 right = rotation * glm::vec3(1.0f, 0.0f, 0.0f); // gives the camera's current local right direction
 			// rotation.x -= deltaY * m_Sensitivity * deltaTime;

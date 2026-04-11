@@ -5,9 +5,9 @@
       "name": "MainPlayer",
       "type": "Player",
       "position": {
-        "x": 0,
+        "x": 4,
         "y": 2,
-        "z": -7
+        "z": 12
       },
       "components": [
         {
