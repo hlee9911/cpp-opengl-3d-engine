@@ -57,6 +57,8 @@ set(PROJECT_SOURCE_FILES
 	source/scene/components/AudioComponent.cpp
 	source/scene/components/AudioListenerComponent.h
 	source/scene/components/AudioListenerComponent.cpp
+	source/scene/components/SpriteComponent.h
+	source/scene/components/SpriteComponent.cpp
 	source/io/FileSystem.h
 	source/io/FileSystem.cpp
 	source/physics/PhysicsManager.h

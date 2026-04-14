@@ -339,6 +339,47 @@ namespace eng
 		return result;
 	}
 
+	/// <summary>
+	/// Creates a simple plane mesh in the X-Y plane with UV coordinates
+	/// The plane is defined by four vertices forming a square, and two triangles are created to render the plane
+	/// </summary>
+	/// <returns></returns>
+	shared<Mesh> Mesh::CreatePlane()
+	{
+		List<float> verticies =
+		{
+			1.0f, 1.0f,
+			0.0f, 1.0f,
+			0.0f, 0.0f,
+			1.0f, 0.0f
+		};
+
+		List<uint32_t> indicies = 
+		{
+			0, 1, 2,
+			0, 2, 3
+		};
+
+		eng::VertexLayout vertexLayout;
+
+		// position
+		vertexLayout.elements.push_back({
+			VertexElement::PositionIndex,
+			2,
+			GL_FLOAT,
+			0 // index, size, type, offset
+		});
+		vertexLayout.stride = sizeof(float) * 2; // 2 floats per vertex (position)
+
+		auto result = std::make_shared<eng::Mesh>(
+			vertexLayout,
+			verticies,
+			indicies
+		);
+
+		return result;
+	}
+
 	// deprecated for now
 #if 0
 	shared<Mesh> Mesh::Load(const std::string& path)

@@ -23,6 +23,7 @@ namespace eng
 			const std::string& fragmentSource);
 
 		const shared<ShaderProgram>& GetDefaultShaderProgram();
+		const shared<ShaderProgram>& GetDefault2DShaderProgram();
 
 		GLuint CreateVertexBuffer(const std::vector<float>& verticies);
 		GLuint CreateIndexBuffer(const std::vector<uint32_t>& indicies);
@@ -38,5 +39,6 @@ namespace eng
 
 	private:
 		shared<ShaderProgram> m_DefaultShaderProgram;
+		shared<ShaderProgram> m_Default2DShaderProgram;
 	};
 }

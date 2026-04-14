@@ -44,3 +44,17 @@ Rigidbody comes in three types:
 Static (immovable = environments), 
 Dynamic (fully simulated = simulated objects), 
 Kinematic (moved by code, but can affect dynamic objects e.g. moving platforms, elevators, player character capsule = scripted motion)	
+
+Sprite
+A sprite is a plane, a rectangle with a texture applied to it, that always faces the camera
+Origin Start
+For sprites, the coordinates start in the bottom left corner not the center
+Next: Size, with width(x) and height(y)
+A sprite can use part of a texture like a region in an atlas
+Thus, two UV coordinates: lower left and upper right define which area of the texture to sample
+Pivot Point
+The pivot point is the sprite that rotates around. By default, the pivot is centered at (0.5, 0.5)
+Pivot values range from 0 to 1 relative to the sprite size
+2D transformation
+Sprites only moves on x/y and rotate around z axis
+Thus, the translation, scaling and rotation are easier to manage than 3D objects

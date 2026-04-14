@@ -138,6 +138,7 @@ namespace eng
 		m_GraphicsAPI.Init();
 		m_PhysicsManager.Init();
 		m_AudioManager.Init();
+		m_RenderQueue.Init();
 		return m_Application->Init();
 	}
 

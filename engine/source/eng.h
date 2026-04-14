@@ -23,6 +23,7 @@
 #include "scene/components/PhysicsComponent.h"
 #include "scene/components/AudioComponent.h"
 #include "scene/components/AudioListenerComponent.h"
+#include "scene/components/SpriteComponent.h"
 #include "source/io/FileSystem.h"
 #include "source/physics/PhysicsManager.h"
 #include "source/physics/Collider.h"

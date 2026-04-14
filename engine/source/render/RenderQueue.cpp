@@ -6,13 +6,24 @@
 
 namespace eng
 {
+	void RenderQueue::Init()
+	{
+		m_Mesh2D = Mesh::CreatePlane();
+	}
+
 	void RenderQueue::Submit(const RenderCommand& command)
 	{
 		m_Commands.push_back(command);
 	}
 
+	void RenderQueue::Submit(const RenderCommand2D& command)
+	{
+		m_Commands2D.push_back(command);
+	}
+
 	void RenderQueue::Draw(GraphicsAPI& graphicsAPI, const CameraData& cameraData, const List<LightData>& lights)
 	{
+		// Render 3D objects
 		for (auto& command : m_Commands)
 		{
 			graphicsAPI.BindMaterial(command.material);
@@ -35,5 +46,16 @@ namespace eng
 		}
 
 		m_Commands.clear();
+
+		// Render 2D objects
+		// bind the mesh first
+		m_Mesh2D->Bind();
+		for (auto& command : m_Commands2D)
+		{
+			// render
+			m_Mesh2D->Draw();
+		}
+		// unbind the mesh
+		m_Mesh2D->Unbind();
 	}
 }

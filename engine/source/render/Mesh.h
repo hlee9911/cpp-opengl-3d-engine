@@ -31,6 +31,8 @@ namespace eng
 		// stacks and sectors define how smooth the sphere will be
 		static shared<Mesh> CreateSphere(float radius, int sectors, int stacks);
 
+		static shared<Mesh> CreatePlane();
+
 	private:
 		VertexLayout m_VertexLayout;
 		GLuint m_VAO = 0;
