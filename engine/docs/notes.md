@@ -58,3 +58,8 @@ Pivot values range from 0 to 1 relative to the sprite size
 2D transformation
 Sprites only moves on x/y and rotate around z axis
 Thus, the translation, scaling and rotation are easier to manage than 3D objects
+2D Rendering
+2D at z = 0 can fight with the 3D depth. To prevent this, add depth test toggling in GraphicsAPI.
+Blend Mode
+Blend mode defines how the sprite's colors blend with the background
+

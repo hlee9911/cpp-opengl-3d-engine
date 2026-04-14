@@ -1,5 +1,8 @@
 #include "scene/components/SpriteComponent.h"
 #include "graphics/Texture.h"
+#include "render/RenderQueue.h"
+#include "scene/GameObject.h"
+#include "Engine.h"
 
 #include <string>
 
@@ -76,6 +79,19 @@ namespace eng
 	void SpriteComponent::Update(float deltaTime)
 	{
 		if (!m_Texture || !m_Visible) return;
+
+		// render queue submission
+		RenderCommand2D command;
+		command.modelMatrix = GetOwner()->GetWorldTransform2D();
+		command.texture = m_Texture.get();
+		command.color = m_Color;
+		command.size = m_Size;
+		command.lowerLeftUV = m_LowerLeftUV;
+		command.upperRightUV = m_UpperRightUV;
+		command.pivot = m_Pivot;
+
+		auto& renderQueue = Engine::GetInstance().GetRenderQueue();
+		renderQueue.Submit(command);
 	}
 
 }

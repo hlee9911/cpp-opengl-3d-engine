@@ -113,18 +113,18 @@ namespace eng
 		return m_Position;
 	}
 
-	glm::vec3 GameObject::GetWorldPosition() const
+	const glm::vec3 GameObject::GetWorldPosition() const noexcept
 	{
 		glm::vec4 hom = GetWorldTransform() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 		return glm::vec3(hom) / hom.w;
 	}
 
-	glm::vec2 GameObject::GetPosition2D() const
+	const glm::vec2 GameObject::GetPosition2D() const noexcept
 	{
 		return glm::vec2(m_Position);
 	}
-
-	glm::vec2 GameObject::GetWorldPosition2D() const
+	
+	const glm::vec2 GameObject::GetWorldPosition2D() const noexcept
 	{
 		glm::vec4 hom = GetWorldTransform2D() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 		return glm::vec3(hom) / hom.w;
@@ -135,7 +135,7 @@ namespace eng
 		m_Position = pos;
 	}
 
-	void GameObject::SetWorldPosition(const glm::vec3& pos)
+	void GameObject::SetWorldPosition(const glm::vec3& pos) noexcept
 	{
 		if (m_Parent)
 		{
@@ -153,12 +153,12 @@ namespace eng
 		}
 	}
 
-	void GameObject::SetPosition2D(const glm::vec2& pos)
+	void GameObject::SetPosition2D(const glm::vec2& pos) noexcept
 	{
 		SetPosition(glm::vec3(pos, 0.0f));
 	}
 
-	void GameObject::SetWorldPosition2D(const glm::vec2& pos)
+	void GameObject::SetWorldPosition2D(const glm::vec2& pos) noexcept
 	{
 		SetWorldPosition(glm::vec3(pos, 0.0f));
 	}
@@ -168,7 +168,7 @@ namespace eng
 		return m_Rotation;
 	}
 
-	glm::quat GameObject::GetWorldRotation() const
+	const glm::quat GameObject::GetWorldRotation() const noexcept
 	{
 		if (m_Parent)
 		{
@@ -181,7 +181,7 @@ namespace eng
 		}
 	}
 
-	float GameObject::GetRotation2D() const
+	const float GameObject::GetRotation2D() const noexcept
 	{
 		return glm::angle(m_Rotation);
 	}
@@ -191,7 +191,7 @@ namespace eng
 		m_Rotation = rot;
 	}
 
-	void GameObject::SetWorldRotation(const glm::quat& rot)
+	void GameObject::SetWorldRotation(const glm::quat& rot) noexcept
 	{
 		if (m_Parent)
 		{
@@ -208,7 +208,7 @@ namespace eng
 		}
 	}
 
-	void GameObject::SetRotation2D(float rot)
+	void GameObject::SetRotation2D(float rot) noexcept
 	{
 		SetRotation(glm::angleAxis(rot, glm::vec3(0.0f, 0.0f, 1.0f)));
 	}
@@ -233,7 +233,7 @@ namespace eng
 		SetScale(glm::vec3(scale, 1.0f));
 	}
 
-	glm::mat4 GameObject::GetLocalTransform() const
+	const glm::mat4 GameObject::GetLocalTransform() const noexcept
 	{
 		// identity matrix
 		glm::mat4 mat = glm::mat4(1.0f);
@@ -251,7 +251,7 @@ namespace eng
 		return mat;
 	}
 
-	glm::mat4 GameObject::GetLocalTransform2D() const
+	const glm::mat4 GameObject::GetLocalTransform2D() const noexcept
 	{
 		glm::mat4 mat = glm::mat4(1.0f);
 		
@@ -273,7 +273,7 @@ namespace eng
 		return mat;
 	}
 
-	glm::mat4 GameObject::GetWorldTransform() const
+	const glm::mat4 GameObject::GetWorldTransform() const noexcept
 	{
 		if (m_Parent)
 		{
@@ -282,7 +282,7 @@ namespace eng
 		return GetLocalTransform();
 	}
 
-	glm::mat4 GameObject::GetWorldTransform2D() const
+	const glm::mat4 GameObject::GetWorldTransform2D() const noexcept
 	{
 		if (m_Parent)
 		{

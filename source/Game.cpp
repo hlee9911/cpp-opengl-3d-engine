@@ -209,9 +209,31 @@ bool Game::Init()
 	// camera->SetPosition(glm::vec3(0.0f, 1.0f, 7.0f));
 #endif
 	
-	auto scene = eng::Scene::Load("scenes/scene.sc");
-	m_Scene = scene;
-	eng::Engine::GetInstance().SetScene(scene);
+	// commenting out to test 2d rendering
+	//auto scene = eng::Scene::Load("scenes/scene.sc");
+	//m_Scene = scene;
+	//eng::Engine::GetInstance().SetScene(scene);
+
+	m_Scene = std::make_shared<eng::Scene>();
+	eng::Engine::GetInstance().SetScene(m_Scene);
+
+	auto sprite = m_Scene->CreateGameObject("Sprite");
+	auto spriteComponent = new eng::SpriteComponent();
+
+	auto texture = eng::Texture::Load("textures/brick.png");
+	spriteComponent->SetTexture(texture);
+
+	sprite->AddComponenet(spriteComponent);
+	sprite->SetPosition2D(glm::vec2(500.0f, 500.0f));
+
+	spriteComponent->SetSize(glm::vec2(200.0f, 100.0f));
+	spriteComponent->SetUpperRightUV(glm::vec2(2.0f, 1.0f));
+	sprite->SetRotation2D(glm::radians(45.0f));
+
+	auto camera = m_Scene->CreateGameObject("Camera");
+	auto cameraComponent = new eng::CameraComponent();
+	camera->AddComponenet(cameraComponent);
+	m_Scene->SetMainCamera(camera);
 
 	return true;
 }

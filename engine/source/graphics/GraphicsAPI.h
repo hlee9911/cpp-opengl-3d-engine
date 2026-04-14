@@ -14,6 +14,15 @@ namespace eng
 	class Material;
 	class Mesh;
 
+	// Blend modes for rendering
+	enum class BlendMode
+	{
+		Disabled,
+		Alpha,
+		Additive,
+		Multiply
+	};
+
 	class GraphicsAPI
 	{
 	public:
@@ -30,6 +39,8 @@ namespace eng
 
 		void SetClearColor(float r, float g, float b, float a);
 		void ClearBuffers();
+		void SetDepthTestEnabled(bool enabled);
+		void SetBlendMode(BlendMode mode);
 	
 		void BindShaderProgram(ShaderProgram* shaderProgram);
 		void BindMaterial(Material* material);

@@ -58,30 +58,30 @@ namespace eng
 		GameObject* FindChildByName(const std::string& name);
 		
 		const glm::vec3& GetPosition() const noexcept;
-		glm::vec3 GetWorldPosition() const;
-		glm::vec2 GetPosition2D() const;
-		glm::vec2 GetWorldPosition2D() const;
+		const glm::vec3 GetWorldPosition() const noexcept;
+		const glm::vec2 GetPosition2D() const noexcept;
+		const glm::vec2 GetWorldPosition2D() const noexcept;
 		void SetPosition(const glm::vec3& pos) noexcept;
-		void SetWorldPosition(const glm::vec3& pos);
-		void SetPosition2D(const glm::vec2& pos);
-		void SetWorldPosition2D(const glm::vec2& pos);
+		void SetWorldPosition(const glm::vec3& pos) noexcept;
+		void SetPosition2D(const glm::vec2& pos) noexcept;
+		void SetWorldPosition2D(const glm::vec2& pos) noexcept;
 
 		const glm::quat& GetRotation() const noexcept;
-		glm::quat GetWorldRotation() const;
-		float GetRotation2D() const;
+		const glm::quat GetWorldRotation() const noexcept;
+		const float GetRotation2D() const noexcept;
 		void SetRotation(const glm::quat& rot) noexcept;
-		void SetWorldRotation(const glm::quat& rot);
-		void SetRotation2D(float rot);
+		void SetWorldRotation(const glm::quat& rot) noexcept;
+		void SetRotation2D(float rot) noexcept;
 
 		const glm::vec3& GetScale() const noexcept;
 		const glm::vec2& GetScale2D() const noexcept;
 		void SetScale(const glm::vec3& scale) noexcept;
 		void SetScale2D(const glm::vec2& scale) noexcept;
 
-		glm::mat4 GetLocalTransform() const;
-		glm::mat4 GetLocalTransform2D() const;
-		glm::mat4 GetWorldTransform() const;
-		glm::mat4 GetWorldTransform2D() const;
+		const glm::mat4 GetLocalTransform() const noexcept;
+		const glm::mat4 GetLocalTransform2D() const noexcept;
+		const glm::mat4 GetWorldTransform() const noexcept;
+		const glm::mat4 GetWorldTransform2D() const noexcept;
 
 		static GameObject* LoadGLTF(const std::string& path, Scene* gameScene);
 

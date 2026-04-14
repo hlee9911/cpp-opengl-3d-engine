@@ -9,6 +9,7 @@ namespace eng
 	{
 		glm::mat4 viewMatrix;
 		glm::mat4 projectionMatrix;
+		glm::mat4 orthoMatrix;
 		glm::vec3 position;
 	};
 
