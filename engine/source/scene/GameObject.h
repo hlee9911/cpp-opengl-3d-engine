@@ -47,7 +47,8 @@ namespace eng
 			for (auto& component : m_Components)
 			{
 				// runtime Id is generated the same wy for every type
-				if (component->GetTypeId() == typeId) // if IDs match, we found the component we want
+				if (component->GetTypeId() == typeId ||
+					ComponentFactory::GetInstance().HasParent(component->GetTypeId(), typeId)) // if IDs match, we found the component we want
 				{
 					return static_cast<T*>(component.get());
 				}
@@ -56,6 +57,7 @@ namespace eng
 		}
 
 		GameObject* FindChildByName(const std::string& name);
+		const List<unique<GameObject>>& GetChildren() const noexcept { return m_Children; }
 		
 		const glm::vec3& GetPosition() const noexcept;
 		const glm::vec3 GetWorldPosition() const noexcept;

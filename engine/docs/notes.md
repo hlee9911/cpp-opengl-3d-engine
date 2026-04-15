@@ -63,3 +63,21 @@ Thus, the translation, scaling and rotation are easier to manage than 3D objects
 Blend Mode
 Blend mode defines how the sprite's colors blend with the background
 
+Parent-type hierarchy inside a ComponentFactory
+Each type store its parent type IDs
+For ex, TextComponent lists UIElementComponent as a parent
+And UIElementComponent then lists Component as a parent
+We will store these links in a map of type ID to parent type IDs
+When we want to check if a component is a certain type, 
+we can traverse up the hierarchy using this map.
+That way, GetComponent can match by inheritance, not just exact type.
+We'll keep the parent links in m_ParentMap. One record per type.
+Recap for ComponentFactory:
+Ex)
+1) Attach a TextComponent to a GameObject
+2) It's registered as a child of UIElementComponent
+3) CanvasComponent searches for UIElementComponent
+4) ComponentFactory checks and confirms TextComponent is a child of UIElementComponent
+5) Then the canvas calls Render()
+6) This works recursively through the UI subtree, allowing for flexible component relationships and rendering order.
+
