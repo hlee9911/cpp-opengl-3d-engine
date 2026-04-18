@@ -139,6 +139,8 @@ namespace eng
 		m_PhysicsManager.Init();
 		m_AudioManager.Init();
 		m_RenderQueue.Init();
+		m_FontManager.Init();
+
 		return m_Application->Init();
 	}
 
@@ -262,5 +264,10 @@ namespace eng
 	AudioManager& Engine::GetAudioManager() noexcept
 	{
 		return m_AudioManager;
+	}
+
+	FontManager& Engine::GetFontManager() noexcept
+	{
+		return m_FontManager;
 	}
 }

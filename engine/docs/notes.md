@@ -81,3 +81,14 @@ Ex)
 5) Then the canvas calls Render()
 6) This works recursively through the UI subtree, allowing for flexible component relationships and rendering order.
 
+Font and Text Rendering
+A font file is essentially a set of mathematical functions
+It describes glyphs which is an individual characters from various alphabets
+Each glyph has a unified code
+Thus, in any character table, we can find the same glyph by its code and get a consistent style
+The font file stores a table of glyphs
+Each glyph stores a mathematical description of its shape.
+That means we can scale a font up or down with no loss in quality, but our engine doesnt draw analytic curves
+It draws rasters (bitmaps)
+So we rasterize the font at a specific pixel size
+After rasterization, glyph images behave like regular textures. And after that we can render them as sprites

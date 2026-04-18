@@ -8,6 +8,7 @@
 #include "io/FileSystem.h"
 #include "physics/PhysicsManager.h"
 #include "audio/AudioManager.h"
+#include "font/FontManager.h"
 #include "Core.h"
 
 #include <chrono>
@@ -46,6 +47,7 @@ namespace eng
 		TextureManager& GetTextureManager() noexcept;
 		PhysicsManager& GetPhysicsManager() noexcept;
 		AudioManager& GetAudioManager() noexcept;
+		FontManager& GetFontManager() noexcept;
 
 		// void SetScene(Scene* scene) noexcept { m_CurrentScene.reset(scene); }
 		void SetScene(shared<Scene> scene) noexcept { m_CurrentScene = scene; }
@@ -62,6 +64,8 @@ namespace eng
 		TextureManager m_TextureManager;
 		PhysicsManager m_PhysicsManager;
 		AudioManager m_AudioManager;
+		FontManager m_FontManager;
+
 		shared<Scene> m_CurrentScene;
 	};
 }
