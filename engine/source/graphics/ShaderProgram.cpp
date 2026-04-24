@@ -39,6 +39,12 @@ namespace eng
 		return location;
 	}
 
+	void ShaderProgram::SetUniform(const std::string& name, int value)
+	{
+		auto location = GetUniformLocation(name);
+		glUniform1i(location, value);
+	}
+
 	/// <summary>
 	/// Sets the value of a float uniform variable in the shader program.
 	/// </summary>

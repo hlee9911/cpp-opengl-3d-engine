@@ -102,12 +102,50 @@ namespace eng
 	{
 		if (m_IndexCount > 0)
 		{
-			glDrawElements(GL_TRIANGLES, m_IndexCount, GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(m_IndexCount), GL_UNSIGNED_INT, 0);
 		}
 		else
 		{
-			glDrawArrays(GL_TRIANGLES, 0, m_VertexCount);
+			glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(m_VertexCount));
 		}
+	}
+
+	void Mesh::DrawIndexedRange(uint32_t startIndex, uint32_t indexCount)
+	{
+		if (indexCount == 0) return;
+
+		glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indexCount), 
+			GL_UNSIGNED_INT,
+			reinterpret_cast<void*>(static_cast<size_t>(startIndex) * sizeof(uint32_t)));
+	}
+
+	// reupload mesh data each frame
+	void Mesh::UpdateDynamic(const List<float>& verticies)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+		glBufferData(GL_ARRAY_BUFFER, verticies.size() * sizeof(float), verticies.data(), GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		m_VertexCount = (verticies.size() * sizeof(float)) / m_VertexLayout.stride;
+	}
+
+	void Mesh::UpdateDynamic(const List<float>& verticies, const List<uint32_t>& indicies)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+		glBufferData(GL_ARRAY_BUFFER, verticies.size() * sizeof(float), verticies.data(), GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		m_VertexCount = (verticies.size() * sizeof(float)) / m_VertexLayout.stride;
+
+		if (m_EBO == 0)
+		{
+			Engine::GetInstance().GetGraphicsAPI().CreateIndexBuffer(indicies);
+		}
+		else
+		{
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicies.size() * sizeof(uint32_t), indicies.data(), GL_DYNAMIC_DRAW);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		}
+		m_IndexCount = indicies.size();
 	}
 
 	/// <summary>

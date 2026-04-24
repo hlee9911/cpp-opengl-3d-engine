@@ -237,6 +237,56 @@ namespace eng
 		return m_Default2DShaderProgram;
 	}
 
+	const shared<ShaderProgram>& GraphicsAPI::GetDefaultUIShaderProgram()
+	{
+		if (!m_DefaultUIShaderProgram)
+		{
+			std::string vertexShaderSource = R"(
+				#version 330 core
+				layout(location = 0) in vec2 position;
+				layout(location = 1) in vec4 color;
+				layout(location = 2) in vec2 uv;
+
+				out vec2 vUV;
+				out vec4 vColor;
+
+				uniform mat4 uProjection;
+
+				void main()
+				{
+					vUV = uv;
+					vColor = color;
+
+					gl_Position = uProjection * vec4(position, 0.0, 1.0);
+				}
+			)";
+
+			// sample uTex or output flat vColor
+			std::string fragmentShaderSource = R"(
+				#version 330 core
+
+				in vec2 vUV;
+				in vec4 vColor;
+
+				uniform sampler2D uTex;
+				uniform int uUseTexture;
+
+				out vec4 FragColor;
+
+				void main()
+				{
+					vec4 src = (uUseTexture != 0) ? texture(uTex, vUV) * vColor : vColor;
+					FragColor = src;
+				}
+
+			)";
+
+			m_DefaultUIShaderProgram = CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
+		}
+
+		return m_DefaultUIShaderProgram;
+	}
+
 	GLuint GraphicsAPI::CreateVertexBuffer(const std::vector<float>& verticies)
 	{
 		GLuint VBO = 0;
@@ -272,6 +322,20 @@ namespace eng
 	{
 		// need to clear the color buffer and the depth buffer as well
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+
+	const Rect& GraphicsAPI::GetViewport() const
+	{
+		return m_Viewport;
+	}
+
+	void GraphicsAPI::SetViewport(int x, int y, int width, int height)
+	{
+		glViewport(x, y, width, height);
+		m_Viewport.x = x;
+		m_Viewport.y = y;
+		m_Viewport.width = width;
+		m_Viewport.height = height;
 	}
 
 	void GraphicsAPI::SetDepthTestEnabled(bool enabled)

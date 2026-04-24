@@ -65,6 +65,10 @@ set(PROJECT_SOURCE_FILES
 	source/scene/components/ui/CanvasComponent.cpp
 	source/scene/components/ui/TextComponent.h
 	source/scene/components/ui/TextComponent.cpp
+	source/scene/components/ui/ButtonComponent.h
+	source/scene/components/ui/ButtonComponent.cpp
+	source/scene/components/ui/UIInputSystem.h
+	source/scene/components/ui/UIInputSystem.cpp
 	source/io/FileSystem.h
 	source/io/FileSystem.cpp
 	source/physics/PhysicsManager.h

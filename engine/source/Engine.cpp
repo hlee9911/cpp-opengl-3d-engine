@@ -47,10 +47,12 @@ namespace eng
 		if (action == GLFW_PRESS)
 		{
 			inputManager.SetMouseButtonPressed(button, true);
+			inputManager.SetMouseButtonWasPressed(button, true);
 		}
 		else if (action == GLFW_RELEASE)
 		{
 			inputManager.SetMouseButtonPressed(button, false);
+			inputManager.SetMouseButtonWasReleased(button, true);
 		}
 	}
 
@@ -81,6 +83,19 @@ namespace eng
 		inputManager.SetMousePositionCurrent(currentPos);
 
 		inputManager.SetMousePositionChanged(true);
+	}
+
+	/// <summary>
+	/// This function is called by GLFW when the window is resized, 
+	/// and it updates the OpenGL viewport to match the new window size
+	/// </summary>
+	/// <param name="window"></param>
+	/// <param name="width"></param>
+	/// <param name="height"></param>
+	void windowSizeCallback(GLFWwindow* window, int width, int height)
+	{
+		Engine& engine = Engine::GetInstance();
+		engine.GetGraphicsAPI().SetViewport(0, 0, width, height);
 	}
 
 	Engine& Engine::GetInstance()
@@ -123,6 +138,7 @@ namespace eng
 		glfwSetKeyCallback(m_Window, keyCallback);
 		glfwSetMouseButtonCallback(m_Window, mouseButtonCallback);
 		glfwSetCursorPosCallback(m_Window, cursorPositionCallback);
+		glfwSetWindowSizeCallback(m_Window, windowSizeCallback);
 		glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // hide the cursor and capture it within the window
 
 		glfwMakeContextCurrent(m_Window);
@@ -136,6 +152,7 @@ namespace eng
 		}
 
 		m_GraphicsAPI.Init();
+		m_GraphicsAPI.SetViewport(0, 0, width, height);
 		m_PhysicsManager.Init();
 		m_AudioManager.Init();
 		m_RenderQueue.Init();
@@ -160,6 +177,12 @@ namespace eng
 
 			// Update physics
 			m_PhysicsManager.Update(deltaTime);
+
+			// Update UI input system
+			if (m_UIInputSystem.IsActive())
+			{
+				m_UIInputSystem.Update(deltaTime);
+			}
 
 			// Update application
 			m_Application->Update(deltaTime);
@@ -206,7 +229,8 @@ namespace eng
 
 			// before we move onto the nextframe, we set the current mouse position to the old one
 			// m_InputManager.SetMousePositionOld(m_InputManager.GetMousePositionCurrent());
-			m_InputManager.SetMousePositionChanged(false);
+			// m_InputManager.SetMousePositionChanged(false);
+			m_InputManager.ClearStates();
 		}
 	}
 
@@ -269,5 +293,10 @@ namespace eng
 	FontManager& Engine::GetFontManager() noexcept
 	{
 		return m_FontManager;
+	}
+
+	UIInputSystem& Engine::GetUIInputSystem() noexcept
+	{
+		return m_UIInputSystem;
 	}
 }

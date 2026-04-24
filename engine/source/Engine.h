@@ -9,6 +9,7 @@
 #include "physics/PhysicsManager.h"
 #include "audio/AudioManager.h"
 #include "font/FontManager.h"
+#include "scene/components/ui/UIInputSystem.h"
 #include "Core.h"
 
 #include <chrono>
@@ -48,6 +49,7 @@ namespace eng
 		PhysicsManager& GetPhysicsManager() noexcept;
 		AudioManager& GetAudioManager() noexcept;
 		FontManager& GetFontManager() noexcept;
+		UIInputSystem& GetUIInputSystem() noexcept;
 
 		// void SetScene(Scene* scene) noexcept { m_CurrentScene.reset(scene); }
 		void SetScene(shared<Scene> scene) noexcept { m_CurrentScene = scene; }
@@ -65,6 +67,7 @@ namespace eng
 		PhysicsManager m_PhysicsManager;
 		AudioManager m_AudioManager;
 		FontManager m_FontManager;
+		UIInputSystem m_UIInputSystem;
 
 		shared<Scene> m_CurrentScene;
 	};

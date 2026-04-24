@@ -235,6 +235,19 @@ bool Game::Init()
 	camera->AddComponenet(cameraComponent);
 	m_Scene->SetMainCamera(camera);
 
+	// UI Test
+	auto canvas = m_Scene->CreateGameObject("Canvas");
+	auto canvasComponent = new eng::CanvasComponent();
+	canvas->AddComponenet(canvasComponent);
+
+	auto text = m_Scene->CreateGameObject("Text", canvas);
+	text->SetPosition2D(glm::vec2(300.0f, 300.0f));
+	auto textComponent = new eng::TextComponent();
+	text->AddComponenet(textComponent);
+	textComponent->SetText("Some Text");
+	textComponent->SetFont("fonts/arial.ttf", 24);
+	textComponent->SetColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+
 	return true;
 }
 

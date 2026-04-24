@@ -14,6 +14,12 @@ namespace eng
 
 	public:
 		virtual void Render(CanvasComponent* canvas);
+		virtual bool HitTest(const glm::vec2& pos) const;
+		virtual void OnPointerEnter();
+		virtual void OnPointerExit();
+		virtual void OnPointerUp();
+		virtual void OnPointerDown();
+		virtual void OnPointerClick();
 
 	protected:
 		glm::vec2 m_Pivot = glm::vec2(0.5f);

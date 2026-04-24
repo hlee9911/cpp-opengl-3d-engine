@@ -4,6 +4,8 @@
 #include "graphics/GraphicsAPI.h"
 #include "graphics/ShaderProgram.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 namespace eng
 {
 	void RenderQueue::Init()
@@ -19,6 +21,11 @@ namespace eng
 	void RenderQueue::Submit(const RenderCommand2D& command)
 	{
 		m_Commands2D.push_back(command);
+	}
+
+	void RenderQueue::Submit(const RenderCommandUI& command)
+	{
+		m_CommandsUI.push_back(command);
 	}
 
 	void RenderQueue::Draw(GraphicsAPI& graphicsAPI, const CameraData& cameraData, const List<LightData>& lights)
@@ -75,5 +82,43 @@ namespace eng
 		graphicsAPI.SetBlendMode(BlendMode::Disabled); // disable blending after 2D rendering
 		// this ensures to isolates the 2D rendering state changes from the 3D rendering
 		graphicsAPI.SetDepthTestEnabled(true); // re-enable depth testing for 3D rendering
+		m_Commands2D.clear();
+		
+		// Render UI Objects
+		graphicsAPI.SetDepthTestEnabled(false); // disable depth testing for UI rendering
+		graphicsAPI.SetBlendMode(BlendMode::Alpha); // enable alpha blending for UI rendering
+		// we render UI objects in batches, so we loop through the commands and render each batch one by one
+		for (auto& command : m_CommandsUI)
+		{
+			glm::mat4 ortho = glm::ortho(
+				0.0f, static_cast<float>(command.screenWidth),
+				0.0f, static_cast<float>(command.screenHeight)
+			);
+			command.shaderProgram->Bind();
+			command.shaderProgram->SetUniform("uProjection", ortho);
+
+			command.mesh->Bind();
+
+			uint32_t indexBase = 0;
+			// each batch corresponds to a draw call, so we loop through the batches and draw them one by one
+			for (auto& batch : command.batches)
+			{
+				if (batch.texture)
+				{
+					command.shaderProgram->SetUniform("uUseTexture", 1);
+					command.shaderProgram->SetTexture("uTex", batch.texture);
+				}
+				else
+				{
+					command.shaderProgram->SetUniform("uUseTexture", 0);
+				}
+				command.mesh->DrawIndexedRange(indexBase, batch.indexCount);
+				indexBase += batch.indexCount;
+			}
+			command.mesh->Unbind();
+		}
+		graphicsAPI.SetBlendMode(BlendMode::Disabled); // disable blending after UI rendering
+		graphicsAPI.SetDepthTestEnabled(true); // re-enable depth testing for 3D rendering
+		m_CommandsUI.clear();
 	}
 }

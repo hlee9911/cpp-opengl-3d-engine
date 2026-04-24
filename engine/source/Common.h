@@ -5,6 +5,7 @@
 
 namespace eng
 {
+	class Texture;
 	struct CameraData
 	{
 		glm::mat4 viewMatrix;
@@ -17,5 +18,11 @@ namespace eng
 	{
 		glm::vec3 color;
 		glm::vec3 position;
+	};
+
+	struct UIBatch
+	{
+		Texture* texture = nullptr;
+		uint32_t indexCount = 0;
 	};
 }

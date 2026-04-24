@@ -92,3 +92,10 @@ That means we can scale a font up or down with no loss in quality, but our engin
 It draws rasters (bitmaps)
 So we rasterize the font at a specific pixel size
 After rasterization, glyph images behave like regular textures. And after that we can render them as sprites
+
+Text Component Rendering
+Add batching: merge draws that share the same state
+same uUseTexture and the same Texture can be one batch
+GL_DRAW_STATIC
+Static: upload once, draw many times
+Dynamic: upload every frame, draw many times (UI updates every frame, so we use this)

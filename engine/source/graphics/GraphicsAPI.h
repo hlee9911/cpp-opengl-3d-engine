@@ -23,6 +23,15 @@ namespace eng
 		Multiply
 	};
 
+	struct Rect
+	{
+		int x = 0;
+		int y = 0;
+
+		int width = 0;
+		int height = 0;
+	};
+
 	class GraphicsAPI
 	{
 	public:
@@ -33,12 +42,15 @@ namespace eng
 
 		const shared<ShaderProgram>& GetDefaultShaderProgram();
 		const shared<ShaderProgram>& GetDefault2DShaderProgram();
+		const shared<ShaderProgram>& GetDefaultUIShaderProgram();
 
 		GLuint CreateVertexBuffer(const std::vector<float>& verticies);
 		GLuint CreateIndexBuffer(const std::vector<uint32_t>& indicies);
 
 		void SetClearColor(float r, float g, float b, float a);
 		void ClearBuffers();
+		const Rect& GetViewport() const;
+		void SetViewport(int x, int y, int width, int height);
 		void SetDepthTestEnabled(bool enabled);
 		void SetBlendMode(BlendMode mode);
 	
@@ -49,7 +61,9 @@ namespace eng
 		void DrawMesh(Mesh* mesh);
 
 	private:
+		Rect m_Viewport;
 		shared<ShaderProgram> m_DefaultShaderProgram;
 		shared<ShaderProgram> m_Default2DShaderProgram;
+		shared<ShaderProgram> m_DefaultUIShaderProgram;
 	};
 }

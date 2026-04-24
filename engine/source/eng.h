@@ -27,6 +27,8 @@
 #include "scene/components/ui/UIElementComponent.h"
 #include "scene/components/ui/CanvasComponent.h"
 #include "scene/components/ui/TextComponent.h"
+#include "scene/components/ui/ButtonComponent.h"
+#include "scene/components/ui/UIInputSystem.h"
 #include "io/FileSystem.h"
 #include "physics/PhysicsManager.h"
 #include "physics/Collider.h"
