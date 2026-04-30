@@ -14,6 +14,7 @@ namespace eng
 		COMPONENT_WITH_PARENT(ButtonComponent, UIElementComponent)
 
 	public:
+		void LoadProperties(const nlohmann::json& json) override;
 		void Render(CanvasComponent* canvas) override;
 		bool HitTest(const glm::vec2& pos) const override;
 		void OnPointerEnter() override;
@@ -27,6 +28,12 @@ namespace eng
 
 		void SetColor(const glm::vec4& color) noexcept { m_Color = color; }
 		const glm::vec4& GetColor() const noexcept { return m_Color; }
+
+		void SetHoveredColor(const glm::vec4& color) noexcept { m_HoveredColor = color; }
+		const glm::vec4& GetHoveredColor() const noexcept { return m_HoveredColor; }
+
+		void SetPressedColor(const glm::vec4& color) noexcept { m_PressedColor = color; }
+		const glm::vec4& GetPressedColor() const noexcept { return m_PressedColor; }
 
 		std::function<void()> onClick;
 

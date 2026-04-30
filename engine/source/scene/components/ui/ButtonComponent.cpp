@@ -4,6 +4,51 @@
 
 namespace eng
 {
+	void ButtonComponent::LoadProperties(const nlohmann::json& json)
+	{
+		if (json.contains("rect"))
+		{
+			auto& rectObj = json["rect"];
+			SetRect(glm::vec2(
+				rectObj.value("x", 1.0f),
+				rectObj.value("y", 1.0f)
+			));
+		}
+
+		if (json.contains("color"))
+		{
+			auto& colorObj = json["color"];
+			SetColor(glm::vec4(
+				colorObj.value("r", 1.0f),
+				colorObj.value("g", 1.0f),
+				colorObj.value("b", 1.0f),
+				colorObj.value("a", 1.0f)
+			));
+		}
+
+		if (json.contains("hovered"))
+		{
+			auto& colorObj = json["hovered"];
+			SetHoveredColor(glm::vec4(
+				colorObj.value("r", 1.0f),
+				colorObj.value("g", 1.0f),
+				colorObj.value("b", 1.0f),
+				colorObj.value("a", 1.0f)
+			));
+		}
+
+		if (json.contains("pressed"))
+		{
+			auto& colorObj = json["pressed"];
+			SetPressedColor(glm::vec4(
+				colorObj.value("r", 1.0f),
+				colorObj.value("g", 1.0f),
+				colorObj.value("b", 1.0f),
+				colorObj.value("a", 1.0f)
+			));
+		}
+	}
+
 	void ButtonComponent::Render(CanvasComponent* canvas)
 	{
 		if (!canvas) return;

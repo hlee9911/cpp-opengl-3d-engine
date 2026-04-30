@@ -240,6 +240,17 @@ bool Game::Init()
 	auto canvasComponent = new eng::CanvasComponent();
 	canvas->AddComponenet(canvasComponent);
 
+	auto& uiInput = eng::Engine::GetInstance().GetUIInputSystem();
+	uiInput.SetActive(true);
+	uiInput.SetActiveCanvas(canvasComponent);
+
+	auto button = m_Scene->CreateGameObject("Button", canvas);
+	button->SetPosition2D(glm::vec2(300.0f, 300.0f));
+	auto buttonComponent = new eng::ButtonComponent();
+	buttonComponent->SetRect(glm::vec2(150.0f, 50.0f));
+	buttonComponent->SetColor(glm::vec4(0.8f, 0.8f, 0.8f, 1.0f));
+	button->AddComponenet(buttonComponent);
+
 	auto text = m_Scene->CreateGameObject("Text", canvas);
 	text->SetPosition2D(glm::vec2(300.0f, 300.0f));
 	auto textComponent = new eng::TextComponent();

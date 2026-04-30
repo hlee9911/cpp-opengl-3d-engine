@@ -11,6 +11,7 @@
 #include "scene/components/ui/UIElementComponent.h"
 #include "scene/components/ui/CanvasComponent.h"
 #include "scene/components/ui/TextComponent.h"
+#include "scene/components/ui/ButtonComponent.h"
 #include "Engine.h"
 
 namespace eng
@@ -29,6 +30,7 @@ namespace eng
 		UIElementComponent::Register();
 		CanvasComponent::Register();
 		TextComponent::Register();
+		ButtonComponent::Register();
 	}
 
 	void Scene::Update(float deltaTime)

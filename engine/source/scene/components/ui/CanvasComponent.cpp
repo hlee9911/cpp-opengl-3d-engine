@@ -95,6 +95,21 @@ namespace eng
 		Engine::GetInstance().GetRenderQueue().Submit(command);
 	}
 
+	// Traverses the UI hierarchy and collects all UIElementComponents into a flat list
+	void CanvasComponent::CollectUI(UIElementComponent* element, List<UIElementComponent*>& out)
+	{
+		out.push_back(element);
+
+		const auto& children = element->GetOwner()->GetChildren();
+		for (const auto& child : children)
+		{
+			if (auto component = child->GetComponent<UIElementComponent>())
+			{
+				CollectUI(component, out);
+			}
+		}
+	}
+
 	void CanvasComponent::DrawRect(
 		const glm::vec2& lowerLeftPos, const glm::vec2& upperRightPos, 
 		const glm::vec2& lowerLeftUV, const glm::vec2& upperRightUV, 
