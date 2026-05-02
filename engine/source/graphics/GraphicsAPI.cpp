@@ -11,7 +11,6 @@ namespace eng
 	{
 		// enable the z buffer
 		glEnable(GL_DEPTH_TEST);
-
 		return true;
 	}
 
@@ -26,6 +25,13 @@ namespace eng
 		const std::string& vertexSource, 
 		const std::string& fragmentSource)
 	{
+		ShaderKey key{ vertexSource, fragmentSource };
+		auto it = m_ShaderCache.find(key);
+		if (it != m_ShaderCache.end())
+		{
+			return it->second; // Return the cached shader program if it exists
+		}
+
 		/////////// vertex shader //////////
 
 		// create vertex shader
@@ -92,7 +98,10 @@ namespace eng
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
 
-		return std::make_shared<ShaderProgram>(shaderProgramID);
+		auto shaderProgram = std::make_shared<ShaderProgram>(shaderProgramID);
+		m_ShaderCache.emplace(key, shaderProgram);
+
+		return shaderProgram;
 	}
 
 	const shared<ShaderProgram>& GraphicsAPI::GetDefaultShaderProgram()

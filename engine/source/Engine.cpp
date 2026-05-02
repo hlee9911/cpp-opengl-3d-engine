@@ -232,6 +232,8 @@ namespace eng
 			// m_InputManager.SetMousePositionChanged(false);
 			m_InputManager.ClearStates();
 		}
+
+		m_Application.reset(nullptr); // ensures a clean shutdown of the application
 	}
 
 	void Engine::Destroy()

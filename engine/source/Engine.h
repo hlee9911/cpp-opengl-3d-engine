@@ -53,8 +53,8 @@ namespace eng
 		UIInputSystem& GetUIInputSystem() noexcept;
 
 		// void SetScene(Scene* scene) noexcept { m_CurrentScene.reset(scene); }
-		void SetScene(shared<Scene> scene) noexcept { m_CurrentScene = scene; }
-		Scene* GetScene() const noexcept { return m_CurrentScene.get(); }
+		void SetScene(const shared<Scene>& scene) noexcept { m_CurrentScene = scene; }
+		const shared<Scene>& GetScene() const noexcept { return m_CurrentScene; }
 
 	private:
 		unique<Application> m_Application;

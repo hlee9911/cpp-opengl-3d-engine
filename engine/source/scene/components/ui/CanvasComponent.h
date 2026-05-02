@@ -18,6 +18,7 @@ namespace eng
 		COMPONENT(CanvasComponent)
 
 	public:
+		void LoadProperties(const nlohmann::json& json) override;
 		void Update(float deltaTime) override;
 		void Init() override;
 		void Render(UIElementComponent* element);
@@ -35,6 +36,9 @@ namespace eng
 			const glm::vec4& color
 		);
 
+		void SetActive(bool active) noexcept { m_Active = active; }
+		bool IsActive() const noexcept { return m_Active; }
+
 	private:
 		void UpdateBatches(Texture* texture);
 
@@ -43,5 +47,6 @@ namespace eng
 		List<float> m_Veriticies;
 		List<uint32_t> m_Indicies;
 		shared<Mesh> m_Mesh;
+		bool m_Active = true;
 	};
 }

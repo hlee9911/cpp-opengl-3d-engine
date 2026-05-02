@@ -32,6 +32,30 @@ namespace eng
 		int height = 0;
 	};
 
+	// Used as a key for caching shader programs based on their vertex and fragment source code
+	struct ShaderKey
+	{
+		std::string vertexSource;
+		std::string fragmentSource;
+
+		bool operator==(const ShaderKey& other) const
+		{
+			return vertexSource == other.vertexSource &&
+				fragmentSource == other.fragmentSource;
+		}
+	};
+
+	// Custom hash function for ShaderKey to be used in unordered_map(Dictionary)
+	struct ShaderKeyHash
+	{
+		std::size_t operator()(const ShaderKey& key) const
+		{
+			size_t h1 = std::hash<std::string>{}(key.vertexSource);
+			size_t h2 = std::hash<std::string>{}(key.fragmentSource);
+			return h1 ^ (h2 << 1); // Combine the two hashes
+		}
+	};
+
 	class GraphicsAPI
 	{
 	public:
@@ -65,5 +89,6 @@ namespace eng
 		shared<ShaderProgram> m_DefaultShaderProgram;
 		shared<ShaderProgram> m_Default2DShaderProgram;
 		shared<ShaderProgram> m_DefaultUIShaderProgram;
+		Dictionary<ShaderKey, shared<ShaderProgram>, ShaderKeyHash> m_ShaderCache;
 	};
 }

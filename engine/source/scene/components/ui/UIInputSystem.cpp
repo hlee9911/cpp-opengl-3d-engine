@@ -9,7 +9,7 @@ namespace eng
 {
 	void UIInputSystem::Update(float deltaTime)
 	{
-		if (!m_Active || !m_ActiveCanvas) return;
+		if (!m_Active || !m_ActiveCanvas || !m_ActiveCanvas->IsActive()) return;
 
 		auto& inputManager = Engine::GetInstance().GetInputManager();
 		bool mouseDown = inputManager.IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT);

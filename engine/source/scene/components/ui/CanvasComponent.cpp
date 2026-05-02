@@ -7,8 +7,16 @@
 
 namespace eng
 {
+	void CanvasComponent::LoadProperties(const nlohmann::json& json)
+	{
+		bool active = json.value("active", true);
+		SetActive(active);
+	}
+
 	void CanvasComponent::Update(float deltaTime)
 	{
+		if (!m_Active) return;
+
 		BeginRendering();
 		const auto& children = m_Owner->GetChildren();
 		for (const auto& child : children)

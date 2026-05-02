@@ -5,6 +5,8 @@
 #include "Bullet.h"
 #include "JumpPlatform.h"
 
+#include <GLFW/glfw3.h>
+
 void Game::RegisterTypes()
 {
 	// engine call this during Engine::Init() after engine-side types are registered
@@ -210,10 +212,56 @@ bool Game::Init()
 #endif
 	
 	// commenting out to test 2d rendering
-	//auto scene = eng::Scene::Load("scenes/scene.sc");
-	//m_Scene = scene;
-	//eng::Engine::GetInstance().SetScene(scene);
+	auto scene = eng::Scene::Load("scenes/scene.sc");
+	m_Scene = scene;
+	auto& engine = eng::Engine::GetInstance();
+	engine.SetScene(m_Scene);
 
+	m_3DRoot = m_Scene->FindObjectByName("3DRoot");
+	if (m_3DRoot)
+	{
+		m_3DRoot->SetActive(false);
+	}
+
+	// UI
+	auto canvasComponent = engine.GetUIInputSystem().GetActiveCanvas();
+	if (!canvasComponent) return false;
+
+	canvasComponent->SetActive(true);
+	engine.SetCursorEnabled(true);
+	engine.GetUIInputSystem().SetActive(true);
+
+	if (auto button = canvasComponent->GetOwner()->FindChildByName("PlayButton"))
+	{
+		if (auto component = button->GetComponent<eng::ButtonComponent>())
+		{
+			component->onClick = [this]()
+				{
+					// clicking playbutton should disable the UI and enable the 3D scene
+					auto& engine = eng::Engine::GetInstance();
+					engine.GetUIInputSystem().GetActiveCanvas()->SetActive(false);
+					engine.SetCursorEnabled(false);
+
+					if (m_3DRoot)
+					{
+						m_3DRoot->SetActive(true);
+					}
+				};
+		}
+	}
+
+	if (auto button = canvasComponent->GetOwner()->FindChildByName("QuitButton"))
+	{
+		if (auto component = button->GetComponent<eng::ButtonComponent>())
+		{
+			component->onClick = [this]()
+				{
+					SetNeedsToBeClosed(true); // clicking quit button should close the application
+				};
+		}
+	}
+
+#if 0
 	m_Scene = std::make_shared<eng::Scene>();
 	eng::Engine::GetInstance().SetScene(m_Scene);
 
@@ -259,12 +307,25 @@ bool Game::Init()
 	textComponent->SetFont("fonts/arial.ttf", 24);
 	textComponent->SetColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 
+#endif
+
 	return true;
 }
 
 void Game::Update(float deltaTime)
 {
 	m_Scene->Update(deltaTime);
+
+	auto& engine = eng::Engine::GetInstance();
+	if (engine.GetInputManager().IsKeyPressed(GLFW_KEY_ESCAPE))
+	{
+		if (m_3DRoot && m_3DRoot->IsActive())
+		{
+			engine.GetUIInputSystem().GetActiveCanvas()->SetActive(true);
+			engine.SetCursorEnabled(true);
+			m_3DRoot->SetActive(false);
+		}
+	}
 }
 
 void Game::Destroy()

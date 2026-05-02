@@ -14,6 +14,8 @@ namespace eng
 		int height;
 
 		int advance;
+		int xOffset = 0;
+		int yOffset = 0;
 	};
 
 	class Font

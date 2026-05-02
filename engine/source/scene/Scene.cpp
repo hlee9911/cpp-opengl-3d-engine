@@ -261,6 +261,24 @@ namespace eng
 		return result;
 	}
 
+	/// <summary>
+	/// This function searches for a GameObject in the scene by its name 
+	/// It iterates through all root GameObjects and their children recursively until it finds a GameObject with the specified name
+	/// </summary>
+	/// <param name="name"></param>
+	/// <returns></returns>
+	GameObject* Scene::FindObjectByName(const std::string& name)
+	{
+		for (auto& obj : m_GameObjects)
+		{
+			if (auto child = obj->FindChildByName(name))
+			{
+				return child;
+			}
+		}
+		return nullptr;
+	}
+
 	List<LightData> Scene::CollectLights()
 	{
 		List<LightData> lights;
@@ -301,6 +319,22 @@ namespace eng
 				if (auto object = child->FindChildByName(cameraObjName))
 				{
 					result->SetMainCamera(object);
+					break;
+				}
+			}
+		}
+
+		std::string activeCanvasName = json.value("activeCanvas", "");
+		// iterate over the root objects to find the active canvas
+		for (auto& child : result->m_GameObjects)
+		{
+			// try find the mainCanvas aand then set it on the UI input system
+			if (auto canvasObject = child->FindChildByName(activeCanvasName))
+			{
+				if (auto component = canvasObject->GetComponent<CanvasComponent>())
+				{
+					// if we found the canvas, set it as active in the UI input system and break the loop
+					Engine::GetInstance().GetUIInputSystem().SetActiveCanvas(component);
 					break;
 				}
 			}
