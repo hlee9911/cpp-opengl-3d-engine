@@ -113,9 +113,20 @@ namespace eng
 		return m_Position;
 	}
 
-	glm::vec3 GameObject::GetWorldPosition() const
+	const glm::vec3 GameObject::GetWorldPosition() const noexcept
 	{
 		glm::vec4 hom = GetWorldTransform() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+		return glm::vec3(hom) / hom.w;
+	}
+
+	const glm::vec2 GameObject::GetPosition2D() const noexcept
+	{
+		return glm::vec2(m_Position);
+	}
+	
+	const glm::vec2 GameObject::GetWorldPosition2D() const noexcept
+	{
+		glm::vec4 hom = GetWorldTransform2D() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 		return glm::vec3(hom) / hom.w;
 	}
 
@@ -124,7 +135,7 @@ namespace eng
 		m_Position = pos;
 	}
 
-	void GameObject::SetWorldPosition(const glm::vec3& pos)
+	void GameObject::SetWorldPosition(const glm::vec3& pos) noexcept
 	{
 		if (m_Parent)
 		{
@@ -142,12 +153,22 @@ namespace eng
 		}
 	}
 
+	void GameObject::SetPosition2D(const glm::vec2& pos) noexcept
+	{
+		SetPosition(glm::vec3(pos, 0.0f));
+	}
+
+	void GameObject::SetWorldPosition2D(const glm::vec2& pos) noexcept
+	{
+		SetWorldPosition(glm::vec3(pos, 0.0f));
+	}
+
 	const glm::quat& GameObject::GetRotation() const noexcept
 	{
 		return m_Rotation;
 	}
 
-	glm::quat GameObject::GetWorldRotation() const
+	const glm::quat GameObject::GetWorldRotation() const noexcept
 	{
 		if (m_Parent)
 		{
@@ -160,12 +181,17 @@ namespace eng
 		}
 	}
 
+	const float GameObject::GetRotation2D() const noexcept
+	{
+		return glm::angle(m_Rotation);
+	}
+
 	void GameObject::SetRotation(const glm::quat& rot) noexcept
 	{
 		m_Rotation = rot;
 	}
 
-	void GameObject::SetWorldRotation(const glm::quat& rot)
+	void GameObject::SetWorldRotation(const glm::quat& rot) noexcept
 	{
 		if (m_Parent)
 		{
@@ -182,9 +208,19 @@ namespace eng
 		}
 	}
 
+	void GameObject::SetRotation2D(float rot) noexcept
+	{
+		SetRotation(glm::angleAxis(rot, glm::vec3(0.0f, 0.0f, 1.0f)));
+	}
+
 	const glm::vec3& GameObject::GetScale() const noexcept
 	{
 		return m_Scale;
+	}
+
+	const glm::vec2& GameObject::GetScale2D() const noexcept
+	{
+		return glm::vec2(m_Scale);
 	}
 
 	void GameObject::SetScale(const glm::vec3& scale) noexcept
@@ -192,7 +228,12 @@ namespace eng
 		m_Scale = scale;
 	}
 
-	glm::mat4 GameObject::GetLocalTransform() const
+	void GameObject::SetScale2D(const glm::vec2& scale) noexcept
+	{
+		SetScale(glm::vec3(scale, 1.0f));
+	}
+
+	const glm::mat4 GameObject::GetLocalTransform() const noexcept
 	{
 		// identity matrix
 		glm::mat4 mat = glm::mat4(1.0f);
@@ -210,13 +251,44 @@ namespace eng
 		return mat;
 	}
 
-	glm::mat4 GameObject::GetWorldTransform() const
+	const glm::mat4 GameObject::GetLocalTransform2D() const noexcept
+	{
+		glm::mat4 mat = glm::mat4(1.0f);
+		
+		// 
+		const auto rotationZ = GetRotation2D();
+		float c = cos(rotationZ);
+		float s = sin(rotationZ);
+
+		// 2D transform is a special case of 3D transform where 
+		// rotation is only around Z axis and scale is uniform in X and Y axes
+		mat[0][0] = m_Scale.x * c;
+		mat[0][1] = m_Scale.x * s;
+		mat[1][0] = -m_Scale.y * s;
+		mat[1][1] = m_Scale.y * c;
+
+		mat[3][0] = m_Position.x;
+		mat[3][1] = m_Position.y;
+
+		return mat;
+	}
+
+	const glm::mat4 GameObject::GetWorldTransform() const noexcept
 	{
 		if (m_Parent)
 		{
 			return m_Parent->GetWorldTransform() * GetLocalTransform();
 		}
 		return GetLocalTransform();
+	}
+
+	const glm::mat4 GameObject::GetWorldTransform2D() const noexcept
+	{
+		if (m_Parent)
+		{
+			return m_Parent->GetWorldTransform2D() * GetLocalTransform2D();
+		}
+		return GetLocalTransform2D();
 	}
 
 	/// <summary>

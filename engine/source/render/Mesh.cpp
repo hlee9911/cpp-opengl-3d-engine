@@ -102,12 +102,50 @@ namespace eng
 	{
 		if (m_IndexCount > 0)
 		{
-			glDrawElements(GL_TRIANGLES, m_IndexCount, GL_UNSIGNED_INT, 0);
+			glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(m_IndexCount), GL_UNSIGNED_INT, 0);
 		}
 		else
 		{
-			glDrawArrays(GL_TRIANGLES, 0, m_VertexCount);
+			glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(m_VertexCount));
 		}
+	}
+
+	void Mesh::DrawIndexedRange(uint32_t startIndex, uint32_t indexCount)
+	{
+		if (indexCount == 0) return;
+
+		glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indexCount), 
+			GL_UNSIGNED_INT,
+			reinterpret_cast<void*>(static_cast<size_t>(startIndex) * sizeof(uint32_t)));
+	}
+
+	// reupload mesh data each frame
+	void Mesh::UpdateDynamic(const List<float>& verticies)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+		glBufferData(GL_ARRAY_BUFFER, verticies.size() * sizeof(float), verticies.data(), GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		m_VertexCount = (verticies.size() * sizeof(float)) / m_VertexLayout.stride;
+	}
+
+	void Mesh::UpdateDynamic(const List<float>& verticies, const List<uint32_t>& indicies)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+		glBufferData(GL_ARRAY_BUFFER, verticies.size() * sizeof(float), verticies.data(), GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		m_VertexCount = (verticies.size() * sizeof(float)) / m_VertexLayout.stride;
+
+		if (m_EBO == 0)
+		{
+			Engine::GetInstance().GetGraphicsAPI().CreateIndexBuffer(indicies);
+		}
+		else
+		{
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicies.size() * sizeof(uint32_t), indicies.data(), GL_DYNAMIC_DRAW);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		}
+		m_IndexCount = indicies.size();
 	}
 
 	/// <summary>
@@ -329,6 +367,47 @@ namespace eng
 		});
 
 		vertexLayout.stride = sizeof(float) * 8; // 3 position + 3 normal + 2 uv'
+
+		auto result = std::make_shared<eng::Mesh>(
+			vertexLayout,
+			verticies,
+			indicies
+		);
+
+		return result;
+	}
+
+	/// <summary>
+	/// Creates a simple plane mesh in the X-Y plane with UV coordinates
+	/// The plane is defined by four vertices forming a square, and two triangles are created to render the plane
+	/// </summary>
+	/// <returns></returns>
+	shared<Mesh> Mesh::CreatePlane()
+	{
+		List<float> verticies =
+		{
+			1.0f, 1.0f,
+			0.0f, 1.0f,
+			0.0f, 0.0f,
+			1.0f, 0.0f
+		};
+
+		List<uint32_t> indicies = 
+		{
+			0, 1, 2,
+			0, 2, 3
+		};
+
+		eng::VertexLayout vertexLayout;
+
+		// position
+		vertexLayout.elements.push_back({
+			VertexElement::PositionIndex,
+			2,
+			GL_FLOAT,
+			0 // index, size, type, offset
+		});
+		vertexLayout.stride = sizeof(float) * 2; // 2 floats per vertex (position)
 
 		auto result = std::make_shared<eng::Mesh>(
 			vertexLayout,

@@ -11,7 +11,6 @@ namespace eng
 	{
 		// enable the z buffer
 		glEnable(GL_DEPTH_TEST);
-
 		return true;
 	}
 
@@ -26,6 +25,13 @@ namespace eng
 		const std::string& vertexSource, 
 		const std::string& fragmentSource)
 	{
+		ShaderKey key{ vertexSource, fragmentSource };
+		auto it = m_ShaderCache.find(key);
+		if (it != m_ShaderCache.end())
+		{
+			return it->second; // Return the cached shader program if it exists
+		}
+
 		/////////// vertex shader //////////
 
 		// create vertex shader
@@ -92,7 +98,10 @@ namespace eng
 		glDeleteShader(vertexShader);
 		glDeleteShader(fragmentShader);
 
-		return std::make_shared<ShaderProgram>(shaderProgramID);
+		auto shaderProgram = std::make_shared<ShaderProgram>(shaderProgramID);
+		m_ShaderCache.emplace(key, shaderProgram);
+
+		return shaderProgram;
 	}
 
 	const shared<ShaderProgram>& GraphicsAPI::GetDefaultShaderProgram()
@@ -118,9 +127,9 @@ namespace eng
 				{
 					vUV = uv;
 
+					vNormal = normalize(transpose(inverse(mat3(uModel))) * normal);
+					
 					vFragPos = vec3(uModel * vec4(position, 1.0));
-
-					vNormal = mat3(transpose(inverse(uModel))) * normal;
 
 					gl_Position = uProjection * uView * uModel * vec4(position, 1.0);
 				}
@@ -181,6 +190,112 @@ namespace eng
 		return m_DefaultShaderProgram;
 	}
 
+	const shared<ShaderProgram>& GraphicsAPI::GetDefault2DShaderProgram()
+	{
+		if (!m_Default2DShaderProgram)
+		{
+			std::string vertexShaderSource = R"(
+				#version 330 core
+				layout(location = 0) in vec2 position;
+
+				out vec2 vUV;
+
+				uniform mat4 uModel;
+				uniform mat4 uView;
+				uniform mat4 uProjection;
+
+				uniform vec2 uPivot;
+				uniform vec2 uSize;
+
+				uniform vec2 uUVMin;
+				uniform vec2 uUVMax;
+
+				void main()
+				{
+					// apply pivot and size transformations to the vertex position
+					vec2 local = (position - uPivot) * uSize;
+					vUV = mix(uUVMin, uUVMax, position);
+
+					gl_Position = uProjection * uView * uModel * vec4(local, 0.0, 1.0);
+				}
+			)";
+
+			std::string fragmentShaderSource = R"(
+				#version 330 core
+
+				in vec2 vUV;
+
+				uniform vec4 uColor;
+
+				uniform sampler2D uTex;
+
+				out vec4 FragColor;
+
+				void main()
+				{
+					// texture color is tinted by the uniform color, allowing for easy color modulation of sprites
+					vec4 src = texture(uTex, vUV) * uColor;
+					FragColor = src;
+				}
+
+			)";
+
+			m_Default2DShaderProgram = CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
+		}
+
+		return m_Default2DShaderProgram;
+	}
+
+	const shared<ShaderProgram>& GraphicsAPI::GetDefaultUIShaderProgram()
+	{
+		if (!m_DefaultUIShaderProgram)
+		{
+			std::string vertexShaderSource = R"(
+				#version 330 core
+				layout(location = 0) in vec2 position;
+				layout(location = 1) in vec4 color;
+				layout(location = 2) in vec2 uv;
+
+				out vec2 vUV;
+				out vec4 vColor;
+
+				uniform mat4 uProjection;
+
+				void main()
+				{
+					vUV = uv;
+					vColor = color;
+
+					gl_Position = uProjection * vec4(position, 0.0, 1.0);
+				}
+			)";
+
+			// sample uTex or output flat vColor
+			std::string fragmentShaderSource = R"(
+				#version 330 core
+
+				in vec2 vUV;
+				in vec4 vColor;
+
+				uniform sampler2D uTex;
+				uniform int uUseTexture;
+
+				out vec4 FragColor;
+
+				void main()
+				{
+					vec4 src = (uUseTexture != 0) ? texture(uTex, vUV) * vColor : vColor;
+					FragColor = src;
+				}
+
+			)";
+
+			m_DefaultUIShaderProgram = CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
+		}
+
+		return m_DefaultUIShaderProgram;
+	}
+
 	GLuint GraphicsAPI::CreateVertexBuffer(const std::vector<float>& verticies)
 	{
 		GLuint VBO = 0;
@@ -216,6 +331,68 @@ namespace eng
 	{
 		// need to clear the color buffer and the depth buffer as well
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+
+	const Rect& GraphicsAPI::GetViewport() const
+	{
+		return m_Viewport;
+	}
+
+	void GraphicsAPI::SetViewport(int x, int y, int width, int height)
+	{
+		glViewport(x, y, width, height);
+		m_Viewport.x = x;
+		m_Viewport.y = y;
+		m_Viewport.width = width;
+		m_Viewport.height = height;
+	}
+
+	void GraphicsAPI::SetDepthTestEnabled(bool enabled)
+	{
+		if (enabled)
+		{
+			glEnable(GL_DEPTH_TEST);
+		}
+		else
+		{
+			glDisable(GL_DEPTH_TEST);
+		}
+	}
+
+	void GraphicsAPI::SetBlendMode(BlendMode mode)
+	{
+		switch (mode)
+		{
+			case BlendMode::Disabled:
+				{
+					glDisable(GL_BLEND);
+				}
+				break;
+			case BlendMode::Alpha:
+				{
+					glEnable(GL_BLEND);
+					// alpha uses source alpha weighting
+					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				}
+				break;
+			case BlendMode::Additive: // additive ignores alpha and brightness
+				{
+					glEnable(GL_BLEND);
+					glBlendFunc(GL_ONE, GL_ONE);
+				}
+				break;
+			case BlendMode::Multiply:
+				{
+					glEnable(GL_BLEND);
+					glBlendFunc(GL_DST_COLOR, GL_ZERO);
+				}	
+				break;
+			default:
+				{
+					glDisable(GL_BLEND);
+				}
+				break;
+		}
 	}
 
 	/// <summary>

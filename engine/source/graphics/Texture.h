@@ -15,6 +15,9 @@ namespace eng
 		GLuint GetID() const noexcept { return m_TextureID; }
 		void Init(int width, int height, int numChannels, unsigned char* data);
 
+		const int GetWidth() const noexcept { return m_Width; }
+		const int GetHeight() const noexcept { return m_Height; }
+
 		static shared<Texture> Load(const std::string& path);
 
 	private:

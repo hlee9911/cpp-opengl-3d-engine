@@ -44,3 +44,58 @@ Rigidbody comes in three types:
 Static (immovable = environments), 
 Dynamic (fully simulated = simulated objects), 
 Kinematic (moved by code, but can affect dynamic objects e.g. moving platforms, elevators, player character capsule = scripted motion)	
+
+Sprite
+A sprite is a plane, a rectangle with a texture applied to it, that always faces the camera
+Origin Start
+For sprites, the coordinates start in the bottom left corner not the center
+Next: Size, with width(x) and height(y)
+A sprite can use part of a texture like a region in an atlas
+Thus, two UV coordinates: lower left and upper right define which area of the texture to sample
+Pivot Point
+The pivot point is the sprite that rotates around. By default, the pivot is centered at (0.5, 0.5)
+Pivot values range from 0 to 1 relative to the sprite size
+2D transformation
+Sprites only moves on x/y and rotate around z axis
+Thus, the translation, scaling and rotation are easier to manage than 3D objects
+2D Rendering
+2D at z = 0 can fight with the 3D depth. To prevent this, add depth test toggling in GraphicsAPI.
+Blend Mode
+Blend mode defines how the sprite's colors blend with the background
+
+Parent-type hierarchy inside a ComponentFactory
+Each type store its parent type IDs
+For ex, TextComponent lists UIElementComponent as a parent
+And UIElementComponent then lists Component as a parent
+We will store these links in a map of type ID to parent type IDs
+When we want to check if a component is a certain type, 
+we can traverse up the hierarchy using this map.
+That way, GetComponent can match by inheritance, not just exact type.
+We'll keep the parent links in m_ParentMap. One record per type.
+Recap for ComponentFactory:
+Ex)
+1) Attach a TextComponent to a GameObject
+2) It's registered as a child of UIElementComponent
+3) CanvasComponent searches for UIElementComponent
+4) ComponentFactory checks and confirms TextComponent is a child of UIElementComponent
+5) Then the canvas calls Render()
+6) This works recursively through the UI subtree, allowing for flexible component relationships and rendering order.
+
+Font and Text Rendering
+A font file is essentially a set of mathematical functions
+It describes glyphs which is an individual characters from various alphabets
+Each glyph has a unified code
+Thus, in any character table, we can find the same glyph by its code and get a consistent style
+The font file stores a table of glyphs
+Each glyph stores a mathematical description of its shape.
+That means we can scale a font up or down with no loss in quality, but our engine doesnt draw analytic curves
+It draws rasters (bitmaps)
+So we rasterize the font at a specific pixel size
+After rasterization, glyph images behave like regular textures. And after that we can render them as sprites
+
+Text Component Rendering
+Add batching: merge draws that share the same state
+same uUseTexture and the same Texture can be one batch
+GL_DRAW_STATIC
+Static: upload once, draw many times
+Dynamic: upload every frame, draw many times (UI updates every frame, so we use this)

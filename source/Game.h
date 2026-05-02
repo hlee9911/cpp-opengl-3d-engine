@@ -15,5 +15,5 @@ public:
 
 private:
 	std::shared_ptr<eng::Scene> m_Scene;
-	// eng::Scene* m_Scene = nullptr;
+	eng::GameObject* m_3DRoot = nullptr;
 };

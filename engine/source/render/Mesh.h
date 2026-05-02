@@ -24,12 +24,17 @@ namespace eng
 		void Bind();
 		void Unbind();
 		void Draw();
+		void DrawIndexedRange(uint32_t startIndex, uint32_t indexCount);
+		void UpdateDynamic(const List<float>& verticies);
+		void UpdateDynamic(const List<float>& verticies, const List<uint32_t>& indicies);
 
 		static shared<Mesh> CreateBox(const glm::vec3& extents = glm::vec3(1.0f));
 		// static shared<Mesh> Load(const std::string& path);
 		
 		// stacks and sectors define how smooth the sphere will be
 		static shared<Mesh> CreateSphere(float radius, int sectors, int stacks);
+
+		static shared<Mesh> CreatePlane();
 
 	private:
 		VertexLayout m_VertexLayout;
