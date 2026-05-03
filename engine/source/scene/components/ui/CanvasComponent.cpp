@@ -1,5 +1,6 @@
 #include "scene/components/ui/CanvasComponent.h"
 #include "scene/components/ui/UIElementComponent.h"
+#include "scene/components/ui/RectTransformComponent.h"
 #include "scene/GameObject.h"
 #include "graphics/VertexLayout.h"
 #include "render/Mesh.h"
@@ -16,6 +17,18 @@ namespace eng
 	void CanvasComponent::Update(float deltaTime)
 	{
 		if (!m_Active) return;
+		
+		// make sure canvas knows the screen size before rendering
+		if (auto rt = GetOwner()->GetComponent<RectTransformComponent>())
+		{
+			// canvas is the root layer, so this keeps the UI responsive on window resize
+			auto& graphics = Engine::GetInstance().GetGraphicsAPI();
+			const auto& viewport = graphics.GetViewport();
+			rt->SetSize(glm::vec2(
+				static_cast<float>(viewport.width),
+				static_cast<float>(viewport.height)
+			));
+		}
 
 		BeginRendering();
 		const auto& children = m_Owner->GetChildren();

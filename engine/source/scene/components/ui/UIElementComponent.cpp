@@ -9,7 +9,7 @@ namespace eng
 
 	// Checks if the cursor is inside the UI element's bounds
 	// Thats how we know the element is hit
-	bool UIElementComponent::HitTest(const glm::vec2& pos) const
+	bool UIElementComponent::HitTest(const glm::vec2& pos)
 	{
 		return false;
 	}

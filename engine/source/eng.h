@@ -29,6 +29,7 @@
 #include "scene/components/ui/TextComponent.h"
 #include "scene/components/ui/ButtonComponent.h"
 #include "scene/components/ui/UIInputSystem.h"
+#include "scene/components/ui/RectTransformComponent.h"
 #include "io/FileSystem.h"
 #include "physics/PhysicsManager.h"
 #include "physics/Collider.h"

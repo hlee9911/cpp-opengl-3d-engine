@@ -188,7 +188,7 @@ namespace eng
 			m_Application->Update(deltaTime);
 		
 			// Clear screen and buffers
-			m_GraphicsAPI.SetClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+			// m_GraphicsAPI.SetClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 			m_GraphicsAPI.ClearBuffers();
 
 			// Collect current camera data

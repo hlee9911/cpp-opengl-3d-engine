@@ -29,7 +29,7 @@ namespace eng
 		void SetFont(const std::string& path, int size);
 		const shared<Font>& GetFont() const noexcept { return m_Font; }
 
-		const glm::vec2 GetPivotPos() const;
+		const glm::vec2 GetPivotPos();
 
 	private:
 		std::string m_Text;

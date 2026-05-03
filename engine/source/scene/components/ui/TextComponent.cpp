@@ -1,5 +1,6 @@
 #include "scene/components/ui/TextComponent.h"
 #include "scene/components/ui/CanvasComponent.h"
+#include "scene/components/ui/RectTransformComponent.h"
 #include "font/Font.h"
 #include "Engine.h"
 
@@ -77,9 +78,10 @@ namespace eng
 		m_Font = Engine::GetInstance().GetFontManager().GetFont(path, size);
 	}
 
-	const glm::vec2 TextComponent::GetPivotPos() const
+	const glm::vec2 TextComponent::GetPivotPos()
 	{
-		auto pos = m_Owner->GetWorldPosition2D();
+		auto rt = GetOwner()->GetComponent<RectTransformComponent>();
+		auto pos = rt ? rt->GetScreenPosition() : GetOwner()->GetWorldPosition2D();
 
 		glm::vec2 rect(0.0f);
 		for (const auto c : m_Text)
@@ -90,8 +92,13 @@ namespace eng
 			rect.y = std::max(rect.y, static_cast<float>(d.height));
 		}
 
-		pos.x -= std::round(rect.x * m_Pivot.x);
-		pos.y -= std::round(rect.y * m_Pivot.y);
+		if (rt)
+		{
+			pos -= rect * rt->GetPivot();
+		}
+
+		pos.x = std::round(pos.x);
+		pos.y = std::round(pos.y);
 		return pos;
 	}
 }

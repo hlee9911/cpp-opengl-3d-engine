@@ -16,15 +16,15 @@ namespace eng
 	public:
 		void LoadProperties(const nlohmann::json& json) override;
 		void Render(CanvasComponent* canvas) override;
-		bool HitTest(const glm::vec2& pos) const override;
+		bool HitTest(const glm::vec2& pos) override;
 		void OnPointerEnter() override;
 		void OnPointerExit() override;
 		void OnPointerUp() override;
 		void OnPointerDown() override;
 		void OnPointerClick() override;
 
-		void SetRect(const glm::vec2& rect) noexcept { m_Rect = rect; }
-		const glm::vec2& GetRect() const noexcept { return m_Rect; }
+		//void SetRect(const glm::vec2& rect) noexcept { m_Rect = rect; }
+		//const glm::vec2& GetRect() const noexcept { return m_Rect; }
 
 		void SetColor(const glm::vec4& color) noexcept { m_Color = color; }
 		const glm::vec4& GetColor() const noexcept { return m_Color; }
@@ -38,7 +38,7 @@ namespace eng
 		std::function<void()> onClick;
 
 	private:
-		glm::vec2 m_Rect = glm::vec2(1.0f);
+		// glm::vec2 m_Rect = glm::vec2(1.0f);
 		glm::vec4 m_Color = glm::vec4(1.0f);
 		glm::vec4 m_HoveredColor = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
 		glm::vec4 m_PressedColor = glm::vec4(0.25f, 0.25f, 0.25f, 1.0f);

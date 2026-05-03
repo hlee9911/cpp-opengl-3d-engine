@@ -261,6 +261,10 @@ bool Game::Init()
 		}
 	}
 
+	eng::Engine::GetInstance().GetGraphicsAPI().SetClearColor(
+		117.0f / 256.0f, 187.0f / 256.0f, 253.0f / 256.0f, 1.0f
+	); // light blue background color
+
 #if 0
 	m_Scene = std::make_shared<eng::Scene>();
 	eng::Engine::GetInstance().SetScene(m_Scene);

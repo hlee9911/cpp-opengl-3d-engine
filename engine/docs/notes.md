@@ -99,3 +99,9 @@ same uUseTexture and the same Texture can be one batch
 GL_DRAW_STATIC
 Static: upload once, draw many times
 Dynamic: upload every frame, draw many times (UI updates every frame, so we use this)
+
+Anchor
+The anchor is sthe origin used to place children within a parent
+If A is the parent and B is the child, A has a pivot and an anchor used by descendants
+B uses its pivot relative to A's anchor
+This makes UI responsive when the parent moves or resizes
