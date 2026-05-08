@@ -4,6 +4,7 @@
 #include "Engine.h"
 #include "Core.h"
 #include "Common.h"
+#include "Logger.h"
 #include "input/InputManager.h"
 #include "graphics/ShaderProgram.h"
 #include "graphics/GraphicsAPI.h"

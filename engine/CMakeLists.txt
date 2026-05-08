@@ -19,6 +19,8 @@ set(PROJECT_SOURCE_FILES
 	source/Core.h
 	source/Core.cpp
 	source/Common.h
+	source/Logger.h
+	source/Logger.cpp
 	source/input/InputManager.h
 	source/input/InputManager.cpp
 	source/graphics/ShaderProgram.h
@@ -143,6 +145,30 @@ target_link_libraries(${PROJECT_NAME} freetype)
 add_library(miniaudio INTERFACE)
 target_include_directories(miniaudio INTERFACE thirdparty/miniaudio)
 
+# Add ImGui library
+set(IMGUI_DIR thirdparty/imgui-1.92.7)
+
+add_library(imgui
+    ${IMGUI_DIR}/imgui.cpp
+    ${IMGUI_DIR}/imgui_draw.cpp
+    ${IMGUI_DIR}/imgui_tables.cpp
+    ${IMGUI_DIR}/imgui_widgets.cpp
+    ${IMGUI_DIR}/imgui_demo.cpp
+
+    # GLFW + OpenGL3 backend
+    ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
+    ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
+)
+
+target_include_directories(imgui PUBLIC
+    ${IMGUI_DIR}
+    ${IMGUI_DIR}/backends
+)
+
+target_link_libraries(imgui PUBLIC
+    glfw
+)
+
 if(UNIX AND NOT APPLE)
   target_link_libraries(miniaudio INTERFACE dl pthread m)
 endif()
@@ -172,6 +198,16 @@ option(BUILD_SHARED_LIBS OFF)
 add_subdirectory(thirdparty/bullet3-3.25)
 target_include_directories(${PROJECT_NAME} PRIVATE thirdparty/bullet3-3.25/src)
 
+# Link OpenGL
+if(WIN32)
+    target_link_libraries(${PROJECT_NAME} opengl32)
+endif()
+
+if(UNIX AND NOT APPLE)
+    find_package(OpenGL REQUIRED)
+    target_link_libraries(${PROJECT_NAME} OpenGL::GL)
+endif()
+
 # Link all thirdparty libraries
 target_link_libraries(${PROJECT_NAME} 
     glfw 
@@ -181,6 +217,7 @@ target_link_libraries(${PROJECT_NAME}
     BulletCollision
     LinearMath
 	miniaudio
+	imgui
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

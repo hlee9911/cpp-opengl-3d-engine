@@ -128,7 +128,7 @@ namespace eng
 
 		if (m_Window == nullptr)
 		{
-			ERROR("Error creating window");
+			Logger::Error("Error creating window");
 			// std::cout << "Error creating window" << std::endl;
 			glfwTerminate();
 			return false;
@@ -145,7 +145,7 @@ namespace eng
 
 		if (glewInit() != GLEW_OK)
 		{
-			ERROR("Error initializing GLEW");
+			Logger::Error("Error initializing GLEW");
 			// std::cout << "Error initializing GLEW" << std::endl;
 			glfwTerminate();
 			return false;

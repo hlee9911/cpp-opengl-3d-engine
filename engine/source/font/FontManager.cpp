@@ -22,7 +22,7 @@ namespace eng
 		if (error != FT_Err_Ok)
 		{
 			m_FontLibrary = nullptr;
-			ERROR("Failed to initialize Font Library");
+			Logger::Error("Failed to initialize Font Library");
 			return;
 		}
 	}

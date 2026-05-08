@@ -85,7 +85,8 @@ namespace eng
 			audio->m_Buffer.size(), nullptr, audio->m_Decoder.get());
 		if (result != MA_SUCCESS)
 		{
-			ERROR("Failed to initialize audio decoder for file: ", path);
+			Logger::Error("Failed to initialize audio decoder for file: " + path);
+			// ERROR("Failed to initialize audio decoder for file: ", path);
 			return nullptr;
 		}
 
@@ -98,7 +99,8 @@ namespace eng
 		);
 		if (result != MA_SUCCESS)
 		{
-			ERROR("Failed to initialize audio sound for file: ", path);
+			Logger::Error("Failed to initialize audio sound for file: " + path);
+			// ERROR("Failed to initialize audio sound for file: ", path);
 			return nullptr;
 		}
 

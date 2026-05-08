@@ -8,6 +8,8 @@
 #include <unordered_set>
 #include <cstdint>
 
+#include "Logger.h"
+
 namespace eng
 {
 	// Smart pointer aliases
@@ -36,7 +38,7 @@ namespace eng
 	using uint8 = uint8_t;
 
 	// Simple logging macro, ... means variadic arguments
-	#define LOG(M, ...) std::printf("[LOG] " M "\n", ##__VA_ARGS__)
-	#define WARN(M, ...) std::printf("[WARN] " M "\n", ##__VA_ARGS__)
-	#define ERROR(M, ...) std::printf("[ERROR] " M "\n", ##__VA_ARGS__)
+	// #define LOG(M, ...) std::printf("[LOG] " M "\n", ##__VA_ARGS__)
+	// #define WARN(M, ...) std::printf("[WARN] " M "\n", ##__VA_ARGS__)
+	// #define ERROR(M, ...) std::printf("[ERROR] " M "\n", ##__VA_ARGS__)
 }
