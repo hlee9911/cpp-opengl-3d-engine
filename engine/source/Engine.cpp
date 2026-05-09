@@ -142,6 +142,7 @@ namespace eng
 		// glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // hide the cursor and capture it within the window
 
 		glfwMakeContextCurrent(m_Window);
+		glfwSwapInterval(1); // Enable VSync
 
 		if (glewInit() != GLEW_OK)
 		{
@@ -174,6 +175,20 @@ namespace eng
 			auto now = std::chrono::high_resolution_clock::now();
 			float deltaTime = std::chrono::duration<float>(now - m_LastFrameTime).count();
 			m_LastFrameTime = now;
+
+			// FPS calculation
+			m_FPSTimer += deltaTime;
+			m_FrameCount++;
+
+			if (m_FPSTimer >= 1.0f)
+			{
+				m_FPS = static_cast<float>(m_FrameCount) / m_FPSTimer;
+
+				Logger::Log("FPS: " + std::to_string(static_cast<int>(std::round(m_FPS))));
+
+				m_FrameCount = 0;
+				m_FPSTimer = 0.0f;
+			}
 
 			// Update physics
 			m_PhysicsManager.Update(deltaTime);

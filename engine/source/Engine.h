@@ -71,5 +71,9 @@ namespace eng
 		UIInputSystem m_UIInputSystem;
 
 		shared<Scene> m_CurrentScene;
+
+		float m_FPS = 0.0f;
+		float m_FPSTimer = 0.0f;
+		int m_FrameCount = 0;
 	};
 }
