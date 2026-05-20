@@ -1845,7 +1845,7 @@
           "name": "Light",
           "position": {
             "x": -2,
-            "y": 5,
+            "y": 20,
             "z": 2
           },
           "components": [
@@ -1855,6 +1855,26 @@
                 "r": 1,
                 "g": 1,
                 "b": 1
+              }
+            },
+            {
+              "type": "MeshComponent",
+              "mesh": {
+                "type": "sphere",
+                "r": 0.1
+              },
+              "material": {
+                "path": "materials/checker.mat",
+                "params": {
+                  "float3": [
+                    {
+                      "name": "color",
+                      "value0": 1.0,
+                      "value1": 1.0,
+                      "value2": 1.0
+                    }
+                  ]
+                }
               }
             }
           ]
@@ -1913,7 +1933,7 @@
               "components": [
                 {
                   "type": "TextComponent",
-                  "text": "Play",
+                  "text": "Start",
                   "font": {
                     "path": "fonts/arial.ttf",
                     "size": 24

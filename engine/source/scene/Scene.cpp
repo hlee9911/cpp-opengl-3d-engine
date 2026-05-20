@@ -346,7 +346,8 @@ namespace eng
 	}
 
 	/// <summary>
-	/// Collects light data from the scene recursively, starting from the given GameObject. If the GameObject has a LightComponent, its data is added to the output list. The function then continues to check all child GameObjects.
+	/// Collects light data from the scene recursively, starting from the given GameObject. If the GameObject has a LightComponent, 
+	/// its data is added to the output list. The function then continues to check all child GameObjects.
 	/// </summary>
 	/// <param name="obj"></param>
 	/// <param name="out"></param>
