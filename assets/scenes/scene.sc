@@ -1861,17 +1861,17 @@
               "type": "MeshComponent",
               "mesh": {
                 "type": "sphere",
-                "r": 0.1
+                "r": 1
               },
               "material": {
-                "path": "materials/checker.mat",
+                "path": "materials/white.mat",
                 "params": {
                   "float3": [
                     {
                       "name": "color",
                       "value0": 1.0,
-                      "value1": 1.0,
-                      "value2": 1.0
+                      "value1": 0.95,
+                      "value2": 0.8
                     }
                   ]
                 }

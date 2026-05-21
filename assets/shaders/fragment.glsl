@@ -38,8 +38,8 @@ void main()
 	const float ambientStrength = 0.4;
     vec3 ambient = ambientStrength * uLight.color;
     
-    vec4 texColor = texture(baseColorTexture, vUV);
-    vec3 result = (diffuse + specular + ambient) * texColor.xyz * color;
+	vec4 texColor = texture(baseColorTexture, vUV);
+	vec3 result = (diffuse + specular + ambient) * texColor.xyz * color;
 
     FragColor = vec4(result, 1.0);
 }

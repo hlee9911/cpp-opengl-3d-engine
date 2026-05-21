@@ -21,6 +21,7 @@ namespace eng
 		void SetFloatParam(const std::string& name, float v0, float v1) noexcept;
 		void SetFloatParam(const std::string& name, const glm::vec3& value) noexcept;
 		void SetTextureParam(const std::string& name, const shared<Texture>& texture);
+		void SetBoolParam(const std::string& name, bool value) noexcept;
 
 		void Bind();
 
@@ -32,5 +33,6 @@ namespace eng
 		Dictionary<std::string, std::pair<float, float>> m_Float2Params;
 		Dictionary<std::string, glm::vec3> m_Float3Params;
 		Dictionary<std::string, shared<Texture>> m_Textures;
+		Dictionary<std::string, bool> m_BoolParams;
 	};
 }

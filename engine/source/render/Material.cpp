@@ -37,6 +37,11 @@ namespace eng
 		m_Textures[name] = texture;
 	}
 
+	void Material::SetBoolParam(const std::string& name, bool value) noexcept
+	{
+		m_BoolParams[name] = value;
+	}
+
 	/// <summary>
 	/// Binds the shader program and sets the float parameters as uniforms.
 	/// </summary>
@@ -64,6 +69,11 @@ namespace eng
 		for (auto& param : m_Textures)
 		{
 			m_ShaderProgram->SetTexture(param.first, param.second.get());
+		}
+
+		for (auto& param : m_BoolParams)
+		{
+			m_ShaderProgram->SetUniform(param.first, param.second);
 		}
 	}
 
