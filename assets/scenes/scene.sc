@@ -75,7 +75,7 @@
                 "z": 30
               },
               "material": {
-                "path": "materials/checker.mat",
+                "path": "materials/floor.mat",
                 "params": {
                   "float3": [
                     {
@@ -1042,7 +1042,7 @@
                 "z": 1.5
               },
               "material": {
-                "path": "materials/checker.mat",
+                "path": "materials/brick.mat",
                 "params": {
                   "float3": [
                     {
@@ -1088,7 +1088,7 @@
                 "z": 1.5
               },
               "material": {
-                "path": "materials/checker.mat",
+                "path": "materials/wood.mat",
                 "params": {
                   "float3": [
                     {
