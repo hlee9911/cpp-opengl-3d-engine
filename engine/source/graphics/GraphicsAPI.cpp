@@ -109,7 +109,7 @@ namespace eng
 		if (!m_DefaultShaderProgram)
 		{
 			std::string vertexShaderSource = R"(
-				#version 330 core
+				#version 460 core
 				layout(location = 0) in vec3 position;
 				layout(location = 1) in vec3 color;
 				layout(location = 2) in vec2 uv;
@@ -136,7 +136,7 @@ namespace eng
 			)";
 
 			std::string fragmentShaderSource = R"(
-				#version 330 core
+				#version 460 core
 				
 				struct Light
 				{
@@ -195,7 +195,7 @@ namespace eng
 		if (!m_Default2DShaderProgram)
 		{
 			std::string vertexShaderSource = R"(
-				#version 330 core
+				#version 460 core
 				layout(location = 0) in vec2 position;
 
 				out vec2 vUV;
@@ -221,7 +221,7 @@ namespace eng
 			)";
 
 			std::string fragmentShaderSource = R"(
-				#version 330 core
+				#version 460 core
 
 				in vec2 vUV;
 
@@ -251,7 +251,7 @@ namespace eng
 		if (!m_DefaultUIShaderProgram)
 		{
 			std::string vertexShaderSource = R"(
-				#version 330 core
+				#version 460 core
 				layout(location = 0) in vec2 position;
 				layout(location = 1) in vec4 color;
 				layout(location = 2) in vec2 uv;
@@ -272,7 +272,7 @@ namespace eng
 
 			// sample uTex or output flat vColor
 			std::string fragmentShaderSource = R"(
-				#version 330 core
+				#version 460 core
 
 				in vec2 vUV;
 				in vec4 vColor;
