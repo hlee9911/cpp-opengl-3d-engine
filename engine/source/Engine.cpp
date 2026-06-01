@@ -7,6 +7,10 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <imgui.h>
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_opengl3.h>
+
 namespace eng
 {
 	/// <summary>
@@ -106,6 +110,9 @@ namespace eng
 
 	bool Engine::Init(int width, int height)
 	{
+		m_WindowWidth = width;
+		m_WindowHeight = height;
+
 		if (!m_Application)
 		{
 			return false;
@@ -124,7 +131,7 @@ namespace eng
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 		// Create window
-		m_Window = glfwCreateWindow(width, height, "Engine", nullptr, nullptr);
+		m_Window = glfwCreateWindow(m_WindowWidth, m_WindowHeight, "Engine", nullptr, nullptr);
 
 		if (m_Window == nullptr)
 		{
@@ -152,8 +159,22 @@ namespace eng
 			return false;
 		}
 
+		// ============ IMGUI TEST ============
+		// setup ImGui context and initialize it for GLFW and OpenGL
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+
+		ImGuiIO& io = ImGui::GetIO();
+		(void)io;
+
+		ImGui::StyleColorsDark();
+
+		ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
+		ImGui_ImplOpenGL3_Init("#version 460");
+		// ====================================
+
 		m_GraphicsAPI.Init();
-		m_GraphicsAPI.SetViewport(0, 0, width, height);
+		m_GraphicsAPI.SetViewport(0, 0, m_WindowWidth, m_WindowHeight);
 		m_PhysicsManager.Init();
 		m_AudioManager.Init();
 		m_RenderQueue.Init();
@@ -170,6 +191,12 @@ namespace eng
 		while (!glfwWindowShouldClose(m_Window) && !m_Application->NeedsToBeClosed())
 		{
 			glfwPollEvents(); // process window events
+
+			// ============ IMGUI TEST ============
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
+			// ====================================
 
 			// Calculate delta time
 			auto now = std::chrono::high_resolution_clock::now();
@@ -239,6 +266,18 @@ namespace eng
 			// Draw render queue
 			m_RenderQueue.Draw(m_GraphicsAPI, cameraData, lights);
 
+			// ============ IMGUI TEST ============
+			// Build editor/UI windows
+			/*ImGui::Begin("Engine Stats");
+			ImGui::Text("FPS: %.1f", m_FPS);
+			ImGui::End();*/
+			ImGui::ShowDemoWindow();
+
+			// Render ImGui
+			ImGui::Render();
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+			// ====================================
+
 			// Swap buffers and render
 			glfwSwapBuffers(m_Window);
 
@@ -257,7 +296,15 @@ namespace eng
 		{
 			m_Application->Destroy();
 			m_Application.reset();
+
+			// ============ IMGUI TEST ============
+			ImGui_ImplOpenGL3_Shutdown();
+			ImGui_ImplGlfw_Shutdown();
+			ImGui::DestroyContext();
+			// ====================================
+
 			glfwTerminate();
+
 			m_Window = nullptr;
 		}
 	}
