@@ -41,3 +41,4 @@
 #include "audio/Audio.h"
 #include "font/Font.h"
 #include "font/FontManager.h"
+#include "editor/EditorManager.h"

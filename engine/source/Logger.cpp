@@ -6,7 +6,7 @@
 
 namespace eng
 {
-	std::vector<LogEntry> Logger::messagesStack;
+	std::vector<LogEntry> Logger::s_MessagesStack;
 
 	/// <summary>
 	/// Returns the current date and time as a string
@@ -14,12 +14,24 @@ namespace eng
 	/// <returns></returns>
 	std::string Logger::CurrentDateTimeToString()
 	{
-		std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-		std::string output(30, '\0');
+		//std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+		//std::string output(30, '\0');
+		//struct tm timeInfo;
+		//localtime_s(&timeInfo, &now);
+		//std::strftime(&output[0], output.size(), "%b-%d-%Y %H:%M:%S", &timeInfo);
+		//return output;
+
+		std::time_t now = std::chrono::system_clock::to_time_t(
+			std::chrono::system_clock::now()
+		);
+
 		struct tm timeInfo;
 		localtime_s(&timeInfo, &now);
-		std::strftime(&output[0], output.size(), "%b-%d-%Y %H:%M:%S", &timeInfo);
-		return output;
+
+		char buffer[32]; // enough for timestamp
+		std::strftime(buffer, sizeof(buffer), "%b-%d-%Y %H:%M:%S", &timeInfo);
+
+		return std::string(buffer);
 	}
 
 	/// <summary>
@@ -34,7 +46,7 @@ namespace eng
 		logEntry.message = "[LOG]: [" + CurrentDateTimeToString() + "]: " + message;
 		std::cout << "\x1B[32m" << logEntry.message << "\033[0m" << "\n"; // change the color to green (fgcode 32)
 
-		messagesStack.emplace_back(logEntry);
+		s_MessagesStack.emplace_back(logEntry);
 	}
 
 	/// <summary>
@@ -49,7 +61,7 @@ namespace eng
 		logEntry.message = "[WAR]: [" + CurrentDateTimeToString() + "]: " + message;
 		std::cout << "\x1B[33m" << logEntry.message << "\033[0m" << "\n"; // change the color to yellow (fgcode 33)
 
-		messagesStack.emplace_back(logEntry);
+		s_MessagesStack.emplace_back(logEntry);
 	}
 
 	/// <summary>
@@ -64,6 +76,17 @@ namespace eng
 		logEntry.message = "[ERR]: [" + CurrentDateTimeToString() + "]: " + message;
 		std::cerr << "\x1B[91m" << logEntry.message << "\033[0m" << "\n"; // change the color to red (fgcode 91)
 
-		messagesStack.emplace_back(logEntry);
+		s_MessagesStack.emplace_back(logEntry);
+	}
+
+	LogEntry Logger::ReadLogMessage()
+	{
+		if (!s_MessagesStack.empty())
+		{
+			LogEntry logEntry = s_MessagesStack.back();
+			s_MessagesStack.pop_back();
+			return logEntry;
+		}
+		return LogEntry();
 	}
 }

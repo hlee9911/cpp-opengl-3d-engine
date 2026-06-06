@@ -93,6 +93,8 @@ set(PROJECT_SOURCE_FILES
 	source/font/Font.cpp
 	source/font/FontManager.h
 	source/font/FontManager.cpp
+	source/editor/EditorManager.h
+	source/editor/EditorManager.cpp
 )
 
 # Group files according to files organization

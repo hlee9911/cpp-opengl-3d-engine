@@ -27,7 +27,9 @@ namespace eng
 		static void Warning(const std::string& message);
 		static void Error(const std::string& message);
 
+		static LogEntry ReadLogMessage();
+
 		// one big container that contains all the messages
-		static std::vector<LogEntry> messagesStack;
+		static std::vector<LogEntry> s_MessagesStack;
 	};
 }

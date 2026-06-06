@@ -6,6 +6,9 @@
 #include <map>
 #include <unordered_map>
 #include <unordered_set>
+#include <stack>
+#include <queue>
+#include <deque>
 #include <cstdint>
 
 #include "Logger.h"
@@ -34,6 +37,15 @@ namespace eng
 
 	template <typename T>
 	using Set = std::unordered_set<T>;
+
+	template <typename T>
+	using Stack = std::stack<T>;
+
+	template <typename T>
+	using Queue = std::queue<T>;
+
+	template <typename T>
+	using Deque = std::deque<T>;
 
 	using uint8 = uint8_t;
 

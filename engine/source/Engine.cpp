@@ -37,7 +37,7 @@ namespace eng
 	}
 
 	/// <summary>
-	/// This function is caleed by GLFW when mouse button event occurs
+	/// This function is called by GLFW when mouse button event occurs
 	/// </summary>
 	/// <param name="window"></param>
 	/// <param name="button"></param>
@@ -98,8 +98,20 @@ namespace eng
 	/// <param name="height"></param>
 	void windowSizeCallback(GLFWwindow* window, int width, int height)
 	{
+		//Engine& engine = Engine::GetInstance();
+		//engine.GetGraphicsAPI().SetViewport(0, 0, width, height);
 		Engine& engine = Engine::GetInstance();
-		engine.GetGraphicsAPI().SetViewport(0, 0, width, height);
+
+		Rect viewport =
+			engine.GetEditorManager().GetViewportRect(
+				width,
+				height);
+
+		engine.GetGraphicsAPI().SetViewport(
+			viewport.x,
+			viewport.y,
+			viewport.width,
+			viewport.height);
 	}
 
 	Engine& Engine::GetInstance()
@@ -161,7 +173,7 @@ namespace eng
 
 		// ============ IMGUI TEST ============
 		// setup ImGui context and initialize it for GLFW and OpenGL
-		IMGUI_CHECKVERSION();
+		/*IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 
 		ImGuiIO& io = ImGui::GetIO();
@@ -170,15 +182,52 @@ namespace eng
 		ImGui::StyleColorsDark();
 
 		ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
-		ImGui_ImplOpenGL3_Init("#version 460");
+		ImGui_ImplOpenGL3_Init("#version 460");*/
 		// ====================================
 
+		m_EditorManager.Init(m_Window);
 		m_GraphicsAPI.Init();
-		m_GraphicsAPI.SetViewport(0, 0, m_WindowWidth, m_WindowHeight);
+		
+		// set the initial viewport with ImGui windows taken into account
+
+		/*int windowWidth = 0;
+		int windowHeight = 0;
+
+		glfwGetWindowSize(
+			m_Window,
+			&windowWidth,
+			&windowHeight);
+
+		Rect viewport =
+			m_EditorManager.GetViewportRect(
+				windowWidth,
+				windowHeight);
+
+		m_GraphicsAPI.SetViewport(
+			viewport.x,
+			viewport.y,
+			viewport.width,
+			viewport.height);*/
+
+		Rect viewport =
+			m_EditorManager.GetViewportRect(
+				m_WindowWidth,
+				m_WindowHeight);
+
+		m_GraphicsAPI.SetViewport(
+			viewport.x,
+			viewport.y,
+			viewport.width,
+			viewport.height
+		);
+
+		// m_GraphicsAPI.SetViewport(0, 0, m_WindowWidth, m_WindowHeight);
 		m_PhysicsManager.Init();
 		m_AudioManager.Init();
 		m_RenderQueue.Init();
 		m_FontManager.Init();
+
+		m_EditorManager.SetFont("assets/fonts/arial.ttf", 16.0f);
 
 		return m_Application->Init();
 	}
@@ -193,9 +242,10 @@ namespace eng
 			glfwPollEvents(); // process window events
 
 			// ============ IMGUI TEST ============
-			ImGui_ImplOpenGL3_NewFrame();
+			/*ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplGlfw_NewFrame();
-			ImGui::NewFrame();
+			ImGui::NewFrame();*/
+			m_EditorManager.ProcessNewFrame();
 			// ====================================
 
 			// Calculate delta time
@@ -225,6 +275,9 @@ namespace eng
 			{
 				m_UIInputSystem.Update(deltaTime);
 			}
+
+			// Update ImGui Editor windows
+			m_EditorManager.Update(deltaTime);
 
 			// Update application
 			m_Application->Update(deltaTime);
@@ -271,11 +324,12 @@ namespace eng
 			/*ImGui::Begin("Engine Stats");
 			ImGui::Text("FPS: %.1f", m_FPS);
 			ImGui::End();*/
-			ImGui::ShowDemoWindow();
+			//ImGui::ShowDemoWindow();
 
 			// Render ImGui
-			ImGui::Render();
-			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+			//ImGui::Render();
+			//ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+			m_EditorManager.Draw(width, height, static_cast<int>(std::round(m_FPS)));
 			// ====================================
 
 			// Swap buffers and render
@@ -298,9 +352,10 @@ namespace eng
 			m_Application.reset();
 
 			// ============ IMGUI TEST ============
-			ImGui_ImplOpenGL3_Shutdown();
+			/*ImGui_ImplOpenGL3_Shutdown();
 			ImGui_ImplGlfw_Shutdown();
-			ImGui::DestroyContext();
+			ImGui::DestroyContext();*/
+			m_EditorManager.Destroy();
 			// ====================================
 
 			glfwTerminate();
@@ -367,5 +422,10 @@ namespace eng
 	UIInputSystem& Engine::GetUIInputSystem() noexcept
 	{
 		return m_UIInputSystem;
+	}
+
+	EditorManager& Engine::GetEditorManager() noexcept
+	{
+		return m_EditorManager;
 	}
 }

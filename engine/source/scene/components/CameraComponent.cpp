@@ -36,5 +36,4 @@ namespace eng
 		return glm::perspective(glm::radians(m_FOV), aspect, m_NearPlane, m_FarPlane);
 	}
 
-
 }
