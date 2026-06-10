@@ -98,9 +98,11 @@ namespace eng
 	/// <param name="height"></param>
 	void windowSizeCallback(GLFWwindow* window, int width, int height)
 	{
-		//Engine& engine = Engine::GetInstance();
-		//engine.GetGraphicsAPI().SetViewport(0, 0, width, height);
 		Engine& engine = Engine::GetInstance();
+		engine.GetGraphicsAPI().SetViewport(0, 0, width, height);
+
+		// new window size callback
+		/*Engine& engine = Engine::GetInstance();
 
 		Rect viewport =
 			engine.GetEditorManager().GetViewportRect(
@@ -111,7 +113,7 @@ namespace eng
 			viewport.x,
 			viewport.y,
 			viewport.width,
-			viewport.height);
+			viewport.height);*/
 	}
 
 	Engine& Engine::GetInstance()
@@ -171,61 +173,15 @@ namespace eng
 			return false;
 		}
 
-		// ============ IMGUI TEST ============
-		// setup ImGui context and initialize it for GLFW and OpenGL
-		/*IMGUI_CHECKVERSION();
-		ImGui::CreateContext();
-
-		ImGuiIO& io = ImGui::GetIO();
-		(void)io;
-
-		ImGui::StyleColorsDark();
-
-		ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
-		ImGui_ImplOpenGL3_Init("#version 460");*/
-		// ====================================
-
-		m_EditorManager.Init(m_Window);
 		m_GraphicsAPI.Init();
 		
-		// set the initial viewport with ImGui windows taken into account
-
-		/*int windowWidth = 0;
-		int windowHeight = 0;
-
-		glfwGetWindowSize(
-			m_Window,
-			&windowWidth,
-			&windowHeight);
-
-		Rect viewport =
-			m_EditorManager.GetViewportRect(
-				windowWidth,
-				windowHeight);
-
-		m_GraphicsAPI.SetViewport(
-			viewport.x,
-			viewport.y,
-			viewport.width,
-			viewport.height);*/
-
-		Rect viewport =
-			m_EditorManager.GetViewportRect(
-				m_WindowWidth,
-				m_WindowHeight);
-
-		m_GraphicsAPI.SetViewport(
-			viewport.x,
-			viewport.y,
-			viewport.width,
-			viewport.height
-		);
-
 		// m_GraphicsAPI.SetViewport(0, 0, m_WindowWidth, m_WindowHeight);
 		m_PhysicsManager.Init();
 		m_AudioManager.Init();
 		m_RenderQueue.Init();
 		m_FontManager.Init();
+		m_EditorManager.Init(m_Window);
+		m_FrameBuffer.Init(m_WindowWidth, m_WindowHeight);
 
 		m_EditorManager.SetFont("assets/fonts/arial.ttf", 16.0f);
 
@@ -241,12 +197,7 @@ namespace eng
 		{
 			glfwPollEvents(); // process window events
 
-			// ============ IMGUI TEST ============
-			/*ImGui_ImplOpenGL3_NewFrame();
-			ImGui_ImplGlfw_NewFrame();
-			ImGui::NewFrame();*/
 			m_EditorManager.ProcessNewFrame();
-			// ====================================
 
 			// Calculate delta time
 			auto now = std::chrono::high_resolution_clock::now();
@@ -270,11 +221,11 @@ namespace eng
 			// Update physics
 			m_PhysicsManager.Update(deltaTime);
 
-			// Update UI input system
-			if (m_UIInputSystem.IsActive())
-			{
-				m_UIInputSystem.Update(deltaTime);
-			}
+			//// Update UI input system
+			//if (m_UIInputSystem.IsActive())
+			//{
+			//	m_UIInputSystem.Update(deltaTime, m_EditorManager.GetViewportPosition(), m_EditorManager.GetViewportSize());
+			//}
 
 			// Update ImGui Editor windows
 			m_EditorManager.Update(deltaTime);
@@ -282,8 +233,48 @@ namespace eng
 			// Update application
 			m_Application->Update(deltaTime);
 		
+			// FBO rendering method
+			//------------------------------------------------------
+			// Window Size
+			int windowWidth = 0;
+			int windowHeight = 0;
+
+			glfwGetWindowSize(
+				m_Window,
+				&windowWidth,
+				&windowHeight);
+
+
+			// Editor Viewport Size
+			Rect viewport =
+				m_EditorManager.GetViewportRect(
+					windowWidth,
+					windowHeight);
+
+			// Resize FBO if needed
+
+			if (viewport.width != m_FrameBuffer.GetWidth() ||
+				viewport.height != m_FrameBuffer.GetHeight())
+			{
+				m_FrameBuffer.Resize(
+					viewport.width,
+					viewport.height);
+			}
+			//------------------------------------------------------
+
 			// Clear screen and buffers
-			// m_GraphicsAPI.SetClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+			// m_GraphicsAPI.ClearBuffers();
+			
+			// FBO render
+			// ====================================
+			m_FrameBuffer.Bind();
+
+			m_GraphicsAPI.SetViewport(
+				0,
+				0,
+				m_FrameBuffer.GetWidth(),
+				m_FrameBuffer.GetHeight());
+
 			m_GraphicsAPI.ClearBuffers();
 
 			// Collect current camera data
@@ -293,7 +284,10 @@ namespace eng
 			int width = 0;
 			int height = 0;
 			glfwGetWindowSize(m_Window, &width, &height);
-			float aspect = static_cast<float>(width) / static_cast<float>(height);
+			float aspect =
+				static_cast<float>(m_FrameBuffer.GetWidth()) /
+				static_cast<float>(m_FrameBuffer.GetHeight());
+			// float aspect = static_cast<float>(width) / static_cast<float>(height);
 
 			if (m_CurrentScene)
 			{
@@ -305,9 +299,15 @@ namespace eng
 					{
 						cameraData.viewMatrix = cameraComponent->GetViewMatrix();
 						cameraData.projectionMatrix = cameraComponent->GetProjectionMatrix(aspect);
-						cameraData.orthoMatrix = glm::ortho(
+						/*cameraData.orthoMatrix = glm::ortho(
 							0.0f, static_cast<float>(width),
 							0.0f, static_cast<float>(height)
+						);*/
+						cameraData.orthoMatrix = glm::ortho(
+							0.0f,
+							static_cast<float>(m_FrameBuffer.GetWidth()),
+							0.0f,
+							static_cast<float>(m_FrameBuffer.GetHeight())
 						);
 						cameraData.position = cameraObject->GetWorldPosition();
 					}
@@ -319,18 +319,25 @@ namespace eng
 			// Draw render queue
 			m_RenderQueue.Draw(m_GraphicsAPI, cameraData, lights);
 
-			// ============ IMGUI TEST ============
-			// Build editor/UI windows
-			/*ImGui::Begin("Engine Stats");
-			ImGui::Text("FPS: %.1f", m_FPS);
-			ImGui::End();*/
-			//ImGui::ShowDemoWindow();
+			m_FrameBuffer.Unbind();
 
-			// Render ImGui
-			//ImGui::Render();
-			//ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-			m_EditorManager.Draw(width, height, static_cast<int>(std::round(m_FPS)));
+			m_GraphicsAPI.SetViewport(
+				0,
+				0,
+				windowWidth,
+				windowHeight);
+
+			m_GraphicsAPI.ClearBuffers();
 			// ====================================
+
+			// Draw ImGui Windows
+			m_EditorManager.Draw(width, height, static_cast<int>(std::round(m_FPS)), m_FrameBuffer.GetColorTexture());
+
+			// Update UI input system
+			if (m_UIInputSystem.IsActive())
+			{
+				m_UIInputSystem.Update(deltaTime);
+			}
 
 			// Swap buffers and render
 			glfwSwapBuffers(m_Window);
@@ -351,12 +358,8 @@ namespace eng
 			m_Application->Destroy();
 			m_Application.reset();
 
-			// ============ IMGUI TEST ============
-			/*ImGui_ImplOpenGL3_Shutdown();
-			ImGui_ImplGlfw_Shutdown();
-			ImGui::DestroyContext();*/
+			m_FrameBuffer.Destroy();
 			m_EditorManager.Destroy();
-			// ====================================
 
 			glfwTerminate();
 
@@ -427,5 +430,10 @@ namespace eng
 	EditorManager& Engine::GetEditorManager() noexcept
 	{
 		return m_EditorManager;
+	}
+
+	FrameBuffer& Engine::GetFrameBuffer() noexcept
+	{
+		return m_FrameBuffer;
 	}
 }

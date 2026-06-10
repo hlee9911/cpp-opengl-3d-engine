@@ -1,8 +1,9 @@
-#pragma once;
+#pragma once
 
 #include "input/InputManager.h"
 #include "graphics/GraphicsAPI.h"
 #include "graphics/Texture.h"
+#include "graphics/FrameBuffer.h"
 #include "render/RenderQueue.h"
 #include "scene/Scene.h"
 #include "io/FileSystem.h"
@@ -53,6 +54,7 @@ namespace eng
 		FontManager& GetFontManager() noexcept;
 		UIInputSystem& GetUIInputSystem() noexcept;
 		EditorManager& GetEditorManager() noexcept;
+		FrameBuffer& GetFrameBuffer() noexcept;
 
 		// void SetScene(Scene* scene) noexcept { m_CurrentScene.reset(scene); }
 		void SetScene(const shared<Scene>& scene) noexcept { m_CurrentScene = scene; }
@@ -72,6 +74,7 @@ namespace eng
 		FontManager m_FontManager;
 		UIInputSystem m_UIInputSystem;
 		EditorManager m_EditorManager;
+		FrameBuffer m_FrameBuffer;
 
 		shared<Scene> m_CurrentScene;
 

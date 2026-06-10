@@ -119,9 +119,19 @@ namespace eng
 		return glm::vec3(hom) / hom.w;
 	}
 
+	const glm::vec3 GameObject::GetStartingPosition() const noexcept
+	{
+		return m_StartingPos;
+	}
+
 	const glm::vec2 GameObject::GetPosition2D() const noexcept
 	{
 		return glm::vec2(m_Position);
+	}
+
+	const glm::vec2 GameObject::GetStartingPosition2D() const noexcept
+	{
+		return glm::vec2(m_StartingPos);
 	}
 	
 	const glm::vec2 GameObject::GetWorldPosition2D() const noexcept
@@ -153,6 +163,11 @@ namespace eng
 		}
 	}
 
+	void GameObject::SetStartingPosition(const glm::vec3& pos) noexcept
+	{
+		m_StartingPos = pos;
+	}
+
 	void GameObject::SetPosition2D(const glm::vec2& pos) noexcept
 	{
 		SetPosition(glm::vec3(pos, 0.0f));
@@ -161,6 +176,11 @@ namespace eng
 	void GameObject::SetWorldPosition2D(const glm::vec2& pos) noexcept
 	{
 		SetWorldPosition(glm::vec3(pos, 0.0f));
+	}
+
+	void GameObject::SetStartingPosition2D(const glm::vec2& pos) noexcept
+	{
+		SetStartingPosition(glm::vec3(pos, 0.0f));
 	}
 
 	const glm::quat& GameObject::GetRotation() const noexcept

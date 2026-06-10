@@ -61,12 +61,16 @@ namespace eng
 		
 		const glm::vec3& GetPosition() const noexcept;
 		const glm::vec3 GetWorldPosition() const noexcept;
+		const glm::vec3 GetStartingPosition() const noexcept;
 		const glm::vec2 GetPosition2D() const noexcept;
 		const glm::vec2 GetWorldPosition2D() const noexcept;
+		const glm::vec2 GetStartingPosition2D() const noexcept;
 		void SetPosition(const glm::vec3& pos) noexcept;
 		void SetWorldPosition(const glm::vec3& pos) noexcept;
+		void SetStartingPosition(const glm::vec3& pos) noexcept;
 		void SetPosition2D(const glm::vec2& pos) noexcept;
 		void SetWorldPosition2D(const glm::vec2& pos) noexcept;
+		void SetStartingPosition2D(const glm::vec2& pos) noexcept;
 
 		const glm::quat& GetRotation() const noexcept;
 		const glm::quat GetWorldRotation() const noexcept;
@@ -98,6 +102,7 @@ namespace eng
 		List<unique<Component>> m_Components;
 		bool m_IsAlive = true;
 		glm::vec3 m_Position = glm::vec3(0.0f);
+		glm::vec3 m_StartingPos = glm::vec3(0.0f);
 		glm::quat m_Rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 		glm::vec3 m_Scale = glm::vec3(1.0f);
 		bool m_Active = true;

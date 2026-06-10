@@ -1,4 +1,5 @@
 #include "editor/EditorManager.h"
+#include "Engine.h"
 
 #include <iostream>
 
@@ -8,7 +9,8 @@ namespace eng
 	constexpr int PROPERTIES_WINDOW_WIDTH = 400;
 	constexpr int PADDING_OFFSET = 25;
 
-	EditorManager::EditorManager() noexcept
+	EditorManager::EditorManager() noexcept : 
+		m_ConsoleMessages{}
 	{
 
 	}
@@ -63,9 +65,16 @@ namespace eng
 
 	}
 
-	void EditorManager::Draw(int windowWidth, int windowHeight, int fpsCount)
+	void EditorManager::Draw(
+		int windowWidth, int 
+		windowHeight, 
+		int fpsCount,
+		unsigned int framebufferTexture)
 	{
-		// TODO: render ImGui windows here
+		RenderViewportWindow(
+			windowWidth,
+			windowHeight,
+			framebufferTexture);
 		RenderConsoleWindow(windowWidth, windowHeight);
 		RenderPropertiesWindow(windowWidth, windowHeight);
 		RenderDebugWindow(windowWidth, windowHeight, fpsCount);
@@ -83,7 +92,7 @@ namespace eng
 
 	Rect EditorManager::GetViewportRect(int windowWidth, int windowHeight) const
 	{
-		Rect viewport;
+		/*Rect viewport;
 
 		viewport.x = 0;
 		viewport.y = 0;
@@ -94,43 +103,85 @@ namespace eng
 		viewport.height =
 			windowHeight - CONSOLE_WINDOW_HEIGHT;
 
-		return viewport;
+		return viewport;*/
+
+		if (m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f)
+		{
+			return {
+				0, 0,
+				static_cast<int>(m_ViewportSize.x),
+				static_cast<int>(m_ViewportSize.y)
+			};
+		}
+		return {
+			0, 0,
+			windowWidth - PROPERTIES_WINDOW_WIDTH,
+			windowHeight - CONSOLE_WINDOW_HEIGHT
+		};
+	}
+
+	void EditorManager::RenderViewportWindow(
+		int windowWidth, 
+		int windowHeight, 
+		unsigned int framebufferTexture)
+	{
+		// Dock the viewport panel to the top-left, leaving room for side/bottom editor panels
+		ImVec2 windowPos(0, 0);
+
+		ImVec2 windowSize(
+			static_cast<float>(
+				windowWidth - PROPERTIES_WINDOW_WIDTH),
+			static_cast<float>(
+				windowHeight - CONSOLE_WINDOW_HEIGHT));
+
+		ImGui::SetNextWindowPos(windowPos);
+		ImGui::SetNextWindowSize(windowSize);
+
+		ImGuiWindowFlags flags =
+			ImGuiWindowFlags_NoResize |
+			ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoCollapse;
+
+		/*ImGui::Begin(m_ViewportWindowName.c_str(), nullptr, flags);
+
+		m_ViewportPosition = ImGui::GetCursorScreenPos();
+		m_ViewportSize = ImGui::GetContentRegionAvail();
+
+		ImGui::Image(
+			(ImTextureID)(intptr_t)framebufferTexture,
+			m_ViewportSize,
+			ImVec2(0, 1),
+			ImVec2(1, 0));
+
+		ImGui::End();*/
+
+		ImGui::Begin(m_ViewportWindowName.c_str(), nullptr, flags);
+
+		// Use all remaining space inside the window for the rendered scene
+		ImVec2 imageSize = ImGui::GetContentRegionAvail();
+
+		// Draw the FBO color texture into the viewport panel
+		ImGui::Image(
+			(ImTextureID)(intptr_t)framebufferTexture,
+			imageSize,
+			ImVec2(0, 1),
+			ImVec2(1, 0));
+
+		// Capture ACTUAL drawn image rect
+		// Store the exact screen-space rect of the image for mouse conversion
+		m_ViewportImageMin = ImGui::GetItemRectMin();
+		m_ViewportSize = ImGui::GetItemRectSize();
+		m_ViewportHovered = ImGui::IsItemHovered();
+
+		ImGui::End();
 	}
 
 	void EditorManager::RenderConsoleWindow(int windowWidth, int windowHeight)
 	{
-		//// create a console window at the bottom of the screen, 
-		//// which will be used to display the logs and other information about the application
-		//ImGui::Begin(m_ConsoleWindowName.c_str(), nullptr,
-		//	ImGuiWindowFlags_::ImGuiWindowFlags_NoResize |
-		//	ImGuiWindowFlags_::ImGuiWindowFlags_NoMove |
-		//	ImGuiWindowFlags_::ImGuiWindowFlags_NoCollapse);
-
-		//// set the position and size of the console window
-		//auto windowPos = ImVec2(0, windowHeight - CONSOLE_WINDOW_HEIGHT);
-		//auto windowSize = ImVec2(windowWidth - PROPERTIES_WINDOW_WIDTH, CONSOLE_WINDOW_HEIGHT);
-
-		//ImGui::SetWindowPos(m_ConsoleWindowName.c_str(), windowPos);
-		//ImGui::SetWindowSize(m_ConsoleWindowName.c_str(), windowSize);
-
-		//auto logEntry = Logger::ReadLogMessage();
-		//if (!logEntry.message.empty())
-		//{
-		//	m_ConsoleMessages.push_front(logEntry.message);
-		//}
-
-		//for (const auto& msg : m_ConsoleMessages)
-		//{
-		//	ImGui::TextWrapped("%s", msg.c_str());
-		//}
-
-		//ImGui::End();
-
-		// New Method
-
-		// Window setup
-		auto windowPos = ImVec2(0, windowHeight - CONSOLE_WINDOW_HEIGHT);
-		auto windowSize = ImVec2(windowWidth - PROPERTIES_WINDOW_WIDTH, CONSOLE_WINDOW_HEIGHT);
+		// Position the console panel at the bottom-left of the editor
+		auto windowPos = ImVec2(0.0f, static_cast<float>(windowHeight - CONSOLE_WINDOW_HEIGHT));
+		auto windowSize = ImVec2(static_cast<float>(windowWidth - PROPERTIES_WINDOW_WIDTH), 
+								 static_cast<float>(CONSOLE_WINDOW_HEIGHT));
 
 		ImGui::SetNextWindowPos(windowPos);
 		ImGui::SetNextWindowSize(windowSize);
@@ -142,40 +193,43 @@ namespace eng
 
 		ImGui::Begin(m_ConsoleWindowName.c_str(), nullptr, flags);
 
-		// Read new log entry
+		// Pull one new log entry from Logger each frame (if any)
 		auto logEntry = Logger::ReadLogMessage();
 		bool newLogAdded = false;
 
 		if (!logEntry.message.empty())
 		{
-			m_ConsoleMessages.push_back(logEntry.message);
+			// Store the full entry so we keep both message + type/flag
+			m_ConsoleMessages.push_back(logEntry);
 			newLogAdded = true;
 
-			// Limit memory usage (ring buffer behavior)
+			// Prevent unbounded memory growth
 			constexpr size_t MAX_LOGS = 2048;
 			if (m_ConsoleMessages.size() > MAX_LOGS)
 				m_ConsoleMessages.erase(m_ConsoleMessages.begin());
 		}
 
-		for (const auto& msg : m_ConsoleMessages)
+		// Draw every stored log with color based on its type
+		for (const auto& entry : m_ConsoleMessages)
 		{
-			ImGui::TextUnformatted(msg.c_str());
+			// Temporarily override text color for this line only
+			ImGui::PushStyleColor(ImGuiCol_Text, GetLogColor(entry.type));
+			// Draw the log message
+			ImGui::TextUnformatted(entry.message.c_str());
+			// Restore previous text color so other ImGui widgets arent affected
+			ImGui::PopStyleColor();
 		}
 
-		// Auto-scroll
-		if (newLogAdded)
-		{
-			ImGui::SetScrollHereY(1.0f);
-		}
-
+		// Scroll to bottom when a new message arrives
+		if (newLogAdded) ImGui::SetScrollHereY(1.0f);
 		ImGui::End();
-
 	}
 
 	void EditorManager::RenderPropertiesWindow(int windowWidth, int windowHeight)
 	{
-		auto windowPos = ImVec2(windowWidth - PROPERTIES_WINDOW_WIDTH, 0);
-		auto windowSize = ImVec2(PROPERTIES_WINDOW_WIDTH, windowHeight);
+		auto windowPos = ImVec2(static_cast<float>(windowWidth - PROPERTIES_WINDOW_WIDTH), 0.0f);
+		auto windowSize = ImVec2(static_cast<float>(PROPERTIES_WINDOW_WIDTH), 
+								 static_cast<float>(windowHeight - CONSOLE_WINDOW_HEIGHT));
 
 		ImGui::SetNextWindowPos(windowPos);
 		ImGui::SetNextWindowSize(windowSize);
@@ -234,10 +288,93 @@ namespace eng
 
 	void EditorManager::RenderDebugWindow(int windowWidth, int windowHeight, int fpsCount)
 	{
-		ImGui::Begin("Debug");
+		// Bottom-right corner: sits under Properties, beside Console
+		ImGui::SetNextWindowPos(ImVec2(
+			static_cast<float>(windowWidth - PROPERTIES_WINDOW_WIDTH),
+			static_cast<float>(windowHeight - CONSOLE_WINDOW_HEIGHT)));
 
+		ImGui::SetNextWindowSize(ImVec2(
+			static_cast<float>(PROPERTIES_WINDOW_WIDTH),
+			static_cast<float>(CONSOLE_WINDOW_HEIGHT)));
+
+		ImGuiWindowFlags flags =
+			ImGuiWindowFlags_NoResize |
+			ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoCollapse;
+
+		ImGui::Begin(m_DebugWindowName.c_str(), nullptr, flags);
+
+		// --- Performance ---
 		ImGui::Text("FPS: %d", fpsCount);
 
+		// Smooth FPS over last N frames (store m_FpsHistory in EditorManager)
+		// ImGui::PlotLines("FPS", m_FpsHistory.data(), (int)m_FpsHistory.size(), ...);
+
+		ImGui::Separator();
+		// --- Memory (placeholder until you wire platform APIs) ---
+
+		// ImGui::Text("Memory: %.2f MB", GetProcessMemoryMB());
+
+		ImGui::Separator();
+
+		// --- Profiler (expand later with scoped timers) ---
+
+		/*ImGui::Text("Frame: %.2f ms", m_LastFrameTimeMs);
+		ImGui::Text("Update: %.2f ms", m_UpdateTimeMs);
+		ImGui::Text("Render: %.2f ms", m_RenderTimeMs);*/
+
 		ImGui::End();
+	}
+
+	ImVec4 EditorManager::GetLogColor(LogType type) const
+	{
+		switch (type)
+		{
+		case LogType::LOG_INFO:
+			return ImVec4(0.2f, 1.0f, 0.2f, 1.0f);   // green
+		case LogType::LOG_WARNING:
+			return ImVec4(1.0f, 1.0f, 0.2f, 1.0f);   // yellow
+		case LogType::LOG_ERROR:
+			return ImVec4(1.0f, 0.3f, 0.3f, 1.0f);   // red
+		default:
+			return ImGui::GetStyleColorVec4(ImGuiCol_Text); // fallback to default text color
+		}
+	}
+
+	std::optional<glm::vec2> EditorManager::ScreenToGameUI(const glm::vec2& screenMouse) const
+	{
+		// Bail out if we don't know the viewport image or UI render size yet
+		if (m_ViewportSize.x <= 0.0f || m_ViewportSize.y <= 0.0f ||
+			m_UIRenderWidth <= 0 || m_UIRenderHeight <= 0)
+			return std::nullopt;
+
+		// Mouse relative to the top-left of the ImGui viewport image
+		const float localX = screenMouse.x - m_ViewportImageMin.x;
+		const float localY = screenMouse.y - m_ViewportImageMin.y;
+
+		// Ignore clicks outside the game viewport (Properties, Console, etc.)
+		if (localX < 0.0f || localY < 0.0f ||
+			localX > m_ViewportSize.x || localY > m_ViewportSize.y)
+			return std::nullopt;
+
+		// UI uses a different resolution than the on-screen image, so scale into UI space
+		const float uiW = static_cast<float>(m_UIRenderWidth);
+		const float uiH = static_cast<float>(m_UIRenderHeight);
+		const float uiX = localX * (uiW / m_ViewportSize.x);
+
+		// Convert from top-left screen space to bottom-left UI space
+		const float uiY = uiH - (localY * (uiH / m_ViewportSize.y));
+		return glm::vec2(uiX, uiY);
+	}
+
+	bool EditorManager::IsMouseOverViewport() const
+	{
+		return false;
+	}
+
+	void EditorManager::SetUIRenderSize(int width, int height)
+	{
+		m_UIRenderWidth = width;
+		m_UIRenderHeight = height;
 	}
 }

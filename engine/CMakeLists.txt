@@ -31,6 +31,8 @@ set(PROJECT_SOURCE_FILES
 	source/graphics/VertexLayout.cpp
 	source/graphics/Texture.h
 	source/graphics/Texture.cpp
+	source/graphics/FrameBuffer.h
+	source/graphics/FrameBuffer.cpp
 	source/render/Material.h
 	source/render/Material.cpp
 	source/render/Mesh.h

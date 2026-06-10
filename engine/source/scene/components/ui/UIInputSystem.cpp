@@ -11,17 +11,42 @@ namespace eng
 	{
 		if (!m_Active || !m_ActiveCanvas || !m_ActiveCanvas->IsActive()) return;
 
-		auto& inputManager = Engine::GetInstance().GetInputManager();
+		/*auto& inputManager = Engine::GetInstance().GetInputManager();
 		bool mouseDown = inputManager.IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT);
 		bool mousePressed = inputManager.WasMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT);
-		bool mouseReleased = inputManager.WasMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT);
+		bool mouseReleased = inputManager.WasMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT);*/
 
-		auto mousePos = inputManager.GetMousePositionCurrent();
-		// GLFW reports mouse Y from the top left corner, but our UI uses the bottom left corner as the origin, so we need to invert the Y coordinate
-		mousePos.y = Engine::GetInstance().GetGraphicsAPI().GetViewport().height - mousePos.y; // Invert Y coordinate for UI
-	
-		// TODO:
+		auto& input = Engine::GetInstance().GetInputManager();
+		auto& editor = Engine::GetInstance().GetEditorManager();
+		const bool mousePressed = input.WasMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT);
+		const bool mouseReleased = input.WasMouseButtonReleased(GLFW_MOUSE_BUTTON_LEFT);
+		const glm::vec2 screenMouse = input.GetMousePositionCurrent();
+		const auto uiMouseOpt = editor.ScreenToGameUI(screenMouse);
+
+		//auto mousePos = inputManager.GetMousePositionCurrent();
+
+		//// GLFW reports mouse Y from the top left corner, but our UI uses the bottom left corner as the origin, so we need to invert the Y coordinate
+		//mousePos.y = Engine::GetInstance().GetGraphicsAPI().GetViewport().height - mousePos.y; // Invert Y coordinate for UI
+
+		//// TODO: Fix this mouse position not matching problem
+		//mousePos.x += 200;
+		//mousePos.y -= 125;
+
 		UIElementComponent* hit = nullptr;
+		if (uiMouseOpt.has_value())
+		{
+			const glm::vec2 uiMouse = uiMouseOpt.value();
+			for (auto* element : CollectUI(m_ActiveCanvas))
+			{
+				if (element->HitTest(uiMouse))
+				{
+					hit = element;
+					break;
+				}
+			}
+		}
+
+		/*UIElementComponent* hit = nullptr;
 		auto uiElements = CollectUI(m_ActiveCanvas);
 		for (auto element : uiElements)
 		{
@@ -30,7 +55,7 @@ namespace eng
 				hit = element;
 				break;
 			}
-		}
+		}*/
 
 		// Handle pointer enter/exit events
 		if (hit != m_Hovered)

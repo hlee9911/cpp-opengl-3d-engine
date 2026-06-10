@@ -60,6 +60,21 @@ namespace eng
 		}
 	}
 
+	// Use only for debugging
+	void KinematicCharacterController::SetPosition(const glm::vec3& pos)
+	{
+		m_Ghost->getWorldTransform().setOrigin(btVector3(
+			btScalar(pos.x),
+			btScalar(pos.y),
+			btScalar(pos.z)
+		));
+		m_Controller->setWalkDirection(btVector3(
+			btScalar(pos.x),
+			btScalar(pos.y),
+			btScalar(pos.z)
+		));
+	}
+
 	glm::vec3 KinematicCharacterController::GetPosition() const
 	{
 		const auto& pos = m_Ghost->getWorldTransform().getOrigin();

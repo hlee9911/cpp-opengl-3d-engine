@@ -408,6 +408,7 @@ namespace eng
 			pos.x = posObj.value("x", 0.0f);
 			pos.y = posObj.value("y", 0.0f);
 			pos.z = posObj.value("z", 0.0f);
+			gameObject->SetStartingPosition(pos);
 			gameObject->SetPosition(pos);
 		}
 

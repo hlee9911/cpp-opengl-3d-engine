@@ -23,11 +23,16 @@ namespace eng
 		{
 			// canvas is the root layer, so this keeps the UI responsive on window resize
 			auto& graphics = Engine::GetInstance().GetGraphicsAPI();
+			auto& fb = Engine::GetInstance().GetFrameBuffer();
 			const auto& viewport = graphics.GetViewport();
 			rt->SetSize(glm::vec2(
 				static_cast<float>(viewport.width),
 				static_cast<float>(viewport.height)
 			));
+			/*rt->SetSize(glm::vec2(
+				static_cast<float>(fb.GetWidth()),
+				static_cast<float>(fb.GetHeight())
+			));*/
 		}
 
 		BeginRendering();
@@ -105,6 +110,9 @@ namespace eng
 		m_Mesh->UpdateDynamic(m_Veriticies, m_Indicies);
 		auto& gfx = Engine::GetInstance().GetGraphicsAPI();
 		const auto& viewport = gfx.GetViewport();
+		Engine::GetInstance().GetEditorManager().SetUIRenderSize(
+			viewport.width,
+			viewport.height);
 
 		RenderCommandUI command;
 		command.mesh = m_Mesh.get();

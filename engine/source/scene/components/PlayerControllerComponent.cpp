@@ -91,6 +91,14 @@ namespace eng
 		{
 			m_KinematicController->Jump(glm::vec3(0.0f, 5.0f, 0.0f));
 		}
+
+		// return the player back to the starting position in case something terrible happens to the player
+		if (inputManager.IsKeyPressed(GLFW_KEY_TAB))
+		{
+			Logger::Log("Setting player's position back to starting position");
+			m_KinematicController->SetPosition(m_Owner->GetStartingPosition());
+			// m_Owner->SetPosition(m_Owner->GetStartingPosition());
+		}
 		
 		// normalize the movement vector to prevent faster diagonal movement
 		if (glm::dot(movement, movement) > 0)
