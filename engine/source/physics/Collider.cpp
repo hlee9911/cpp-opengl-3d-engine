@@ -29,4 +29,15 @@ namespace eng
 		m_Shape = new btCapsuleShape(btScalar(radius), btScalar(height));
 	}
 
+	ConeCollider::ConeCollider(float radius, float height) noexcept
+	{
+		m_Shape = new btConeShape(btScalar(radius), btScalar(height));
+	}
+
+	CylinderCollider::CylinderCollider(const glm::vec3& extents) noexcept
+	{
+		glm::vec3 halfExtents = extents * 0.5f;
+		m_Shape = new btCylinderShape(btVector3(halfExtents.x, halfExtents.y, halfExtents.z));
+	}
+
 }

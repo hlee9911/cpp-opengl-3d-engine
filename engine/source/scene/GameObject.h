@@ -89,6 +89,8 @@ namespace eng
 		const glm::mat4 GetWorldTransform() const noexcept;
 		const glm::mat4 GetWorldTransform2D() const noexcept;
 
+		const List<unique<Component>>& GetComponents() const { return m_Components; }
+
 		static GameObject* LoadGLTF(const std::string& path, Scene* gameScene);
 
 	protected:

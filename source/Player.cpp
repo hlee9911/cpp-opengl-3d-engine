@@ -61,7 +61,8 @@ void Player::Update(float deltaTime)
 	GameObject::Update(deltaTime);
 	
 	auto& input = eng::Engine::GetInstance().GetInputManager();
-	if (input.IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
+	auto& editorManager = eng::Engine::GetInstance().GetEditorManager();
+	if (input.IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT) && !editorManager.GetEditorCursorEnabled())
 	{
 		if (m_AnimationComponent && !m_AnimationComponent->IsPlaying())
 		{
@@ -107,7 +108,7 @@ void Player::Update(float deltaTime)
 	}
 	
 	// play jump sound when space is pressed, but only if it's not already playing to prevent spamming the sound
-	if (input.IsKeyPressed(GLFW_KEY_SPACE) && m_PlayerControllerComponent && m_PlayerControllerComponent->IsOnGround())
+	if (input.IsKeyPressed(GLFW_KEY_SPACE) && m_PlayerControllerComponent && m_PlayerControllerComponent->IsOnGround() && !editorManager.GetEditorCursorEnabled())
 	{
 		if (m_AudioComponent && !m_AudioComponent->IsPlaying("jump"))
 		{
@@ -128,7 +129,7 @@ void Player::Update(float deltaTime)
 				   input.IsKeyPressed(GLFW_KEY_D);
 
 	// play footstep sound if the player is walking and on the ground, otherwise stop it
-	if (walking && m_PlayerControllerComponent && m_PlayerControllerComponent->IsOnGround())
+	if (walking && m_PlayerControllerComponent && m_PlayerControllerComponent->IsOnGround() && !editorManager.GetEditorCursorEnabled())
 	{
 		if (m_AudioComponent && !m_AudioComponent->IsPlaying("step"))
 		{

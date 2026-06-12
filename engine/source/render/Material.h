@@ -23,6 +23,8 @@ namespace eng
 		void SetTextureParam(const std::string& name, const shared<Texture>& texture);
 		void SetBoolParam(const std::string& name, bool value) noexcept;
 
+		const glm::vec3& GetFloat3Params(const std::string& name) noexcept;
+
 		void Bind();
 
 		static shared<Material> Load(const std::string& path);

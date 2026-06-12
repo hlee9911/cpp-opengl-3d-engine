@@ -17,10 +17,11 @@ namespace eng
 	void PlayerControllerComponent::Update(float deltaTime)
 	{
 		auto& inputManager = Engine::GetInstance().GetInputManager();
+		auto& editorManager = Engine::GetInstance().GetEditorManager();
 		auto rotation = m_Owner->GetRotation(); // Yaw uses y-axis and Pitch uses the x-axis
 
 		// if (inputManager.IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
-		if (inputManager.IsMousePositionChanged())
+		if (inputManager.IsMousePositionChanged() && !editorManager.GetEditorCursorEnabled())
 		{
 			const auto& oldPos = inputManager.GetMousePositionOld();
 			const auto& currentPos = inputManager.GetMousePositionCurrent();
@@ -62,44 +63,47 @@ namespace eng
 
 		glm::vec3 movement(0.0f);
 
-		// Right/Left movement
-		if (inputManager.IsKeyPressed(GLFW_KEY_A))
+		if (!editorManager.GetEditorCursorEnabled())
 		{
-			// position -= right * m_MoveSpeed * deltaTime;
-			movement -= right;
-		}
-		else if (inputManager.IsKeyPressed(GLFW_KEY_D))
-		{
-			// position += right * m_MoveSpeed * deltaTime;
-			movement += right;
+			// Right/Left movement
+			if (inputManager.IsKeyPressed(GLFW_KEY_A))
+			{
+				// position -= right * m_MoveSpeed * deltaTime;
+				movement -= right;
+			}
+			else if (inputManager.IsKeyPressed(GLFW_KEY_D))
+			{
+				// position += right * m_MoveSpeed * deltaTime;
+				movement += right;
+			}
+
+			// Forward/Backward movement
+			if (inputManager.IsKeyPressed(GLFW_KEY_W))
+			{
+				// position += front * m_MoveSpeed * deltaTime;
+				movement += front;
+			}
+			else if (inputManager.IsKeyPressed(GLFW_KEY_S))
+			{
+				// position -= front * m_MoveSpeed * deltaTime;
+				movement -= front;
+			}
+			// m_Owner->SetPosition(position);
+
+			if (inputManager.IsKeyPressed(GLFW_KEY_SPACE))
+			{
+				m_KinematicController->Jump(glm::vec3(0.0f, 5.0f, 0.0f));
+			}
+
+			// return the player back to the starting position in case something terrible happens to the player
+			if (inputManager.WasKeyPressed(GLFW_KEY_1))
+			{
+				Logger::Log("Setting player's position back to starting position");
+				m_KinematicController->SetPosition(m_Owner->GetStartingPosition());
+			}
+
 		}
 
-		// Forward/Backward movement
-		if (inputManager.IsKeyPressed(GLFW_KEY_W))
-		{
-			// position += front * m_MoveSpeed * deltaTime;
-			movement += front;
-		}
-		else if (inputManager.IsKeyPressed(GLFW_KEY_S))
-		{
-			// position -= front * m_MoveSpeed * deltaTime;
-			movement -= front;
-		}
-		// m_Owner->SetPosition(position);
-
-		if (inputManager.IsKeyPressed(GLFW_KEY_SPACE))
-		{
-			m_KinematicController->Jump(glm::vec3(0.0f, 5.0f, 0.0f));
-		}
-
-		// return the player back to the starting position in case something terrible happens to the player
-		if (inputManager.IsKeyPressed(GLFW_KEY_TAB))
-		{
-			Logger::Log("Setting player's position back to starting position");
-			m_KinematicController->SetPosition(m_Owner->GetStartingPosition());
-			// m_Owner->SetPosition(m_Owner->GetStartingPosition());
-		}
-		
 		// normalize the movement vector to prevent faster diagonal movement
 		if (glm::dot(movement, movement) > 0)
 		{
@@ -109,7 +113,6 @@ namespace eng
 
 		// sync the scene objects position and rotation with the kinematic controller
 		m_Owner->SetPosition(m_KinematicController->GetPosition());
-
 	}
 
 	bool PlayerControllerComponent::IsOnGround() const

@@ -23,14 +23,8 @@ namespace eng
 		const glm::vec2 screenMouse = input.GetMousePositionCurrent();
 		const auto uiMouseOpt = editor.ScreenToGameUI(screenMouse);
 
-		//auto mousePos = inputManager.GetMousePositionCurrent();
-
 		//// GLFW reports mouse Y from the top left corner, but our UI uses the bottom left corner as the origin, so we need to invert the Y coordinate
 		//mousePos.y = Engine::GetInstance().GetGraphicsAPI().GetViewport().height - mousePos.y; // Invert Y coordinate for UI
-
-		//// TODO: Fix this mouse position not matching problem
-		//mousePos.x += 200;
-		//mousePos.y -= 125;
 
 		UIElementComponent* hit = nullptr;
 		if (uiMouseOpt.has_value())

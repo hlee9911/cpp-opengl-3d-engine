@@ -367,6 +367,23 @@ namespace eng
 		}
 	}
 
+	void Scene::CollectAllGameObjects(List<GameObject*>& outObjects) const
+	{
+		outObjects.clear();
+		// Walk each root object and all descendants
+		for (const auto& obj : m_GameObjects)
+			CollectAllGameObjectsRecursive(obj.get(), outObjects);
+	}
+
+	void Scene::CollectAllGameObjectsRecursive(GameObject* obj, List<GameObject*>& outObjects) const
+	{
+		if (!obj || !obj->IsAlive())
+			return;
+		outObjects.push_back(obj);
+		for (const auto& child : obj->GetChildren())
+			CollectAllGameObjectsRecursive(child.get(), outObjects);
+	}
+
 	void Scene::LoadObject(const nlohmann::json& jsonObject, GameObject* parent)
 	{
 		const std::string name = jsonObject.value("name", "Object");

@@ -7,13 +7,13 @@ namespace eng
 {
 	struct GlyphDescription
 	{
-		int x0, y0;
-		int x1, y1;
+		int x0 = 0, y0 = 0;
+		int x1 = 0, y1 = 0;
 
-		int width;
-		int height;
+		int width = 0;
+		int height = 0;
 
-		int advance;
+		int advance = 0;
 		int xOffset = 0;
 		int yOffset = 0;
 	};

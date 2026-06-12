@@ -3,6 +3,8 @@
 #include "scene/GameObject.h"
 #include "scene/Component.h"
 #include "scene/components/CameraComponent.h"
+#include "profiler/Profiler.h"
+#include "profiler/MemoryManager.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -29,10 +31,12 @@ namespace eng
 		if (action == GLFW_PRESS)
 		{
 			inputManager.SetKeyPressed(key, true);
+			inputManager.SetKeyWasPressed(key, true);  // one-frame pulse
 		}
 		else if (action == GLFW_RELEASE)
 		{
 			inputManager.SetKeyPressed(key, false);
+			inputManager.SetKeyWasPressed(key, false);  // one-frame pulse
 		}
 	}
 
@@ -199,6 +203,10 @@ namespace eng
 
 			m_EditorManager.ProcessNewFrame();
 
+			// Measure whole frame
+			auto frameStart = std::chrono::high_resolution_clock::now();
+			Profiler::GetInstance().BeginFrame();
+
 			// Calculate delta time
 			auto now = std::chrono::high_resolution_clock::now();
 			float deltaTime = std::chrono::duration<float>(now - m_LastFrameTime).count();
@@ -212,14 +220,17 @@ namespace eng
 			{
 				m_FPS = static_cast<float>(m_FrameCount) / m_FPSTimer;
 
-				Logger::Log("FPS: " + std::to_string(static_cast<int>(std::round(m_FPS))));
+				// Logger::Log("FPS: " + std::to_string(static_cast<int>(std::round(m_FPS))));
 
 				m_FrameCount = 0;
 				m_FPSTimer = 0.0f;
 			}
 
 			// Update physics
-			m_PhysicsManager.Update(deltaTime);
+			{
+				ENG_PROFILE("Physics");
+				m_PhysicsManager.Update(deltaTime);
+			}
 
 			//// Update UI input system
 			//if (m_UIInputSystem.IsActive())
@@ -231,7 +242,10 @@ namespace eng
 			m_EditorManager.Update(deltaTime);
 
 			// Update application
-			m_Application->Update(deltaTime);
+			{
+				ENG_PROFILE("Game Update");
+				m_Application->Update(deltaTime);
+			}
 		
 			// FBO rendering method
 			//------------------------------------------------------
@@ -265,61 +279,66 @@ namespace eng
 			// Clear screen and buffers
 			// m_GraphicsAPI.ClearBuffers();
 			
-			// FBO render
-			// ====================================
-			m_FrameBuffer.Bind();
-
-			m_GraphicsAPI.SetViewport(
-				0,
-				0,
-				m_FrameBuffer.GetWidth(),
-				m_FrameBuffer.GetHeight());
-
-			m_GraphicsAPI.ClearBuffers();
-
-			// Collect current camera data
-			CameraData cameraData;
-			List<LightData> lights;
-
 			int width = 0;
 			int height = 0;
-			glfwGetWindowSize(m_Window, &width, &height);
-			float aspect =
-				static_cast<float>(m_FrameBuffer.GetWidth()) /
-				static_cast<float>(m_FrameBuffer.GetHeight());
-			// float aspect = static_cast<float>(width) / static_cast<float>(height);
-
-			if (m_CurrentScene)
+			// FBO render
+			// ====================================
 			{
-				if (auto cameraObject = m_CurrentScene->GetMainCamera())
+				ENG_PROFILE("Render");
+
+
+				m_FrameBuffer.Bind();
+
+				m_GraphicsAPI.SetViewport(
+					0,
+					0,
+					m_FrameBuffer.GetWidth(),
+					m_FrameBuffer.GetHeight());
+
+				m_GraphicsAPI.ClearBuffers();
+
+				// Collect current camera data
+				CameraData cameraData;
+				List<LightData> lights;
+
+				glfwGetWindowSize(m_Window, &width, &height);
+				float aspect =
+					static_cast<float>(m_FrameBuffer.GetWidth()) /
+					static_cast<float>(m_FrameBuffer.GetHeight());
+				// float aspect = static_cast<float>(width) / static_cast<float>(height);
+
+				if (m_CurrentScene)
 				{
-					// logic for matrices
-					auto cameraComponent = cameraObject->GetComponent<CameraComponent>();
-					if (cameraComponent)
+					if (auto cameraObject = m_CurrentScene->GetMainCamera())
 					{
-						cameraData.viewMatrix = cameraComponent->GetViewMatrix();
-						cameraData.projectionMatrix = cameraComponent->GetProjectionMatrix(aspect);
-						/*cameraData.orthoMatrix = glm::ortho(
-							0.0f, static_cast<float>(width),
-							0.0f, static_cast<float>(height)
-						);*/
-						cameraData.orthoMatrix = glm::ortho(
-							0.0f,
-							static_cast<float>(m_FrameBuffer.GetWidth()),
-							0.0f,
-							static_cast<float>(m_FrameBuffer.GetHeight())
-						);
-						cameraData.position = cameraObject->GetWorldPosition();
+						// logic for matrices
+						auto cameraComponent = cameraObject->GetComponent<CameraComponent>();
+						if (cameraComponent)
+						{
+							cameraData.viewMatrix = cameraComponent->GetViewMatrix();
+							cameraData.projectionMatrix = cameraComponent->GetProjectionMatrix(aspect);
+							/*cameraData.orthoMatrix = glm::ortho(
+								0.0f, static_cast<float>(width),
+								0.0f, static_cast<float>(height)
+							);*/
+							cameraData.orthoMatrix = glm::ortho(
+								0.0f,
+								static_cast<float>(m_FrameBuffer.GetWidth()),
+								0.0f,
+								static_cast<float>(m_FrameBuffer.GetHeight())
+							);
+							cameraData.position = cameraObject->GetWorldPosition();
+						}
 					}
+
+					lights = m_CurrentScene->CollectLights();
 				}
 
-				lights = m_CurrentScene->CollectLights();
+				// Draw render queue
+				m_RenderQueue.Draw(m_GraphicsAPI, cameraData, lights);
+
+				m_FrameBuffer.Unbind();
 			}
-
-			// Draw render queue
-			m_RenderQueue.Draw(m_GraphicsAPI, cameraData, lights);
-
-			m_FrameBuffer.Unbind();
 
 			m_GraphicsAPI.SetViewport(
 				0,
@@ -331,7 +350,11 @@ namespace eng
 			// ====================================
 
 			// Draw ImGui Windows
-			m_EditorManager.Draw(width, height, static_cast<int>(std::round(m_FPS)), m_FrameBuffer.GetColorTexture());
+			{
+				ENG_PROFILE("ImGui");
+				m_EditorManager.Draw(width, height, static_cast<int>(std::round(m_FPS)), m_FrameBuffer.GetColorTexture());
+			}
+			// m_EditorManager.Draw(width, height, static_cast<int>(std::round(m_FPS)), m_FrameBuffer.GetColorTexture());
 
 			// Update UI input system
 			if (m_UIInputSystem.IsActive())
@@ -346,6 +369,11 @@ namespace eng
 			// m_InputManager.SetMousePositionOld(m_InputManager.GetMousePositionCurrent());
 			// m_InputManager.SetMousePositionChanged(false);
 			m_InputManager.ClearStates();
+
+			// End-of-frame profiler stats
+			// auto frameEnd = std::chrono::high_resolution_clock::now();
+			// float frameMs = std::chrono::duration<float, std::milli>(frameEnd - frameStart).count();
+			Profiler::GetInstance().EndFrame(deltaTime);
 		}
 
 		m_Application.reset(nullptr); // ensures a clean shutdown of the application

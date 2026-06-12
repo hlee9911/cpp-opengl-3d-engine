@@ -44,9 +44,19 @@ namespace eng
 		if (buffer.empty()) return nullptr;
 
 		FT_Face face;
+		
+		if (buffer.size() > static_cast<size_t>(std::numeric_limits<FT_Long>::max()))
+		{
+			Logger::Error("Font file is too large for FreeType.");
+			return nullptr;
+		}
+
 		FT_Error result = FT_New_Memory_Face(
-			m_FontLibrary, reinterpret_cast<FT_Byte*>(buffer.data()), buffer.size(),
-			0, &face
+			m_FontLibrary,
+			reinterpret_cast<const FT_Byte*>(buffer.data()),
+			static_cast<FT_Long>(buffer.size()),
+			0,
+			&face
 		);
 
 		if (result != FT_Err_Ok) return nullptr;

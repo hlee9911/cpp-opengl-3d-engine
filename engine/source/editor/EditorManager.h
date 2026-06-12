@@ -1,8 +1,11 @@
 #pragma once
 
 #include "Core.h"
-#include "scene/GameObject.h"
 #include "graphics/GraphicsAPI.h"
+#include "profiler/MemoryManager.h"
+#include "scene/Component.h"
+#include "scene/GameObject.h"
+#include "scene/Scene.h"
 
 #include <string>
 #include <optional>
@@ -38,6 +41,18 @@ namespace eng
 		bool IsMouseOverViewport() const;
 		void SetUIRenderSize(int width, int height);
 
+		void HandleEditorInput();
+		void CycleSelection(bool backward);
+		void DrawGameObjectInspector(GameObject* obj);
+		void DrawTransformInspector(GameObject* obj);
+		void DrawComponentInspectors(GameObject* obj);
+
+		GameObject* GetSelectedGameObject() const { return m_SelectedGameObject; }
+		void SetSelectedGameObject(GameObject* obj) { m_SelectedGameObject = obj; }
+
+		bool GetEditorCursorEnabled() const { return m_EditorCursorEnabled; }
+		void SetEditorCursorEnabled(bool editorCursorEnabled) { m_EditorCursorEnabled = editorCursorEnabled; }
+
 	private:
 
 		void RenderViewportWindow(int windowWidth, int windowHeight, unsigned int framebufferTexture);
@@ -62,6 +77,11 @@ namespace eng
 
 		Deque<LogEntry> m_ConsoleMessages;
 
+		MemoryStats m_DisplayMemory;
+		float m_MemoryRefreshTimer = 0.0f;
+
 		GameObject* m_SelectedGameObject = nullptr;
+		int m_SelectedIndex = -1;
+		bool m_EditorCursorEnabled = false;
 	};
 }

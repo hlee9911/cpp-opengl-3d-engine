@@ -97,6 +97,10 @@ set(PROJECT_SOURCE_FILES
 	source/font/FontManager.cpp
 	source/editor/EditorManager.h
 	source/editor/EditorManager.cpp
+	source/profiler/Profiler.h
+	source/profiler/Profiler.cpp
+	source/profiler/MemoryManager.h
+	source/profiler/MemoryManager.cpp
 )
 
 # Group files according to files organization

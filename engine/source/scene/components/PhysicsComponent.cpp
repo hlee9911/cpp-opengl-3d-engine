@@ -41,6 +41,21 @@ namespace eng
 				float height = colliderObj.value("h", 1.0f);
 				collider = std::make_shared<CapsuleCollider>(radius, height);
 			}
+			else if (type == "cone")
+			{
+				float radius = colliderObj.value("r", 1.0f);
+				float height = colliderObj.value("h", 1.0f);
+				collider = std::make_shared<ConeCollider>(radius, height);
+			}
+			else if (type == "cylinder")
+			{
+				glm::vec3 extents(
+					colliderObj.value("x", 1.0f),
+					colliderObj.value("y", 1.0f),
+					colliderObj.value("z", 1.0f)
+				);
+				collider = std::make_shared<CylinderCollider>(extents);
+			}
 
 			if (!collider) return;
 

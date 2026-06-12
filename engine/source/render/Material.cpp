@@ -42,6 +42,16 @@ namespace eng
 		m_BoolParams[name] = value;
 	}
 
+	const glm::vec3& Material::GetFloat3Params(const std::string& name) noexcept
+	{
+		auto result = m_Float3Params.find(name);
+		if (result != m_Float3Params.end())
+		{
+			return result->second;
+		}
+		return glm::vec3(0.0f);
+	}
+
 	/// <summary>
 	/// Binds the shader program and sets the float parameters as uniforms.
 	/// </summary>

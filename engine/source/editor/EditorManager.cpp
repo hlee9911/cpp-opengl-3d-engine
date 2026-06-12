@@ -1,16 +1,22 @@
 #include "editor/EditorManager.h"
+#include "profiler/Profiler.h"
+#include "scene/components/LightComponent.h"
+#include "scene/components/CameraComponent.h"
+#include "scene/components/MeshComponent.h"
+#include "scene/components/ui/UIInputSystem.h"
+#include "scene/components/ui/CanvasComponent.h"
+#include "render/Material.h"
 #include "Engine.h"
-
-#include <iostream>
 
 namespace eng
 {
-	constexpr int CONSOLE_WINDOW_HEIGHT = 250;
+	constexpr int CONSOLE_WINDOW_HEIGHT = 300;
 	constexpr int PROPERTIES_WINDOW_WIDTH = 400;
 	constexpr int PADDING_OFFSET = 25;
 
 	EditorManager::EditorManager() noexcept : 
-		m_ConsoleMessages{}
+		m_ConsoleMessages{},
+		m_DisplayMemory{}
 	{
 
 	}
@@ -62,7 +68,15 @@ namespace eng
 
 	void EditorManager::Update(float deltaTime)
 	{
+		// Refresh memory display values once per second
+		m_MemoryRefreshTimer += deltaTime;
+		if (m_MemoryRefreshTimer >= 1.0f)
+		{
+			m_DisplayMemory = MemoryManager::GetProcessMemoryStats();
+			m_MemoryRefreshTimer = 0.0f;
+		}
 
+		HandleEditorInput();
 	}
 
 	void EditorManager::Draw(
@@ -142,19 +156,6 @@ namespace eng
 			ImGuiWindowFlags_NoMove |
 			ImGuiWindowFlags_NoCollapse;
 
-		/*ImGui::Begin(m_ViewportWindowName.c_str(), nullptr, flags);
-
-		m_ViewportPosition = ImGui::GetCursorScreenPos();
-		m_ViewportSize = ImGui::GetContentRegionAvail();
-
-		ImGui::Image(
-			(ImTextureID)(intptr_t)framebufferTexture,
-			m_ViewportSize,
-			ImVec2(0, 1),
-			ImVec2(1, 0));
-
-		ImGui::End();*/
-
 		ImGui::Begin(m_ViewportWindowName.c_str(), nullptr, flags);
 
 		// Use all remaining space inside the window for the rendered scene
@@ -222,17 +223,18 @@ namespace eng
 
 		// Scroll to bottom when a new message arrives
 		if (newLogAdded) ImGui::SetScrollHereY(1.0f);
+
 		ImGui::End();
 	}
 
 	void EditorManager::RenderPropertiesWindow(int windowWidth, int windowHeight)
 	{
-		auto windowPos = ImVec2(static_cast<float>(windowWidth - PROPERTIES_WINDOW_WIDTH), 0.0f);
-		auto windowSize = ImVec2(static_cast<float>(PROPERTIES_WINDOW_WIDTH), 
-								 static_cast<float>(windowHeight - CONSOLE_WINDOW_HEIGHT));
 
-		ImGui::SetNextWindowPos(windowPos);
-		ImGui::SetNextWindowSize(windowSize);
+		ImGui::SetNextWindowPos(ImVec2(
+			static_cast<float>(windowWidth - PROPERTIES_WINDOW_WIDTH), 0.0f));
+		ImGui::SetNextWindowSize(ImVec2(
+			static_cast<float>(PROPERTIES_WINDOW_WIDTH),
+			static_cast<float>(windowHeight - CONSOLE_WINDOW_HEIGHT)));
 
 		ImGuiWindowFlags flags =
 			ImGuiWindowFlags_NoResize |
@@ -241,48 +243,20 @@ namespace eng
 
 		ImGui::Begin(m_PropertiesWindowName.c_str(), nullptr, flags);
 
-		// slider widget
-		//if (!Objects.empty())
-		//{
-		//	auto position = Objects[0]->GetTransform().GetPosition();
-		//	ImGui::SliderFloat3("Position", &position.x, -10.0f, 10.0f, "%.2f");
-		//	Objects[0]->GetTransform().SetPosition(position.x, position.y, position.z);
-
-		//	auto rotation = Objects[0]->GetTransform().GetRotation();
-		//	ImGui::SliderFloat3("Rotation", &rotation.x, -180.0f, 180.0f, "%.2f");
-		//	Objects[0]->GetTransform().SetRotation(rotation.x, rotation.y, rotation.z);
-
-		//	auto scale = Objects[0]->GetTransform().GetScale();
-		//	ImGui::SliderFloat3("Scale", &scale.x, 0.001f, 10.0f, "%.2f");
-		//	Objects[0]->GetTransform().SetScale(scale.x, scale.y, scale.z);
-		//}
+		ImGui::TextDisabled("Tab: next  |  Shift+Tab: prev");
+		ImGui::TextDisabled("V: toggle cursor");
 
 		ImGui::Separator();
 
-		//ImGui::Button("Crate 1 texture");
-		//ImGui::Button("Crate 2 texture");
-
-		ImGui::Separator();
-
-		/*if (!Objects.empty())
+		if (!m_SelectedGameObject)
 		{
-			auto isTextured = Objects[0]->IsTextured();
-			ImGui::Checkbox("Textured", &isTextured);
-			Objects[0]->SetTextured(isTextured);
-		}*/
+			ImGui::TextWrapped("No object selected. Press Tab to cycle scene objects.");
+			ImGui::End();
+			return;
+		}
 
-		//ImGui::Checkbox("Light the scene", &isLit);
+		DrawGameObjectInspector(m_SelectedGameObject);
 
-		ImGui::Separator();
-
-		/*if (!Objects.empty())
-		{
-			auto color = Objects[0]->GetColor();
-			ImGui::ColorEdit4("Color", &color.r);
-			Objects[0]->SetColor(color);
-		}*/
-
-		ImGui::Separator();
 		ImGui::End();
 	}
 
@@ -292,7 +266,6 @@ namespace eng
 		ImGui::SetNextWindowPos(ImVec2(
 			static_cast<float>(windowWidth - PROPERTIES_WINDOW_WIDTH),
 			static_cast<float>(windowHeight - CONSOLE_WINDOW_HEIGHT)));
-
 		ImGui::SetNextWindowSize(ImVec2(
 			static_cast<float>(PROPERTIES_WINDOW_WIDTH),
 			static_cast<float>(CONSOLE_WINDOW_HEIGHT)));
@@ -304,24 +277,65 @@ namespace eng
 
 		ImGui::Begin(m_DebugWindowName.c_str(), nullptr, flags);
 
-		// --- Performance ---
-		ImGui::Text("FPS: %d", fpsCount);
+		auto& profiler = Profiler::GetInstance();
 
-		// Smooth FPS over last N frames (store m_FpsHistory in EditorManager)
-		// ImGui::PlotLines("FPS", m_FpsHistory.data(), (int)m_FpsHistory.size(), ...);
+		// --------------- FPS --------------------------
+
+		// These only change once per second now
+		ImGui::Text("FPS: %.0f", profiler.GetDisplayFps());
+		ImGui::Text("Frame: %.2f ms", profiler.GetDisplayFrameMs());
+
+		// Graph can still update every frame (smooth line)
+
+		ImGui::PlotLines(
+			"FPS Graph",
+			profiler.GetFpsHistory().data(),
+			static_cast<int>(profiler.GetFpsHistory().size()),
+			0,
+			nullptr,
+			0.0f,
+			120.0f,
+			ImVec2(-1, 60));
 
 		ImGui::Separator();
-		// --- Memory (placeholder until you wire platform APIs) ---
 
-		// ImGui::Text("Memory: %.2f MB", GetProcessMemoryMB());
+		// --------------- Memory --------------------------
 
+		// Memory also refreshes once per second
+		ImGui::Text("Working Set: %.2f MB", m_DisplayMemory.workingSetMB);
+		ImGui::Text("Private Usage: %.2f MB", m_DisplayMemory.privateUsageMB);
+		ImGui::Text("Peak Working Set: %.2f MB", m_DisplayMemory.peakWorkingSetMB);
+		
 		ImGui::Separator();
 
-		// --- Profiler (expand later with scoped timers) ---
+		// --------------- Profiler --------------------------
+		
+		ImGui::Text("Profiler (1s avg)");
 
-		/*ImGui::Text("Frame: %.2f ms", m_LastFrameTimeMs);
-		ImGui::Text("Update: %.2f ms", m_UpdateTimeMs);
-		ImGui::Text("Render: %.2f ms", m_RenderTimeMs);*/
+		auto drawSample = [](const char* label, const char* sampleName)
+			{
+				if (const ProfileSample* sample = Profiler::GetInstance().GetSample(sampleName))
+				{
+					// Show the 1-second average
+					ImGui::Text("%s: %.2f ms", label, sample->displayMs);
+				}
+			};
+
+		drawSample("Physics", "Physics");
+		drawSample("Editor", "Editor");
+		drawSample("Game Update", "Game Update");
+		drawSample("Render", "Render");
+		drawSample("ImGui", "ImGui");
+
+		ImGui::PlotLines(
+			"Frame Time (ms)",
+			profiler.GetFrameHistory().data(),
+			static_cast<int>(profiler.GetFrameHistory().size()),
+			0,
+			nullptr,
+			0.0f,
+			33.3f,
+			ImVec2(-1, 60));
 
 		ImGui::End();
 	}
@@ -343,7 +357,7 @@ namespace eng
 
 	std::optional<glm::vec2> EditorManager::ScreenToGameUI(const glm::vec2& screenMouse) const
 	{
-		// Bail out if we don't know the viewport image or UI render size yet
+		// Bail out if we dont know the viewport image or UI render size yet
 		if (m_ViewportSize.x <= 0.0f || m_ViewportSize.y <= 0.0f ||
 			m_UIRenderWidth <= 0 || m_UIRenderHeight <= 0)
 			return std::nullopt;
@@ -377,4 +391,177 @@ namespace eng
 		m_UIRenderWidth = width;
 		m_UIRenderHeight = height;
 	}
+
+	void EditorManager::HandleEditorInput()
+	{
+		auto& engine = Engine::GetInstance();
+		auto& input = engine.GetInputManager();
+
+		// Dont steal Tab while typing in an ImGui text field
+		if (ImGui::GetIO().WantCaptureKeyboard) return;
+
+		// Tab = next object, Shift+Tab = previous
+		if (input.WasKeyPressed(GLFW_KEY_TAB))
+		{
+			const bool backward =
+				input.IsKeyPressed(GLFW_KEY_LEFT_SHIFT) ||
+				input.IsKeyPressed(GLFW_KEY_RIGHT_SHIFT);
+			CycleSelection(backward);
+		}
+
+		// V = toggle cursor so you can use ImGui during gameplay
+		if (input.WasKeyPressed(GLFW_KEY_V))
+		{
+			bool isUIInputSystemActive = engine.GetUIInputSystem().IsActive();
+			m_EditorCursorEnabled = !m_EditorCursorEnabled;
+			engine.SetCursorEnabled(m_EditorCursorEnabled && isUIInputSystemActive);
+		}
+	}
+
+	void EditorManager::CycleSelection(bool backward)
+	{
+		auto scene = Engine::GetInstance().GetScene();
+
+		if (!scene) return;
+
+		List<GameObject*> objects;
+		scene->CollectAllGameObjects(objects);
+
+		// Remove inactive objects so Tab skips hidden stuff (like 3DRoot when menu is up)
+		objects.erase(
+			std::remove_if(objects.begin(), objects.end(),
+				[](GameObject* obj) { return !obj->IsActive(); }),
+			objects.end());
+
+		if (objects.empty())
+		{
+			m_SelectedGameObject = nullptr;
+			m_SelectedIndex = -1;
+			return;
+		}
+
+		// Find current index (selection may have become invalid)
+		if (m_SelectedGameObject)
+		{
+			auto it = std::find(objects.begin(), objects.end(), m_SelectedGameObject);
+			m_SelectedIndex = (it != objects.end())
+				? static_cast<int>(std::distance(objects.begin(), it))
+				: -1;
+		}
+
+		// Move forward/backward with wrap-around
+		if (backward)
+		{
+			m_SelectedIndex = (m_SelectedIndex <= 0)
+				? static_cast<int>(objects.size()) - 1
+				: m_SelectedIndex - 1;
+		}
+		else
+		{
+			m_SelectedIndex = (m_SelectedIndex + 1) % static_cast<int>(objects.size());
+		}
+
+		m_SelectedGameObject = objects[m_SelectedIndex];
+		Logger::Log("Selected: " + m_SelectedGameObject->GetName());
+	}
+
+	void EditorManager::DrawGameObjectInspector(GameObject* obj)
+	{
+		// --- Object header ---
+		char buffer[256];
+		strncpy_s(buffer, obj->GetName().c_str(), sizeof(buffer));
+
+		if (ImGui::InputText("Name", buffer, sizeof(buffer)))
+		{
+			obj->SetName(buffer);
+		}
+
+		bool active = obj->IsActive();
+		if (ImGui::Checkbox("Is Active", &active))
+		{
+			obj->SetActive(active);
+		}
+
+		ImGui::Separator();
+
+		// --- Transform (always shown) ---
+		if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			DrawTransformInspector(obj);
+		}
+
+		// --- Components ---
+		DrawComponentInspectors(obj);
+	}
+
+	void EditorManager::DrawTransformInspector(GameObject* obj)
+	{
+		// Position
+		glm::vec3 pos = obj->GetPosition();
+		if (ImGui::DragFloat3("Position", &pos.x, 0.1f))
+		{
+			obj->SetPosition(pos);
+		}
+
+		// Rotation as Euler degrees (easier to edit than quaternions in ImGui)
+		glm::vec3 euler = glm::degrees(glm::eulerAngles(obj->GetRotation()));
+		if (ImGui::DragFloat3("Rotation", &euler.x, 1.0f))
+		{
+			obj->SetRotation(glm::quat(glm::radians(euler)));
+		}
+
+		// Scale
+		glm::vec3 scale = obj->GetScale();
+		if (ImGui::DragFloat3("Scale", &scale.x, 0.05f, 0.001f, 100.0f))
+		{
+			obj->SetScale(scale);
+		}
+	}
+
+	void EditorManager::DrawComponentInspectors(GameObject* obj)
+	{
+		// Light
+		if (auto* light = obj->GetComponent<LightComponent>())
+		{
+			if (ImGui::CollapsingHeader("LightComponent", ImGuiTreeNodeFlags_DefaultOpen))
+			{
+				glm::vec3 color = light->GetColor();
+				if (ImGui::ColorEdit3("Color", &color.x))
+				{
+					light->SetColor(color);
+				}
+			}
+		}
+
+		// Camera
+		if (auto* camera = obj->GetComponent<CameraComponent>())
+		{
+			if (ImGui::CollapsingHeader("CameraComponent"))
+			{
+				float fov = camera->GetFov();
+				if (ImGui::DragFloat("FOV", &fov, 1.0f, 1.0f, 179.0f))
+				{
+					camera->SetFov(fov);
+				}
+			}
+		}
+
+		// Mesh (only color for now)
+		if (auto* meshComp = obj->GetComponent<MeshComponent>())
+		{
+			if (ImGui::CollapsingHeader("MeshComponent"))
+			{
+				// ImGui::TextUnformatted("(Mesh present)");
+				glm::vec3 color = meshComp->GetMaterial().get()->GetFloat3Params("color");
+				if (ImGui::ColorEdit3("Color", &color.x))
+				{
+					meshComp->GetMaterial().get()->SetFloatParam("color", color);
+				}
+			}
+		}
+		
+		// TODO:
+		// List any other component types if needed
+	}
+
 }
