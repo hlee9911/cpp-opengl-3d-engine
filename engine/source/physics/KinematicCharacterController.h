@@ -22,6 +22,7 @@ namespace eng
 		glm::vec3 GetPosition() const;
 		glm::vec3 GetRotation() const;
 
+		void SetPosition(const glm::vec3& pos);
 		void Walk(const glm::vec3& direction);
 		void Jump(const glm::vec3& direction);
 		bool IsOnGround() const;

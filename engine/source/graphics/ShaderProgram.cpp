@@ -80,6 +80,12 @@ namespace eng
 		glUniform4fv(location, 1, glm::value_ptr(value));
 	}
 
+	void ShaderProgram::SetUniform(const std::string& name, bool value)
+	{
+		auto location = GetUniformLocation(name);
+		glUniform1i(location, value ? 1 : 0);
+	}
+
 	void ShaderProgram::SetTexture(const std::string& name, Texture* texture)
 	{
 		auto location = GetUniformLocation(name);

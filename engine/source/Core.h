@@ -6,7 +6,12 @@
 #include <map>
 #include <unordered_map>
 #include <unordered_set>
+#include <stack>
+#include <queue>
+#include <deque>
 #include <cstdint>
+
+#include "Logger.h"
 
 namespace eng
 {
@@ -33,10 +38,19 @@ namespace eng
 	template <typename T>
 	using Set = std::unordered_set<T>;
 
+	template <typename T>
+	using Stack = std::stack<T>;
+
+	template <typename T>
+	using Queue = std::queue<T>;
+
+	template <typename T>
+	using Deque = std::deque<T>;
+
 	using uint8 = uint8_t;
 
 	// Simple logging macro, ... means variadic arguments
-	#define LOG(M, ...) std::printf("[LOG] " M "\n", ##__VA_ARGS__)
-	#define WARN(M, ...) std::printf("[WARN] " M "\n", ##__VA_ARGS__)
-	#define ERROR(M, ...) std::printf("[ERROR] " M "\n", ##__VA_ARGS__)
+	// #define LOG(M, ...) std::printf("[LOG] " M "\n", ##__VA_ARGS__)
+	// #define WARN(M, ...) std::printf("[WARN] " M "\n", ##__VA_ARGS__)
+	// #define ERROR(M, ...) std::printf("[ERROR] " M "\n", ##__VA_ARGS__)
 }

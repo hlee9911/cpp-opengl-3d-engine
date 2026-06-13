@@ -1,14 +1,16 @@
-#pragma once;
+#pragma once
 
 #include "input/InputManager.h"
 #include "graphics/GraphicsAPI.h"
 #include "graphics/Texture.h"
+#include "graphics/FrameBuffer.h"
 #include "render/RenderQueue.h"
 #include "scene/Scene.h"
 #include "io/FileSystem.h"
 #include "physics/PhysicsManager.h"
 #include "audio/AudioManager.h"
 #include "font/FontManager.h"
+#include "editor/EditorManager.h"
 #include "scene/components/ui/UIInputSystem.h"
 #include "Core.h"
 
@@ -51,6 +53,8 @@ namespace eng
 		AudioManager& GetAudioManager() noexcept;
 		FontManager& GetFontManager() noexcept;
 		UIInputSystem& GetUIInputSystem() noexcept;
+		EditorManager& GetEditorManager() noexcept;
+		FrameBuffer& GetFrameBuffer() noexcept;
 
 		// void SetScene(Scene* scene) noexcept { m_CurrentScene.reset(scene); }
 		void SetScene(const shared<Scene>& scene) noexcept { m_CurrentScene = scene; }
@@ -69,7 +73,16 @@ namespace eng
 		AudioManager m_AudioManager;
 		FontManager m_FontManager;
 		UIInputSystem m_UIInputSystem;
+		EditorManager m_EditorManager;
+		FrameBuffer m_FrameBuffer;
 
 		shared<Scene> m_CurrentScene;
+
+		float m_FPS = 0.0f;
+		float m_FPSTimer = 0.0f;
+		int m_FrameCount = 0;
+
+		int m_WindowWidth = 0;
+		int m_WindowHeight = 0;
 	};
 }

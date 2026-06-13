@@ -16,7 +16,11 @@ namespace eng
 		glm::mat4 GetViewMatrix() const;
 		glm::mat4 GetProjectionMatrix(float aspect) const;
 
+		float GetFov() const { return m_FOV; }
+		void SetFov(float fov) { m_FOV = fov; }
+
 	private:
+
 		float m_FOV = 60.0f;
 		float m_NearPlane = 0.1f;
 		float m_FarPlane = 1000.0f;

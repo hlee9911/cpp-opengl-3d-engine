@@ -61,7 +61,8 @@ void Player::Update(float deltaTime)
 	GameObject::Update(deltaTime);
 	
 	auto& input = eng::Engine::GetInstance().GetInputManager();
-	if (input.IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT))
+	auto& editorManager = eng::Engine::GetInstance().GetEditorManager();
+	if (input.IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT) && !editorManager.GetEditorCursorEnabled())
 	{
 		if (m_AnimationComponent && !m_AnimationComponent->IsPlaying())
 		{
@@ -80,6 +81,7 @@ void Player::Update(float deltaTime)
 			// create a bullet and set its position and direction based on the gun's position and forward direction
 			auto bullet = m_Scene->CreateGameObject<Bullet>("Bullet");
 			auto bulletMaterial = eng::Material::Load("materials/suzanne.mat");
+			bulletMaterial->SetFloatParam("color", glm::vec3(0.0f, 0.0f, 0.0f));
 			float bulletRadius = 0.2f;
 			auto bulletMesh = eng::Mesh::CreateSphere(bulletRadius, 32, 32);
 			bullet->AddComponenet(new eng::MeshComponent(bulletMaterial, bulletMesh));
@@ -106,7 +108,7 @@ void Player::Update(float deltaTime)
 	}
 	
 	// play jump sound when space is pressed, but only if it's not already playing to prevent spamming the sound
-	if (input.IsKeyPressed(GLFW_KEY_SPACE) && m_PlayerControllerComponent && m_PlayerControllerComponent->IsOnGround())
+	if (input.IsKeyPressed(GLFW_KEY_SPACE) && m_PlayerControllerComponent && m_PlayerControllerComponent->IsOnGround() && !editorManager.GetEditorCursorEnabled())
 	{
 		if (m_AudioComponent && !m_AudioComponent->IsPlaying("jump"))
 		{
@@ -127,7 +129,7 @@ void Player::Update(float deltaTime)
 				   input.IsKeyPressed(GLFW_KEY_D);
 
 	// play footstep sound if the player is walking and on the ground, otherwise stop it
-	if (walking && m_PlayerControllerComponent && m_PlayerControllerComponent->IsOnGround())
+	if (walking && m_PlayerControllerComponent && m_PlayerControllerComponent->IsOnGround() && !editorManager.GetEditorCursorEnabled())
 	{
 		if (m_AudioComponent && !m_AudioComponent->IsPlaying("step"))
 		{

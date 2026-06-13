@@ -51,7 +51,7 @@ namespace eng
 		{
 			char infoLog[512];
 			glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
-			ERROR("VERTEX_SHADER_COMPILATION_FAILED: \n%s", infoLog);
+			Logger::Error("VERTEX_SHADER_COMPILATION_FAILED: " + std::string(infoLog));
 			// std::cerr << "ERROR::VERTEX_SHADER_COMPILATION_FAILED: \n" << infoLog << std::endl;
 			return nullptr;
 		}
@@ -73,7 +73,7 @@ namespace eng
 		{
 			char infoLog[512];
 			glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
-			ERROR("FRAGMENT_SHADER_COMPILATION_FAILED: \n%s", infoLog);
+			Logger::Error("FRAGMENT_SHADER_COMPILATION_FAILED: " + std::string(infoLog));
 			// std::cerr << "ERROR::FRAGMENT_SHADER_COMPILATION_FAILED: \n" << infoLog << std::endl;
 			return nullptr;
 		}
@@ -90,7 +90,7 @@ namespace eng
 		{
 			char infoLog[512];
 			glGetProgramInfoLog(shaderProgramID, 512, nullptr, infoLog);
-			ERROR("SHADER_PROGRAM_LINKING_FAILED: \n%s", infoLog);
+			Logger::Error("SHADER_PROGRAM_LINKING_FAILED: " + std::string(infoLog));
 			// std::cerr << "ERROR::SHADER_PROGRAM_LINKING_FAILED: \n" << infoLog << std::endl;
 			return nullptr;
 		}
@@ -109,7 +109,7 @@ namespace eng
 		if (!m_DefaultShaderProgram)
 		{
 			std::string vertexShaderSource = R"(
-				#version 330 core
+				#version 460 core
 				layout(location = 0) in vec3 position;
 				layout(location = 1) in vec3 color;
 				layout(location = 2) in vec2 uv;
@@ -136,7 +136,7 @@ namespace eng
 			)";
 
 			std::string fragmentShaderSource = R"(
-				#version 330 core
+				#version 460 core
 				
 				struct Light
 				{
@@ -195,7 +195,7 @@ namespace eng
 		if (!m_Default2DShaderProgram)
 		{
 			std::string vertexShaderSource = R"(
-				#version 330 core
+				#version 460 core
 				layout(location = 0) in vec2 position;
 
 				out vec2 vUV;
@@ -221,7 +221,7 @@ namespace eng
 			)";
 
 			std::string fragmentShaderSource = R"(
-				#version 330 core
+				#version 460 core
 
 				in vec2 vUV;
 
@@ -251,7 +251,7 @@ namespace eng
 		if (!m_DefaultUIShaderProgram)
 		{
 			std::string vertexShaderSource = R"(
-				#version 330 core
+				#version 460 core
 				layout(location = 0) in vec2 position;
 				layout(location = 1) in vec4 color;
 				layout(location = 2) in vec2 uv;
@@ -272,7 +272,7 @@ namespace eng
 
 			// sample uTex or output flat vColor
 			std::string fragmentShaderSource = R"(
-				#version 330 core
+				#version 460 core
 
 				in vec2 vUV;
 				in vec4 vColor;

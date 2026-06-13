@@ -75,7 +75,7 @@
                 "z": 30
               },
               "material": {
-                "path": "materials/checker.mat",
+                "path": "materials/floor.mat",
                 "params": {
                   "float3": [
                     {
@@ -1042,7 +1042,7 @@
                 "z": 1.5
               },
               "material": {
-                "path": "materials/checker.mat",
+                "path": "materials/brick.mat",
                 "params": {
                   "float3": [
                     {
@@ -1088,7 +1088,7 @@
                 "z": 1.5
               },
               "material": {
-                "path": "materials/checker.mat",
+                "path": "materials/wood.mat",
                 "params": {
                   "float3": [
                     {
@@ -1845,7 +1845,7 @@
           "name": "Light",
           "position": {
             "x": -2,
-            "y": 5,
+            "y": 20,
             "z": 2
           },
           "components": [
@@ -1855,6 +1855,26 @@
                 "r": 1,
                 "g": 1,
                 "b": 1
+              }
+            },
+            {
+              "type": "MeshComponent",
+              "mesh": {
+                "type": "sphere",
+                "r": 1
+              },
+              "material": {
+                "path": "materials/white.mat",
+                "params": {
+                  "float3": [
+                    {
+                      "name": "color",
+                      "value0": 1.0,
+                      "value1": 0.95,
+                      "value2": 0.8
+                    }
+                  ]
+                }
               }
             }
           ]
@@ -1913,7 +1933,7 @@
               "components": [
                 {
                   "type": "TextComponent",
-                  "text": "Play",
+                  "text": "Start",
                   "font": {
                     "path": "fonts/arial.ttf",
                     "size": 24

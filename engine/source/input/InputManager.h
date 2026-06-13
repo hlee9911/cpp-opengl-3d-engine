@@ -1,4 +1,4 @@
-#pragma once;
+#pragma once
 
 #include <glm/vec2.hpp>
 
@@ -18,6 +18,9 @@ namespace eng
 	public:
 		void SetKeyPressed(int key, bool pressed);
 		bool IsKeyPressed(int key) const;
+
+		void SetKeyWasPressed(int key, bool pressed);
+		bool WasKeyPressed(int key) const;
 
 		void SetMouseButtonPressed(int button, bool pressed);
 		bool IsMouseButtonPressed(int button);
@@ -41,6 +44,7 @@ namespace eng
 
 	private:
 		std::array<bool, 512> m_Keys = { false }; // Simple key state storage
+		std::array<bool, 512> m_KeyPressed = { false };
 		std::array<bool, 16> m_MouseKeys = { false };
 		std::array<bool, 16> m_MouseKeyPressed = { false };
 		std::array<bool, 16> m_MouseKeyReleased = { false };

@@ -37,6 +37,21 @@ namespace eng
 		m_Textures[name] = texture;
 	}
 
+	void Material::SetBoolParam(const std::string& name, bool value) noexcept
+	{
+		m_BoolParams[name] = value;
+	}
+
+	const glm::vec3& Material::GetFloat3Params(const std::string& name) noexcept
+	{
+		auto result = m_Float3Params.find(name);
+		if (result != m_Float3Params.end())
+		{
+			return result->second;
+		}
+		return glm::vec3(0.0f);
+	}
+
 	/// <summary>
 	/// Binds the shader program and sets the float parameters as uniforms.
 	/// </summary>
@@ -64,6 +79,11 @@ namespace eng
 		for (auto& param : m_Textures)
 		{
 			m_ShaderProgram->SetTexture(param.first, param.second.get());
+		}
+
+		for (auto& param : m_BoolParams)
+		{
+			m_ShaderProgram->SetUniform(param.first, param.second);
 		}
 	}
 

@@ -35,4 +35,16 @@ namespace eng
 	public:
 		CapsuleCollider(float radius, float height) noexcept;
 	};
+
+	class ConeCollider : public Collider
+	{
+	public:
+		ConeCollider(float radius, float height) noexcept;
+	};
+
+	class CylinderCollider : public Collider
+	{
+	public:
+		CylinderCollider(const glm::vec3& extents) noexcept;
+	};
 }

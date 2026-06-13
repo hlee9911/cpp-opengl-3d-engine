@@ -29,12 +29,21 @@ namespace eng
 		void SetAddedToWorld(bool added) noexcept { m_AddedToWorld = added; }
 		bool IsAddedToWorld() const noexcept { return m_AddedToWorld; }
 
+		float GetMass() const noexcept { return m_Mass; }
+		void SetMass(float mass);
+
+		float GetFriction() const noexcept { return m_Friction; }
+		void SetFriction(float friction);
+
 		BodyType GetBodyType() const noexcept { return m_BodyType; }
+		void SetBodyType(BodyType type);
 
 		void SetPosition(const glm::vec3& position);
 		glm::vec3 GetPosition() const;
 		void SetRotation(const glm::quat& rotation);
 		glm::quat GetRotation() const;
+		void SetScale(const glm::vec3& scale);
+		glm::vec3 GetScale() const;
 
 		void ApplyImpulse(const glm::vec3& impulse);
 

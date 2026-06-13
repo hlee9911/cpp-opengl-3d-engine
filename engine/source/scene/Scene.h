@@ -59,10 +59,15 @@ namespace eng
 
 		static shared<Scene> Load(const std::string& path);
 
+		// Collect every alive object in the scene (roots + children)
+		void CollectAllGameObjects(List<GameObject*>& outObjects) const;
+		void CollectAllGameObjectsRecursive(GameObject* obj, List<GameObject*>& outObjects) const;
+
 	private:
 		void CollectLightsRecursive(GameObject* obj, List<LightData>& out);
 
 		void LoadObject(const nlohmann::json& jsonObject, GameObject* parent);
+
 
 	private:
 		List<unique<GameObject>> m_GameObjects;

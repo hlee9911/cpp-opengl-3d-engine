@@ -7,7 +7,7 @@ int main(int argc, char* argv[])
 	eng::Engine& engine = eng::Engine::GetInstance();
 	engine.SetApplication(game);
 
-	if (engine.Init(1280, 720))
+	if (engine.Init(1920, 1080))
 	{
 		engine.Run();
 	}

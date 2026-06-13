@@ -16,6 +16,20 @@ namespace eng
 		return m_Keys[key];
 	}
 
+	void InputManager::SetKeyWasPressed(int key, bool pressed)
+	{
+		if (key < 0 || key >= static_cast<int>(m_KeyPressed.size())) return;
+
+		m_KeyPressed[key] = pressed;
+	}
+
+	bool InputManager::WasKeyPressed(int key) const
+	{
+		if (key < 0 || key >= static_cast<int>(m_KeyPressed.size())) return false;
+
+		return m_KeyPressed[key];
+	}
+
 	void InputManager::SetMouseButtonPressed(int button, bool pressed)
 	{
 		if (button < 0 || button >= static_cast<int>(m_MouseKeys.size())) return;
@@ -60,6 +74,7 @@ namespace eng
 
 	void InputManager::ClearStates()
 	{
+		m_KeyPressed.fill(false);
 		SetMousePositionChanged(false);
 		for (auto k : m_MouseKeyPressed)
 		{

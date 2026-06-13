@@ -21,6 +21,9 @@ namespace eng
 		void SetMaterial(const shared<Material>& material) noexcept { m_Material = material; }
 		void SetMesh(const shared<Mesh>& mesh) noexcept { m_Mesh = mesh; }
 
+		const shared<Material>& GetMaterial() const noexcept { return m_Material; }
+		const shared<Mesh>& GetMesh() const noexcept { return m_Mesh; }
+
 	private:
 		shared<Material> m_Material;
 		shared<Mesh> m_Mesh;

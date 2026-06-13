@@ -211,7 +211,6 @@ bool Game::Init()
 	// camera->SetPosition(glm::vec3(0.0f, 1.0f, 7.0f));
 #endif
 	
-	// commenting out to test 2d rendering
 	auto scene = eng::Scene::Load("scenes/scene.sc");
 	m_Scene = scene;
 	auto& engine = eng::Engine::GetInstance();
@@ -240,6 +239,7 @@ bool Game::Init()
 					// clicking playbutton should disable the UI and enable the 3D scene
 					auto& engine = eng::Engine::GetInstance();
 					engine.GetUIInputSystem().GetActiveCanvas()->SetActive(false);
+					engine.GetEditorManager().SetEditorCursorEnabled(false);
 					engine.SetCursorEnabled(false);
 
 					if (m_3DRoot)

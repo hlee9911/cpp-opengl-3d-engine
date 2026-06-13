@@ -346,7 +346,8 @@ namespace eng
 	}
 
 	/// <summary>
-	/// Collects light data from the scene recursively, starting from the given GameObject. If the GameObject has a LightComponent, its data is added to the output list. The function then continues to check all child GameObjects.
+	/// Collects light data from the scene recursively, starting from the given GameObject. If the GameObject has a LightComponent, 
+	/// its data is added to the output list. The function then continues to check all child GameObjects.
 	/// </summary>
 	/// <param name="obj"></param>
 	/// <param name="out"></param>
@@ -363,6 +364,26 @@ namespace eng
 		for (auto& child : obj->m_Children)
 		{
 			CollectLightsRecursive(child.get(), out);
+		}
+	}
+
+	void Scene::CollectAllGameObjects(List<GameObject*>& outObjects) const
+	{
+		outObjects.clear();
+		// iterate each root object and all descendants
+		for (const auto& obj : m_GameObjects)
+		{
+			CollectAllGameObjectsRecursive(obj.get(), outObjects);
+		}
+	}
+
+	void Scene::CollectAllGameObjectsRecursive(GameObject* obj, List<GameObject*>& outObjects) const
+	{
+		if (!obj || !obj->IsAlive()) return;
+		outObjects.push_back(obj);
+		for (const auto& child : obj->GetChildren())
+		{
+			CollectAllGameObjectsRecursive(child.get(), outObjects);
 		}
 	}
 
@@ -407,6 +428,7 @@ namespace eng
 			pos.x = posObj.value("x", 0.0f);
 			pos.y = posObj.value("y", 0.0f);
 			pos.z = posObj.value("z", 0.0f);
+			gameObject->SetStartingPosition(pos);
 			gameObject->SetPosition(pos);
 		}
 
