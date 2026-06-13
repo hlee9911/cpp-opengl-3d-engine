@@ -92,11 +92,11 @@ namespace eng
 
 			if (inputManager.IsKeyPressed(GLFW_KEY_SPACE))
 			{
-				m_KinematicController->Jump(glm::vec3(0.0f, 5.0f, 0.0f));
+				m_KinematicController->Jump(glm::vec3(0.0f, m_JumpForce, 0.0f));
 			}
 
 			// return the player back to the starting position in case something terrible happens to the player
-			if (inputManager.WasKeyPressed(GLFW_KEY_1))
+			if (inputManager.WasKeyPressed(GLFW_KEY_R))
 			{
 				Logger::Log("Setting player's position back to starting position");
 				m_KinematicController->SetPosition(m_Owner->GetStartingPosition());

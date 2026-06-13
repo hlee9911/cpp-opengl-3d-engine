@@ -1,8 +1,13 @@
 #include "editor/EditorManager.h"
 #include "profiler/Profiler.h"
-#include "scene/components/LightComponent.h"
-#include "scene/components/CameraComponent.h"
 #include "scene/components/MeshComponent.h"
+#include "scene/components/CameraComponent.h"
+#include "scene/components/PlayerControllerComponent.h"
+#include "scene/components/LightComponent.h"
+#include "scene/components/AnimationComponent.h"
+#include "scene/components/PhysicsComponent.h"
+#include "scene/components/AudioComponent.h"
+#include "scene/components/AudioListenerComponent.h"
 #include "scene/components/ui/UIInputSystem.h"
 #include "scene/components/ui/CanvasComponent.h"
 #include "render/Material.h"
@@ -243,8 +248,17 @@ namespace eng
 
 		ImGui::Begin(m_PropertiesWindowName.c_str(), nullptr, flags);
 
-		ImGui::TextDisabled("Tab: next  |  Shift+Tab: prev");
-		ImGui::TextDisabled("V: toggle cursor");
+		ImGui::TextDisabled("Tab: Next Game Object  |  Shift+Tab: Previous Game Object");
+		ImGui::TextDisabled("R: Set the player's position to the initial position");
+		ImGui::TextDisabled("V: Toggle Editor Mode (Cursor & Input)");
+		if (m_EditorCursorEnabled)
+		{
+			ImGui::Text("Mode: Editor");
+		}
+		else
+		{
+			ImGui::Text("Mode: Gameplay");
+		}
 
 		ImGui::Separator();
 
@@ -501,6 +515,10 @@ namespace eng
 		if (ImGui::DragFloat3("Position", &pos.x, 0.1f))
 		{
 			obj->SetPosition(pos);
+			if (auto* physicsComp = obj->GetComponent<PhysicsComponent>())
+			{
+				physicsComp->GetRigidBody()->SetPosition(pos);
+			}
 		}
 
 		// Rotation as Euler degrees (easier to edit than quaternions in ImGui)
@@ -508,6 +526,10 @@ namespace eng
 		if (ImGui::DragFloat3("Rotation", &euler.x, 1.0f))
 		{
 			obj->SetRotation(glm::quat(glm::radians(euler)));
+			if (auto* physicsComp = obj->GetComponent<PhysicsComponent>())
+			{
+				physicsComp->GetRigidBody()->SetRotation(glm::quat(glm::radians(euler)));
+			}
 		}
 
 		// Scale
@@ -515,33 +537,37 @@ namespace eng
 		if (ImGui::DragFloat3("Scale", &scale.x, 0.05f, 0.001f, 100.0f))
 		{
 			obj->SetScale(scale);
+			if (auto* physicsComp = obj->GetComponent<PhysicsComponent>())
+			{
+				physicsComp->GetRigidBody()->SetScale(scale);
+			}
 		}
 	}
 
 	void EditorManager::DrawComponentInspectors(GameObject* obj)
 	{
 		// Light
-		if (auto* light = obj->GetComponent<LightComponent>())
+		if (auto* lightComp = obj->GetComponent<LightComponent>())
 		{
-			if (ImGui::CollapsingHeader("LightComponent", ImGuiTreeNodeFlags_DefaultOpen))
+			if (ImGui::CollapsingHeader("Light Component", ImGuiTreeNodeFlags_DefaultOpen))
 			{
-				glm::vec3 color = light->GetColor();
-				if (ImGui::ColorEdit3("Color", &color.x))
+				glm::vec3 lightColor = lightComp->GetColor();
+				if (ImGui::ColorEdit3("Light Color", &lightColor.x))
 				{
-					light->SetColor(color);
+					lightComp->SetColor(lightColor);
 				}
 			}
 		}
 
 		// Camera
-		if (auto* camera = obj->GetComponent<CameraComponent>())
+		if (auto* cameraComp = obj->GetComponent<CameraComponent>())
 		{
-			if (ImGui::CollapsingHeader("CameraComponent"))
+			if (ImGui::CollapsingHeader("Camera Component", ImGuiTreeNodeFlags_DefaultOpen))
 			{
-				float fov = camera->GetFov();
+				float fov = cameraComp->GetFov();
 				if (ImGui::DragFloat("FOV", &fov, 1.0f, 1.0f, 179.0f))
 				{
-					camera->SetFov(fov);
+					cameraComp->SetFov(fov);
 				}
 			}
 		}
@@ -549,19 +575,134 @@ namespace eng
 		// Mesh (only color for now)
 		if (auto* meshComp = obj->GetComponent<MeshComponent>())
 		{
-			if (ImGui::CollapsingHeader("MeshComponent"))
+			if (ImGui::CollapsingHeader("Mesh Component", ImGuiTreeNodeFlags_DefaultOpen))
 			{
 				// ImGui::TextUnformatted("(Mesh present)");
-				glm::vec3 color = meshComp->GetMaterial().get()->GetFloat3Params("color");
-				if (ImGui::ColorEdit3("Color", &color.x))
+				glm::vec3 materialColor = meshComp->GetMaterial().get()->GetFloat3Params("color");
+				if (ImGui::ColorEdit3("Material Color", &materialColor.x))
 				{
-					meshComp->GetMaterial().get()->SetFloatParam("color", color);
+					meshComp->GetMaterial().get()->SetFloatParam("color", materialColor);
 				}
 			}
 		}
+
+		// Physics
+		if (auto* physicsComp = obj->GetComponent<PhysicsComponent>())
+		{
+			if (ImGui::CollapsingHeader("Physics Component", ImGuiTreeNodeFlags_DefaultOpen))
+			{
+				RigidBody* body = physicsComp->GetRigidBody().get();
+
+				if (body)
+				{
+					float mass = body->GetMass();
+					if (ImGui::DragFloat(
+						"Mass",
+						&mass,
+						0.1f,
+						0.0f,
+						1000.0f))
+					{
+						body->SetMass(mass);
+					}
+
+					float friction = body->GetFriction();
+					if (ImGui::DragFloat(
+						"Friction",
+						&friction,
+						0.01f,
+						0.0f,
+						10.0f))
+					{
+						body->SetFriction(friction);
+					}
+
+					static const char* bodyTypes[] =
+					{
+						"Static",
+						"Dynamic",
+						"Kinematic"
+					};
+					int currentType = static_cast<int>(body->GetBodyType());
+					if (ImGui::Combo(
+						"Body Type",
+						&currentType,
+						bodyTypes,
+						IM_ARRAYSIZE(bodyTypes)))
+					{
+						body->SetBodyType(
+							static_cast<BodyType>(currentType));
+					}
+				}
+			}
+		}
+
+		// Animation (Read only for now)
+		if (auto* animComp = obj->GetComponent<AnimationComponent>())
+		{
+			if (ImGui::CollapsingHeader("Animation Component", ImGuiTreeNodeFlags_DefaultOpen))
+			{
+				ImGui::Text("Animation Component Presents");
+			}
+		}
+
+		// Audio (Read only for now)
+		if (auto* audioComp = obj->GetComponent<AudioComponent>())
+		{
+			if (ImGui::CollapsingHeader("Audio Component", ImGuiTreeNodeFlags_DefaultOpen))
+			{
+				ImGui::Text("Audio Component Presents");
+			}
+		}
+
+		// Audio Listener (Read only for now)
+		if (auto* audioListenerComp = obj->GetComponent<AudioListenerComponent>())
+		{
+			if (ImGui::CollapsingHeader("AudioListener Component", ImGuiTreeNodeFlags_DefaultOpen))
+			{
+				ImGui::Text("AudioListener Component Presents");
+			}
+		}
 		
-		// TODO:
-		// List any other component types if needed
+		// PlayerController (Read only for now)
+		if (auto* playerControllerComp = obj->GetComponent<PlayerControllerComponent>())
+		{
+			if (ImGui::CollapsingHeader("PlayerController Component", ImGuiTreeNodeFlags_DefaultOpen))
+			{
+				float playerMouseSensitivity = playerControllerComp->GetMouseSensitivity();
+				if (ImGui::DragFloat(
+					"Mouse Sensitivity",
+					&playerMouseSensitivity,
+					0.1f,
+					0.0f,
+					100.0f))
+				{
+					playerControllerComp->SetMouseSensitivity(playerMouseSensitivity);
+				}
+
+				float playerMoveSpeed = playerControllerComp->GetMoveSpeed();
+				if (ImGui::DragFloat(
+					"Walk Speed",
+					&playerMoveSpeed,
+					0.01f,
+					0.0f,
+					100.0f))
+				{
+					playerControllerComp->SetMoveSpeed(playerMoveSpeed);
+				}
+
+				float playerJumpForce = playerControllerComp->GetJumpForce();
+				if (ImGui::DragFloat(
+					"Jump Force",
+					&playerJumpForce,
+					0.01f,
+					0.0f,
+					100.0f))
+				{
+					playerControllerComp->SetJumpForce(playerJumpForce);
+				}
+			}
+		}
 	}
 
 }

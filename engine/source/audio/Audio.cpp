@@ -97,6 +97,7 @@ namespace eng
 			NULL, 
 			audio->m_Sound.get()
 		);
+
 		if (result != MA_SUCCESS)
 		{
 			Logger::Error("Failed to initialize audio sound for file: " + path);

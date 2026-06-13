@@ -56,6 +56,91 @@ namespace eng
 		}
 	}
 
+	void RigidBody::SetMass(float mass)
+	{
+		if (!m_Body) return;
+
+		m_Mass = mass;
+
+		btVector3 inertia(0, 0, 0);
+
+		if (m_BodyType == BodyType::Dynamic &&
+			m_Mass > 0.0f &&
+			m_Collider &&
+			m_Collider->GetShape())
+		{
+			m_Collider->GetShape()->calculateLocalInertia(
+				btScalar(m_Mass),
+				inertia);
+		}
+
+		m_Body->setMassProps(
+			(m_BodyType == BodyType::Dynamic) ? btScalar(m_Mass) : btScalar(0.0f),
+			inertia);
+
+		m_Body->updateInertiaTensor();
+		m_Body->activate(true);
+	}
+
+	void RigidBody::SetFriction(float friction)
+	{
+		if (!m_Body) return;
+
+		m_Friction = friction;
+
+		m_Body->setFriction(btScalar(friction));
+	}
+
+	void RigidBody::SetBodyType(BodyType type)
+	{
+		if (!m_Body) return;
+
+		m_BodyType = type;
+
+		int flags = m_Body->getCollisionFlags();
+
+		flags &= ~btCollisionObject::CF_KINEMATIC_OBJECT;
+
+		switch (type)
+		{
+			case BodyType::Static:
+			{
+				m_Body->setMassProps(0.0f, btVector3(0, 0, 0));
+				break;
+			}
+			case BodyType::Dynamic:
+			{
+				btVector3 inertia(0, 0, 0);
+
+				if (m_Collider && m_Collider->GetShape())
+				{
+					m_Collider->GetShape()->calculateLocalInertia(
+						btScalar(m_Mass),
+						inertia);
+				}
+
+				m_Body->setMassProps(
+					btScalar(m_Mass),
+					inertia);
+
+				break;
+			}
+			case BodyType::Kinematic:
+			{
+				m_Body->setMassProps(0.0f, btVector3(0, 0, 0));
+
+				flags |= btCollisionObject::CF_KINEMATIC_OBJECT;
+
+				m_Body->setActivationState(DISABLE_DEACTIVATION);
+
+				break;
+			}
+		}
+
+		m_Body->setCollisionFlags(flags);
+		m_Body->activate(true);
+	}
+
 	void RigidBody::SetPosition(const glm::vec3& position)
 	{
 		if (!m_Body) return;
@@ -100,6 +185,52 @@ namespace eng
 
 		const auto& rot = m_Body->getWorldTransform().getRotation();
 		return glm::quat(rot.w(), rot.x(), rot.y(), rot.z());
+	}
+
+	void RigidBody::SetScale(const glm::vec3& scale)
+	{
+		if (!m_Body || !m_Collider || !m_Collider->GetShape()) return;
+
+		// scale is applied directly to the collision shape
+		m_Collider->GetShape()->setLocalScaling(
+			btVector3(
+				btScalar(scale.x),
+				btScalar(scale.y),
+				btScalar(scale.z)));
+
+		// if this is a dynamic rigid body, changing the shape size
+		// changes its inertia tensor, so we need to recalculate it
+		if (m_BodyType == BodyType::Dynamic && m_Mass > 0.0f)
+		{
+			btVector3 inertia(0, 0, 0);
+
+			m_Collider->GetShape()->calculateLocalInertia(
+				btScalar(m_Mass),
+				inertia);
+
+			m_Body->setMassProps(
+				btScalar(m_Mass),
+				inertia);
+
+			m_Body->updateInertiaTensor();
+		}
+
+		// wake the body so the physics simulation updates immediately
+		m_Body->activate(true);
+	}
+
+	glm::vec3 RigidBody::GetScale() const
+	{
+		if (!m_Body || !m_Collider || !m_Collider->GetShape()) return glm::vec3(1.0f);
+
+		// retrieve the collision shape's local scaling
+		const btVector3 scale =
+			m_Collider->GetShape()->getLocalScaling();
+
+		return glm::vec3(
+			scale.x(),
+			scale.y(),
+			scale.z());
 	}
 	
 	/// <summary>
