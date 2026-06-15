@@ -21,9 +21,7 @@ namespace eng
 		//std::strftime(&output[0], output.size(), "%b-%d-%Y %H:%M:%S", &timeInfo);
 		//return output;
 
-		std::time_t now = std::chrono::system_clock::to_time_t(
-			std::chrono::system_clock::now()
-		);
+		std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 
 		struct tm timeInfo;
 		localtime_s(&timeInfo, &now);

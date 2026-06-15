@@ -6,6 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/vec4.hpp>
 #include <iostream>
+#include <string>
 
 namespace eng
 {
@@ -55,9 +56,31 @@ namespace eng
 		//rotMat = glm::rotate(rotMat, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f)); // Y-axis
 		//rotMat = glm::rotate(rotMat, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f)); // Z-axis
 
-		// calculate forward and right vector
-		glm::vec3 front = rotation * glm::vec3(0.0f, 0.0f, -1.0f);
-		glm::vec3 right = rotation * glm::vec3(1.0f, 0.0f, 0.0f);
+		// better approach: using only yaw for the movement
+		// fixes the jump height inconsistency issue 
+		float yaw = glm::radians(m_yRot);
+
+		glm::vec3 front(
+			-sinf(yaw),
+			0.0f,
+			-cosf(yaw));
+
+		glm::vec3 right(
+			cosf(yaw),
+			0.0f,
+			-sinf(yaw));
+
+		//// calculate forward and right vector
+		//glm::vec3 front = rotation * glm::vec3(0.0f, 0.0f, -1.0f);
+		//glm::vec3 right = rotation * glm::vec3(1.0f, 0.0f, 0.0f);
+
+		//// remove any vertical component caused by camera pitch
+		//front.y = 0.0f;
+		//right.y = 0.0f;
+
+		//// renormalize after removing y
+		//front = glm::normalize(front);
+		//right = glm::normalize(right);
 	
 		// auto position = m_Owner->GetPosition();
 
@@ -90,7 +113,7 @@ namespace eng
 			}
 			// m_Owner->SetPosition(position);
 
-			if (inputManager.IsKeyPressed(GLFW_KEY_SPACE))
+			if (inputManager.WasKeyPressed(GLFW_KEY_SPACE))
 			{
 				m_KinematicController->Jump(glm::vec3(0.0f, m_JumpForce, 0.0f));
 			}
@@ -109,7 +132,20 @@ namespace eng
 		{
 			movement = glm::normalize(movement);
 		}
-		m_KinematicController->Walk(movement * m_MoveSpeed * deltaTime);
+
+		//Logger::Log(
+		//	"Movement Y: " +
+		//	std::to_string(movement.y));
+
+		// account for sprinting
+		if (inputManager.IsKeyPressed(GLFW_KEY_LEFT_SHIFT))
+		{
+			m_KinematicController->Walk(movement * m_SprintSpeed * deltaTime);
+		}
+		else
+		{
+			m_KinematicController->Walk(movement * m_WalkSpeed * deltaTime);
+		}
 
 		// sync the scene objects position and rotation with the kinematic controller
 		m_Owner->SetPosition(m_KinematicController->GetPosition());

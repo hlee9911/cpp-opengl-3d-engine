@@ -1842,7 +1842,95 @@
           ]
         },
         {
-          "name": "Light",
+          "name": "ObjectCollide19",
+          "position": {
+            "x": -10,
+            "y": 2,
+            "z": -10
+          },
+          "components": [
+            {
+              "type": "MeshComponent",
+              "mesh": {
+                "type": "cylinder",
+                "r": 0.75,
+                "h": 1.5
+              },
+              "material": {
+                "path": "materials/checker.mat",
+                "params": {
+                  "float3": [
+                    {
+                      "name": "color",
+                      "value0": 1.0,
+                      "value1": 1.0,
+                      "value2": 1.0
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "PhysicsComponent",
+              "collider": {
+                "type": "cylinder",
+                "r": 0.75,
+                "h": 1.5
+              },
+              "body": {
+                "mass": 15,
+                "friction": 0.5,
+                "type": "dynamic"
+              }
+            }
+          ]
+        },
+        {
+          "name": "ObjectCollide20",
+          "position": {
+            "x": -10,
+            "y": 2,
+            "z": -12.5
+          },
+          "components": [
+            {
+              "type": "MeshComponent",
+              "mesh": {
+                "type": "cone",
+                "r": 1.0,
+                "h": 1.0
+              },
+              "material": {
+                "path": "materials/checker.mat",
+                "params": {
+                  "float3": [
+                    {
+                      "name": "color",
+                      "value0": 1.0,
+                      "value1": 1.0,
+                      "value2": 1.0
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "PhysicsComponent",
+              "collider": {
+                "type": "cone",
+                "r": 1.0,
+                "h": 1.0
+              },
+              "body": {
+                "mass": 15,
+                "friction": 0.5,
+                "type": "dynamic"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Light Source",
           "position": {
             "x": -2,
             "y": 20,

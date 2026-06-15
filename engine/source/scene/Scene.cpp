@@ -383,6 +383,12 @@ namespace eng
 		outObjects.push_back(obj);
 		for (const auto& child : obj->GetChildren())
 		{
+			// ignore all the children objects of glTF loaded object
+			if (child->GetIsglTFLoadedGameObject())
+			{
+				outObjects.push_back(child.get());
+				continue;
+			}
 			CollectAllGameObjectsRecursive(child.get(), outObjects);
 		}
 	}
@@ -405,6 +411,7 @@ namespace eng
 				{
 					gameObject->SetParent(parent);
 					gameObject->SetName(name);
+					gameObject->SetIsglTFLoadedGameObject(true);
 				}
 			}
 			else
