@@ -106,6 +106,22 @@ namespace eng
 				auto mesh = Mesh::CreateSphere(r, 16, 16);
 				SetMesh(mesh);
 			}
+			else if (type == "cone")
+			{
+				float radius = meshObj.value("r", 0.5f);
+				float height = meshObj.value("h", 1.0f);
+				auto mesh = Mesh::CreateCone(
+					radius, height, 32);
+				SetMesh(mesh);
+			}
+			else if (type == "cylinder")
+			{
+				float radius = meshObj.value("r", 0.5f);
+				float height = meshObj.value("h", 1.0f);
+				auto mesh = Mesh::CreateCylinder(
+					radius, height, 32);
+				SetMesh(mesh);
+			}
 		}
 	}
 

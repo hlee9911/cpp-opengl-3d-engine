@@ -34,10 +34,9 @@ namespace eng
 		m_Shape = new btConeShape(btScalar(radius), btScalar(height));
 	}
 
-	CylinderCollider::CylinderCollider(const glm::vec3& extents) noexcept
+	CylinderCollider::CylinderCollider(float radius, float height) noexcept
 	{
-		glm::vec3 halfExtents = extents * 0.5f;
-		m_Shape = new btCylinderShape(btVector3(halfExtents.x, halfExtents.y, halfExtents.z));
+		m_Shape = new btCylinderShape(btVector3(radius, height * 0.5f, radius));
 	}
 
 }

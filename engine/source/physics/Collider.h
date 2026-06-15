@@ -45,6 +45,6 @@ namespace eng
 	class CylinderCollider : public Collider
 	{
 	public:
-		CylinderCollider(const glm::vec3& extents) noexcept;
+		CylinderCollider(float radius, float height) noexcept;
 	};
 }

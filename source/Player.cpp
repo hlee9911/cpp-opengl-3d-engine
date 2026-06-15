@@ -108,7 +108,7 @@ void Player::Update(float deltaTime)
 	}
 	
 	// play jump sound when space is pressed, but only if it's not already playing to prevent spamming the sound
-	if (input.IsKeyPressed(GLFW_KEY_SPACE) && m_PlayerControllerComponent && m_PlayerControllerComponent->IsOnGround() && !editorManager.GetEditorCursorEnabled())
+	if (input.WasKeyPressed(GLFW_KEY_SPACE) && m_PlayerControllerComponent && m_PlayerControllerComponent->IsOnGround() && !editorManager.GetEditorCursorEnabled())
 	{
 		if (m_AudioComponent && !m_AudioComponent->IsPlaying("jump"))
 		{

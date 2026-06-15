@@ -1,16 +1,20 @@
 #include "editor/EditorManager.h"
 #include "profiler/Profiler.h"
-#include "scene/components/MeshComponent.h"
-#include "scene/components/CameraComponent.h"
-#include "scene/components/PlayerControllerComponent.h"
-#include "scene/components/LightComponent.h"
+#include "render/Material.h"
 #include "scene/components/AnimationComponent.h"
-#include "scene/components/PhysicsComponent.h"
 #include "scene/components/AudioComponent.h"
 #include "scene/components/AudioListenerComponent.h"
-#include "scene/components/ui/UIInputSystem.h"
+#include "scene/components/CameraComponent.h"
+#include "scene/components/LightComponent.h"
+#include "scene/components/MeshComponent.h"
+#include "scene/components/PlayerControllerComponent.h"
+#include "scene/components/PhysicsComponent.h"
+#include "scene/components/ui/ButtonComponent.h"
 #include "scene/components/ui/CanvasComponent.h"
-#include "render/Material.h"
+#include "scene/components/ui/RectTransformComponent.h"
+#include "scene/components/ui/TextComponent.h"
+#include "scene/components/ui/UIInputSystem.h"
+#include "scene/components/ui/UIElementComponent.h"
 #include "Engine.h"
 
 namespace eng
@@ -441,10 +445,21 @@ namespace eng
 		List<GameObject*> objects;
 		scene->CollectAllGameObjects(objects);
 
-		// Remove inactive objects so Tab skips hidden stuff (like 3DRoot when menu is up)
+		// Remove inactive objects so Tab skips hidden stuff
 		objects.erase(
 			std::remove_if(objects.begin(), objects.end(),
 				[](GameObject* obj) { return !obj->IsActive(); }),
+			objects.end());
+
+		// Remove any ui related game objects as well
+		objects.erase(
+			std::remove_if(objects.begin(), objects.end(),
+				[](GameObject* obj) { return
+				obj->GetComponent<CanvasComponent>() ||
+				obj->GetComponent<RectTransformComponent>() ||
+				obj->GetComponent<TextComponent>() ||
+				obj->GetComponent<UIElementComponent>() ||
+				obj->GetComponent<ButtonComponent>(); }),
 			objects.end());
 
 		if (objects.empty())
@@ -680,15 +695,26 @@ namespace eng
 					playerControllerComp->SetMouseSensitivity(playerMouseSensitivity);
 				}
 
-				float playerMoveSpeed = playerControllerComp->GetMoveSpeed();
+				float playerWalkSpeed = playerControllerComp->GetWalkSpeed();
 				if (ImGui::DragFloat(
 					"Walk Speed",
-					&playerMoveSpeed,
+					&playerWalkSpeed,
 					0.01f,
 					0.0f,
 					100.0f))
 				{
-					playerControllerComp->SetMoveSpeed(playerMoveSpeed);
+					playerControllerComp->SetWalkSpeed(playerWalkSpeed);
+				}
+
+				float playerSprintSpeed = playerControllerComp->GetSprintSpeed();
+				if (ImGui::DragFloat(
+					"Sprint Speed",
+					&playerSprintSpeed,
+					0.01f,
+					0.0f,
+					100.0f))
+				{
+					playerControllerComp->SetSprintSpeed(playerSprintSpeed);
 				}
 
 				float playerJumpForce = playerControllerComp->GetJumpForce();

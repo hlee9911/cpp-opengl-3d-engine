@@ -91,6 +91,9 @@ namespace eng
 
 		const List<unique<Component>>& GetComponents() const { return m_Components; }
 
+		const bool GetIsglTFLoadedGameObject() const noexcept { return m_IsglTFLoadedGameObject; }
+		void SetIsglTFLoadedGameObject(bool isglTFLoadedGameObject) { m_IsglTFLoadedGameObject = isglTFLoadedGameObject; }
+
 		static GameObject* LoadGLTF(const std::string& path, Scene* gameScene);
 
 	protected:
@@ -108,6 +111,7 @@ namespace eng
 		glm::quat m_Rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
 		glm::vec3 m_Scale = glm::vec3(1.0f);
 		bool m_Active = true;
+		bool m_IsglTFLoadedGameObject = false;
 
 		friend class Scene;
 	};

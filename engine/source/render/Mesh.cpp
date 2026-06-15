@@ -418,6 +418,387 @@ namespace eng
 		return result;
 	}
 
+	/// <summary>
+	/// Creates a cylinder centered at the origin
+	/// The cylinder is aligned along the Y axis and consists of:
+	///     - Side wall vertices
+	///     - Top cap vertices
+	///     - Bottom cap vertices
+	///
+	/// Separate vertices are generated for caps and side walls so that
+	/// normals are not shared between surfaces. This produces proper
+	/// hard edges and correct lighting
+	/// </summary>
+	/// <param name="radius">Cylinder radius</param>
+	/// <param name="height">Cylinder height</param>
+	/// <param name="segments">Number of radial subdivisions</param>
+	/// <returns>Generated cylinder mesh</returns>
+	shared<Mesh> Mesh::CreateCylinder(float radius, float height, int segments)
+	{
+		constexpr float PI = 3.14159265358979323846f;
+
+		List<float> vertices;
+		List<uint32_t> indices;
+
+		const float halfHeight = height * 0.5f;
+
+		// Helper for inserting Position + Normal + UV vertices
+		auto AddVertex =
+			[&vertices](const glm::vec3& position,
+				const glm::vec3& normal,
+				const glm::vec2& uv)
+			{
+				vertices.push_back(position.x);
+				vertices.push_back(position.y);
+				vertices.push_back(position.z);
+
+				vertices.push_back(normal.x);
+				vertices.push_back(normal.y);
+				vertices.push_back(normal.z);
+
+				vertices.push_back(uv.x);
+				vertices.push_back(uv.y);
+			};
+
+		// SIDE WALL
+		const uint32_t sideStartIndex = 0;
+
+		for (int i = 0; i <= segments; ++i)
+		{
+			float t = static_cast<float>(i) / static_cast<float>(segments);
+			float angle = t * 2.0f * PI;
+
+			float x = cosf(angle) * radius;
+			float z = sinf(angle) * radius;
+
+			glm::vec3 normal = glm::normalize(glm::vec3(x, 0.0f, z));
+
+			// Top vertex
+			AddVertex(
+				glm::vec3(x, halfHeight, z),
+				normal,
+				glm::vec2(t, 1.0f)
+			);
+
+			// Bottom vertex
+			AddVertex(
+				glm::vec3(x, -halfHeight, z),
+				normal,
+				glm::vec2(t, 0.0f)
+			);
+		}
+
+		// Generate side wall triangles
+		for (int i = 0; i < segments; ++i)
+		{
+			uint32_t topLeft = sideStartIndex + i * 2;
+			uint32_t bottomLeft = topLeft + 1;
+
+			uint32_t topRight = topLeft + 2;
+			uint32_t bottomRight = topLeft + 3;
+
+			// First triangle
+			indices.push_back(topLeft);
+			indices.push_back(bottomLeft);
+			indices.push_back(topRight);
+
+			// Second triangle
+			indices.push_back(topRight);
+			indices.push_back(bottomLeft);
+			indices.push_back(bottomRight);
+		}
+
+		// TOP CAP
+		const uint32_t topCenterIndex =
+			static_cast<uint32_t>(vertices.size() / 8);
+
+		// Center vertex
+		AddVertex(
+			glm::vec3(0.0f, halfHeight, 0.0f),
+			glm::vec3(0.0f, 1.0f, 0.0f),
+			glm::vec2(0.5f, 0.5f));
+
+		const uint32_t topRingStart =
+			static_cast<uint32_t>(vertices.size() / 8);
+
+		for (int i = 0; i <= segments; ++i)
+		{
+			float t = static_cast<float>(i) / static_cast<float>(segments);
+			float angle = t * 2.0f * PI;
+
+			float x = cosf(angle) * radius;
+			float z = sinf(angle) * radius;
+
+			// Map circle coordinates into UV space
+			float u = (x / radius + 1.0f) * 0.5f;
+			float v = (z / radius + 1.0f) * 0.5f;
+
+			AddVertex(
+				glm::vec3(x, halfHeight, z),
+				glm::vec3(0.0f, 1.0f, 0.0f),
+				glm::vec2(u, v)
+			);
+		}
+
+		// Generate top cap triangles
+		for (int i = 0; i < segments; ++i)
+		{
+			indices.push_back(topCenterIndex);
+			indices.push_back(topRingStart + i + 1);
+			indices.push_back(topRingStart + i);
+		}
+
+		// BOTTOM CAP
+		const uint32_t bottomCenterIndex =
+			static_cast<uint32_t>(vertices.size() / 8);
+
+		AddVertex(
+			glm::vec3(0.0f, -halfHeight, 0.0f),
+			glm::vec3(0.0f, -1.0f, 0.0f),
+			glm::vec2(0.5f, 0.5f)
+		);
+
+		const uint32_t bottomRingStart =
+			static_cast<uint32_t>(vertices.size() / 8);
+
+		for (int i = 0; i <= segments; ++i)
+		{
+			float t = static_cast<float>(i) / static_cast<float>(segments);
+			float angle = t * 2.0f * PI;
+
+			float x = cosf(angle) * radius;
+			float z = sinf(angle) * radius;
+
+			float u = (x / radius + 1.0f) * 0.5f;
+			float v = (z / radius + 1.0f) * 0.5f;
+
+			AddVertex(
+				glm::vec3(x, -halfHeight, z),
+				glm::vec3(0.0f, -1.0f, 0.0f),
+				glm::vec2(u, v)
+			);
+		}
+
+		// Generate bottom cap triangles
+		for (int i = 0; i < segments; ++i)
+		{
+			indices.push_back(bottomCenterIndex);
+			indices.push_back(bottomRingStart + i);
+			indices.push_back(bottomRingStart + i + 1);
+		}
+
+		// Vertex Layout
+		eng::VertexLayout vertexLayout;
+
+		// Position
+		vertexLayout.elements.push_back({
+			VertexElement::PositionIndex,
+			3,
+			GL_FLOAT,
+			0
+		});
+
+		// Normal
+		vertexLayout.elements.push_back({
+			VertexElement::NormalIndex,
+			3,
+			GL_FLOAT,
+			sizeof(float) * 3
+		});
+
+		// UV
+		vertexLayout.elements.push_back({
+			VertexElement::UVIndex,
+			2,
+			GL_FLOAT,
+			sizeof(float) * 6
+		});
+
+		vertexLayout.stride = sizeof(float) * 8;
+
+		// Create Mesh
+		auto result = std::make_shared<eng::Mesh>(
+			vertexLayout,
+			vertices,
+			indices);
+
+		return result;
+	}
+
+	/// <summary>
+	/// Creates a cone centered at the origin.
+	/// The cone is aligned along the Y axis and consists of:
+	///     - Side wall vertices
+	///     - Bottom cap vertices
+	///
+	/// Separate vertices are generated for the side and bottom cap so
+	/// normals are not shared between surfaces. This produces proper
+	/// hard edges and correct lighting
+	///
+	/// The cone's apex is located at +height/2 and the base is located
+	/// at -height/2
+	/// </summary>
+	/// <param name="radius">Cone base radius</param>
+	/// <param name="height">Cone height</param>
+	/// <param name="segments">Number of radial subdivisions</param>
+	/// <returns>Generated cone mesh</returns>
+	shared<Mesh> Mesh::CreateCone(float radius, float height, int segments)
+	{
+		constexpr float PI = 3.14159265358979323846f;
+
+		List<float> vertices;
+		List<uint32_t> indices;
+
+		const float halfHeight = height * 0.5f;
+
+		// Helper for inserting Position + Normal + UV vertices
+		auto AddVertex =
+			[&vertices](const glm::vec3& position,
+				const glm::vec3& normal,
+				const glm::vec2& uv)
+			{
+				vertices.push_back(position.x);
+				vertices.push_back(position.y);
+				vertices.push_back(position.z);
+
+				vertices.push_back(normal.x);
+				vertices.push_back(normal.y);
+				vertices.push_back(normal.z);
+
+				vertices.push_back(uv.x);
+				vertices.push_back(uv.y);
+			};
+
+		// SIDE SURFACE
+		const uint32_t sideApexIndex = 0;
+
+
+		// Apex vertex for side surface.
+		// Note:
+		// We duplicate the apex specifically for the side surface so it is
+		// not shared with the bottom cap geometry
+		AddVertex(
+			glm::vec3(0.0f, halfHeight, 0.0f),
+			glm::vec3(0.0f, 1.0f, 0.0f),
+			glm::vec2(0.5f, 1.0f));
+
+		const uint32_t sideRingStart =
+			static_cast<uint32_t>(vertices.size() / 8);
+
+		// Generate side ring vertices
+		// We generate an extra vertex at the seam (segments + 1) so UVs
+		// wrap correctly
+		for (int i = 0; i <= segments; ++i)
+		{
+			float t = static_cast<float>(i) / static_cast<float>(segments);
+			float angle = t * 2.0f * PI;
+
+			float x = cosf(angle) * radius;
+			float z = sinf(angle) * radius;
+
+			// Side normal calculation
+			// For a cone, normals are not purely radial
+			// We incorporate the cone slope so lighting behaves correctly
+			float slope = radius / height;
+
+			glm::vec3 normal =
+				glm::normalize(glm::vec3(
+					x,
+					slope * radius,
+					z));
+
+			AddVertex(
+				glm::vec3(x, -halfHeight, z),
+				normal,
+				glm::vec2(t, 0.0f));
+		}
+
+		// Generate side triangles
+		for (int i = 0; i < segments; ++i)
+		{
+			indices.push_back(sideApexIndex);
+			indices.push_back(sideRingStart + i);
+			indices.push_back(sideRingStart + i + 1);
+		}
+
+		// BOTTOM CAP
+		const uint32_t bottomCenterIndex =
+			static_cast<uint32_t>(vertices.size() / 8);
+
+		AddVertex(
+			glm::vec3(0.0f, -halfHeight, 0.0f),
+			glm::vec3(0.0f, -1.0f, 0.0f),
+			glm::vec2(0.5f, 0.5f));
+
+		const uint32_t bottomRingStart =
+			static_cast<uint32_t>(vertices.size() / 8);
+
+		// Generate bottom cap ring vertices
+		// These vertices are duplicated from the side ring because they use
+		// different normals
+		for (int i = 0; i <= segments; ++i)
+		{
+			float t = static_cast<float>(i) / static_cast<float>(segments);
+			float angle = t * 2.0f * PI;
+
+			float x = cosf(angle) * radius;
+			float z = sinf(angle) * radius;
+
+			float u = (x / radius + 1.0f) * 0.5f;
+			float v = (z / radius + 1.0f) * 0.5f;
+
+			AddVertex(
+				glm::vec3(x, -halfHeight, z),
+				glm::vec3(0.0f, -1.0f, 0.0f),
+				glm::vec2(u, v));
+		}
+
+		// Generate bottom cap triangles
+		for (int i = 0; i < segments; ++i)
+		{
+			indices.push_back(bottomCenterIndex);
+			indices.push_back(bottomRingStart + i);
+			indices.push_back(bottomRingStart + i + 1);
+		}
+
+		// Vertex Layout
+		eng::VertexLayout vertexLayout;
+
+		// Position
+		vertexLayout.elements.push_back({
+			VertexElement::PositionIndex,
+			3,
+			GL_FLOAT,
+			0
+		});
+
+		// Normal
+		vertexLayout.elements.push_back({
+			VertexElement::NormalIndex,
+			3,
+			GL_FLOAT,
+			sizeof(float) * 3
+		});
+
+		// UV
+		vertexLayout.elements.push_back({
+			VertexElement::UVIndex,
+			2,
+			GL_FLOAT,
+			sizeof(float) * 6
+		});
+
+		vertexLayout.stride = sizeof(float) * 8;
+
+		// Create Mesh
+		auto result = std::make_shared<eng::Mesh>(
+			vertexLayout,
+			vertices,
+			indices);
+
+		return result;
+	}
+
 	// deprecated for now
 #if 0
 	shared<Mesh> Mesh::Load(const std::string& path)

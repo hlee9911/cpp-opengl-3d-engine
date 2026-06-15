@@ -33,8 +33,12 @@ namespace eng
 		
 		// stacks and sectors define how smooth the sphere will be
 		static shared<Mesh> CreateSphere(float radius, int sectors, int stacks);
-
+		
 		static shared<Mesh> CreatePlane();
+
+		static shared<Mesh> CreateCylinder(float radius, float height, int segments);
+
+		static shared<Mesh> CreateCone(float radius, float height, int segments);
 
 	private:
 		VertexLayout m_VertexLayout;
