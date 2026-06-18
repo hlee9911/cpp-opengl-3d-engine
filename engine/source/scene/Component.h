@@ -21,6 +21,9 @@ namespace eng
 
 		GameObject* GetOwner() noexcept { return m_Owner; }
 
+		virtual void OnEnable();
+		virtual void OnDisable();
+
 		// each distinct T gets a unique, stable ID
 		template<typename T>
 		static size_t StaticTypeId()

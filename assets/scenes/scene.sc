@@ -7,6 +7,7 @@
         {
           "name": "MainPlayer",
           "type": "Player",
+          "isActive": 1,
           "position": {
             "x": 4,
             "y": 2,
@@ -45,6 +46,7 @@
               "name": "Gun",
               "type": "gltf",
               "path": "models/sten_gunmachine_carbine/scene.gltf",
+              "isActive": 1,
               "position": {
                 "x": 0.75,
                 "y": -0.5,
@@ -60,6 +62,7 @@
         },
         {
           "name": "Ground",
+          "isActive": 1,
           "position": {
             "x": 0,
             "y": 0,
@@ -106,6 +109,7 @@
         },
         {
           "name": "LeftWall",
+          "isActive": 1,
           "position": {
             "x": -15.5,
             "y": 3,
@@ -152,6 +156,7 @@
         },
         {
           "name": "RightWall",
+          "isActive": 1,
           "position": {
             "x": 15.5,
             "y": 3,
@@ -198,6 +203,7 @@
         },
         {
           "name": "FrontWall",
+          "isActive": 1,
           "position": {
             "x": 0,
             "y": 3,
@@ -244,6 +250,7 @@
         },
         {
           "name": "BackWall",
+          "isActive": 1,
           "position": {
             "x": 0,
             "y": 3,
@@ -290,6 +297,7 @@
         },
         {
           "name": "PlatformA",
+          "isActive": 1,
           "position": {
             "x": -14,
             "y": 1.05,
@@ -336,6 +344,7 @@
         },
         {
           "name": "LadderA_1",
+          "isActive": 1,
           "position": {
             "x": -12.85,
             "y": 1.35,
@@ -382,6 +391,7 @@
         },
         {
           "name": "LadderA_2",
+          "isActive": 1,
           "position": {
             "x": -12.55,
             "y": 1.25,
@@ -428,6 +438,7 @@
         },
         {
           "name": "LadderA_3",
+          "isActive": 1,
           "position": {
             "x": -12.25,
             "y": 1.15,
@@ -474,6 +485,7 @@
         },
         {
           "name": "LadderA_4",
+          "isActive": 1,
           "position": {
             "x": -11.95,
             "y": 1.05,
@@ -520,6 +532,7 @@
         },
         {
           "name": "LadderA_5",
+          "isActive": 1,
           "position": {
             "x": -11.65,
             "y": 0.95,
@@ -566,6 +579,7 @@
         },
         {
           "name": "LadderA_6",
+          "isActive": 1,
           "position": {
             "x": -11.35,
             "y": 0.85,
@@ -612,6 +626,7 @@
         },
         {
           "name": "LadderA_7",
+          "isActive": 1,
           "position": {
             "x": -11.05,
             "y": 0.75,
@@ -658,6 +673,7 @@
         },
         {
           "name": "LadderA_8",
+          "isActive": 1,
           "position": {
             "x": -10.75,
             "y": 0.65,
@@ -704,6 +720,7 @@
         },
         {
           "name": "LadderA_9",
+          "isActive": 1,
           "position": {
             "x": -10.45,
             "y": 0.55,
@@ -750,6 +767,7 @@
         },
         {
           "name": "PlatformB",
+          "isActive": 1,
           "position": {
             "x": -14,
             "y": 1.05,
@@ -796,6 +814,7 @@
         },
         {
           "name": "PlatformС",
+          "isActive": 1,
           "position": {
             "x": -14,
             "y": 1.05,
@@ -842,6 +861,7 @@
         },
         {
           "name": "PlatformD",
+          "isActive": 1,
           "position": {
             "x": -7,
             "y": 1.05,
@@ -888,6 +908,7 @@
         },
         {
           "name": "InternalWall1",
+          "isActive": 1,
           "position": {
             "x": -1,
             "y": 1.5,
@@ -934,6 +955,7 @@
         },
         {
           "name": "InternalWall2",
+          "isActive": 1,
           "position": {
             "x": 1.5,
             "y": 1.5,
@@ -981,6 +1003,7 @@
         {
           "name": "JumpPlatform",
           "type": "JumpPlatform",
+          "isActive": 1,
           "position": {
             "x": -7,
             "y": 1.75,
@@ -1027,6 +1050,7 @@
         },
         {
           "name": "ObjectCollide1",
+          "isActive": 1,
           "position": {
             "x": 10,
             "y": 1.251,
@@ -1073,6 +1097,7 @@
         },
         {
           "name": "ObjectCollide2",
+          "isActive": 1,
           "position": {
             "x": 10,
             "y": 1.251,
@@ -1119,6 +1144,7 @@
         },
         {
           "name": "ObjectCollide3",
+          "isActive": 1,
           "position": {
             "x": 10,
             "y": 1.251,
@@ -1165,6 +1191,7 @@
         },
         {
           "name": "ObjectCollide4",
+          "isActive": 1,
           "position": {
             "x": 10,
             "y": 1.251,
@@ -1211,6 +1238,7 @@
         },
         {
           "name": "ObjectCollide5",
+          "isActive": 1,
           "position": {
             "x": 10,
             "y": 1.251,
@@ -1257,6 +1285,7 @@
         },
         {
           "name": "ObjectCollide6",
+          "isActive": 1,
           "position": {
             "x": 10,
             "y": 1.251,
@@ -1303,6 +1332,7 @@
         },
         {
           "name": "ObjectCollide7",
+          "isActive": 1,
           "position": {
             "x": 10,
             "y": 2.752,
@@ -1349,6 +1379,7 @@
         },
         {
           "name": "ObjectCollide8",
+          "isActive": 1,
           "position": {
             "x": 10,
             "y": 2.752,
@@ -1395,6 +1426,7 @@
         },
         {
           "name": "ObjectCollide9",
+          "isActive": 1,
           "position": {
             "x": 10,
             "y": 2.752,
@@ -1441,6 +1473,7 @@
         },
         {
           "name": "ObjectCollide10",
+          "isActive": 1,
           "position": {
             "x": 10,
             "y": 2.752,
@@ -1487,6 +1520,7 @@
         },
         {
           "name": "ObjectCollide11",
+          "isActive": 1,
           "position": {
             "x": 10,
             "y": 2.752,
@@ -1533,6 +1567,7 @@
         },
         {
           "name": "ObjectCollide12",
+          "isActive": 1,
           "position": {
             "x": 10,
             "y": 4.253,
@@ -1579,6 +1614,7 @@
         },
         {
           "name": "ObjectCollide13",
+          "isActive": 1,
           "position": {
             "x": 10,
             "y": 4.253,
@@ -1625,6 +1661,7 @@
         },
         {
           "name": "ObjectCollide14",
+          "isActive": 1,
           "position": {
             "x": 10,
             "y": 4.253,
@@ -1671,6 +1708,7 @@
         },
         {
           "name": "ObjectCollide15",
+          "isActive": 1,
           "position": {
             "x": 10,
             "y": 4.253,
@@ -1717,6 +1755,7 @@
         },
         {
           "name": "ObjectCollide16",
+          "isActive": 1,
           "position": {
             "x": 10,
             "y": 1.251,
@@ -1759,6 +1798,7 @@
         },
         {
           "name": "ObjectCollide17",
+          "isActive": 1,
           "position": {
             "x": 10,
             "y": 1.251,
@@ -1801,6 +1841,7 @@
         },
         {
           "name": "ObjectCollide18",
+          "isActive": 1,
           "position": {
             "x": 10,
             "y": 1.251,
@@ -1834,7 +1875,7 @@
                 "r": 1.5
               },
               "body": {
-                "mass": 15,
+                "mass": 0.001,
                 "friction": 0.5,
                 "type": "dynamic"
               }
@@ -1843,9 +1884,10 @@
         },
         {
           "name": "ObjectCollide19",
+          "isActive": 1,
           "position": {
             "x": -10,
-            "y": 2,
+            "y": 20,
             "z": -10
           },
           "components": [
@@ -1887,6 +1929,7 @@
         },
         {
           "name": "ObjectCollide20",
+          "isActive": 1,
           "position": {
             "x": -10,
             "y": 2,
@@ -1931,6 +1974,7 @@
         },
         {
           "name": "Light Source",
+          "isActive": 1,
           "position": {
             "x": -2,
             "y": 20,
@@ -1971,6 +2015,7 @@
     },
     {
       "name": "MainCanvas",
+      "isActive": 1,
       "components": [
         {
           "type": "CanvasComponent"
@@ -1990,6 +2035,7 @@
       "children": [
         {
           "name": "PlayButton",
+          "isActive": 1,
           "position": {
             "x": 0,
             "y": 50,
@@ -2050,6 +2096,7 @@
         },
         {
           "name": "QuitButton",
+          "isActive": 1,
           "position": {
             "x": 0,
             "y": -50,

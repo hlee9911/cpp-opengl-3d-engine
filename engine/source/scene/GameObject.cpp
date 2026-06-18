@@ -1,6 +1,7 @@
 #include "scene/GameObject.h"
 #include "scene/components/MeshComponent.h"
 #include "scene/components/AnimationComponent.h"
+#include "scene/components/PhysicsComponent.h"
 #include "graphics/VertexLayout.h"
 #include "graphics/Texture.h"
 #include "render/Material.h"
@@ -81,6 +82,22 @@ namespace eng
 	void GameObject::MarkForDestroy()
 	{
 		m_IsAlive = false;
+	}
+
+	void GameObject::SetActive(bool active)
+	{
+		m_Active = active;
+		for (auto& component : m_Components)
+		{
+			if (m_Active)
+			{
+				component->OnEnable();
+			}
+			else
+			{
+				component->OnDisable();
+			}
+		}
 	}
 
 	void GameObject::AddComponenet(Component* component)

@@ -24,6 +24,9 @@ namespace eng
 		void Init() override;
 		void Update(float deltaTime) override;
 
+		void OnEnable() override;
+		void OnDisable() override;
+
 		void SetRigidBody(const shared<RigidBody>& body) noexcept { m_RigidBody = body; }
 		const shared<RigidBody>& GetRigidBody() const noexcept { return m_RigidBody; }
 

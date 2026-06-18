@@ -6,6 +6,9 @@ class btCollisionDispatcher;
 class btSequentialImpulseConstraintSolver;
 class btDiscreteDynamicsWorld;
 
+class btRigidBody;
+class btCollisionObject;
+
 #include "Core.h"
 
 namespace eng
@@ -23,6 +26,9 @@ namespace eng
 
 		void AddRigidBody(RigidBody* body);
 		void RemoveRigidBody(RigidBody* body);
+
+		void ApplyPlayerPush(btRigidBody* body, const btCollisionObject* playerObj, const btCollisionObject* otherObj);
+		void WakeUpNearbyCollidingRigidBodies();
 
 		btDiscreteDynamicsWorld* GetWorld();
 

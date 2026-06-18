@@ -94,11 +94,14 @@ namespace eng
 		// sync the RigidBody's transform with the GameObject's transform
 		const auto pos = m_Owner->GetWorldPosition();
 		const auto rot = m_Owner->GetWorldRotation();
+		const auto scale = m_Owner->GetScale();
 
 		m_RigidBody->SetPosition(pos);
 		m_RigidBody->SetRotation(rot);
+		m_RigidBody->SetScale(scale);
 
-		Engine::GetInstance().GetPhysicsManager().AddRigidBody(m_RigidBody.get());
+		// Engine::GetInstance().GetPhysicsManager().AddRigidBody(m_RigidBody.get());
+		OnEnable();
 	}
 
 	void PhysicsComponent::Update(float deltaTime)
@@ -112,4 +115,25 @@ namespace eng
 			m_Owner->SetWorldRotation(m_RigidBody->GetRotation());
 		}
 	}
+
+	void PhysicsComponent::OnEnable()
+	{
+		if (m_RigidBody)
+		{
+			Engine::GetInstance()
+				.GetPhysicsManager()
+				.AddRigidBody(m_RigidBody.get());
+		}
+	}
+
+	void PhysicsComponent::OnDisable()
+	{
+		if (m_RigidBody)
+		{
+			Engine::GetInstance()
+				.GetPhysicsManager()
+				.RemoveRigidBody(m_RigidBody.get());
+		}
+	}
+
 }

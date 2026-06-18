@@ -27,6 +27,7 @@ namespace eng
 	CapsuleCollider::CapsuleCollider(float radius, float height) noexcept
 	{
 		m_Shape = new btCapsuleShape(btScalar(radius), btScalar(height));
+		// m_Shape = new btCapsuleShape(radius, height * 0.5f - radius);
 	}
 
 	ConeCollider::ConeCollider(float radius, float height) noexcept

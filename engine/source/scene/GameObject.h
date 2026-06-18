@@ -35,7 +35,7 @@ namespace eng
 
 		void MarkForDestroy();
 
-		void SetActive(bool active) noexcept { m_Active = active; }
+		void SetActive(bool active);
 		bool IsActive() const noexcept { return m_Active; }
 
 		void AddComponenet(Component* component);

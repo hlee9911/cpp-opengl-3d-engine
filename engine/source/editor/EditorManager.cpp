@@ -143,6 +143,12 @@ namespace eng
 		};
 	}
 
+	void EditorManager::SetSelectedGameObjectNULL()
+	{
+		m_SelectedGameObject = nullptr;
+		m_SelectedIndex = -1;
+	}
+
 	void EditorManager::RenderViewportWindow(
 		int windowWidth, 
 		int windowHeight, 
@@ -446,10 +452,10 @@ namespace eng
 		scene->CollectAllGameObjects(objects);
 
 		// Remove inactive objects so Tab skips hidden stuff
-		objects.erase(
+		/*objects.erase(
 			std::remove_if(objects.begin(), objects.end(),
 				[](GameObject* obj) { return !obj->IsActive(); }),
-			objects.end());
+			objects.end());*/
 
 		// Remove any ui related game objects as well
 		objects.erase(
@@ -496,6 +502,8 @@ namespace eng
 
 	void EditorManager::DrawGameObjectInspector(GameObject* obj)
 	{
+		if (!obj) return;
+
 		// --- Object header ---
 		char buffer[256];
 		strncpy_s(buffer, obj->GetName().c_str(), sizeof(buffer));
@@ -525,6 +533,8 @@ namespace eng
 
 	void EditorManager::DrawTransformInspector(GameObject* obj)
 	{
+		if (!obj) return;
+
 		// Position
 		glm::vec3 pos = obj->GetPosition();
 		if (ImGui::DragFloat3("Position", &pos.x, 0.1f))
@@ -561,6 +571,8 @@ namespace eng
 
 	void EditorManager::DrawComponentInspectors(GameObject* obj)
 	{
+		if (!obj) return;
+
 		// Light
 		if (auto* lightComp = obj->GetComponent<LightComponent>())
 		{

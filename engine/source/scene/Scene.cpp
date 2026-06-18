@@ -427,6 +427,13 @@ namespace eng
 
 		if (!gameObject) return;
 
+		// check isActive
+		if (jsonObject.contains("isActive"))
+		{
+			bool isActiveObj = jsonObject.value("isActive", 0);
+			gameObject->SetActive(isActiveObj);
+		}
+
 		// load transform
 		if (jsonObject.contains("position"))
 		{

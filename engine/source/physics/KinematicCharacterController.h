@@ -28,8 +28,8 @@ namespace eng
 		bool IsOnGround() const;
 
 	private:
-		float m_Height = 1.2f;
-		float m_Radius = 0.4f;
+		float m_Height = 0.0f;
+		float m_Radius = 0.0f;
 
 		unique<btPairCachingGhostObject> m_Ghost;
 		unique<btKinematicCharacterController> m_Controller;

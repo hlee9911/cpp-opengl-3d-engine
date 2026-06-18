@@ -79,8 +79,9 @@ namespace eng
 	{
 		const auto& pos = m_Ghost->getWorldTransform().getOrigin();
 		// offset the camera by m_Height * 0.5f + m_Radius, so the camera is at the center of the character
-		const glm::vec3 offset(0.0f, m_Height * 0.5f + m_Radius, 0.0f);
-		return glm::vec3(pos.x(), pos.y(), pos.z()) + offset;
+		// const glm::vec3 offset(0.0f, m_Height * 0.5f + m_Radius, 0.0f);
+		// return glm::vec3(pos.x(), pos.y(), pos.z()) + offset;
+		return glm::vec3(pos.x(), pos.y(), pos.z());
 	}
 
 	glm::vec3 KinematicCharacterController::GetRotation() const

@@ -19,6 +19,16 @@ namespace eng
 
 	}
 
+	void Component::OnEnable()
+	{
+
+	}
+
+	void Component::OnDisable()
+	{
+
+	}
+
 	ComponentFactory& ComponentFactory::GetInstance()
 	{
 		static ComponentFactory instance;

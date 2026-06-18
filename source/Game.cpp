@@ -326,6 +326,7 @@ void Game::Update(float deltaTime)
 		if (m_3DRoot && m_3DRoot->IsActive())
 		{
 			engine.GetUIInputSystem().GetActiveCanvas()->SetActive(true);
+			engine.GetEditorManager().SetSelectedGameObjectNULL();
 			engine.SetCursorEnabled(true);
 			m_3DRoot->SetActive(false);
 		}
