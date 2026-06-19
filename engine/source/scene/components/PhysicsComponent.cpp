@@ -11,7 +11,7 @@ namespace eng
 	}
 
 	// load the properties from the json formatted file
-	void PhysicsComponent::LoadProperties(const nlohmann::json& json)
+	void PhysicsComponent::LoadPropertiesFromJson(const nlohmann::json& json)
 	{
 		// load collider properties
 		shared<Collider> collider;

@@ -171,7 +171,7 @@ namespace eng
 
 		if (body->isStaticObject() || body->isKinematicObject()) return;
 
-		// IMPORTANT: keep body awake during interaction
+		// keep body awake during interaction
 		body->activate(true);
 		body->setActivationState(DISABLE_DEACTIVATION);
 

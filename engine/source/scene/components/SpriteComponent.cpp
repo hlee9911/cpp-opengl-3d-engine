@@ -8,12 +8,12 @@
 
 namespace eng
 {
-	void SpriteComponent::LoadProperties(const nlohmann::json& json)
+	void SpriteComponent::LoadPropertiesFromJson(const nlohmann::json& json)
 	{
 		// Load texture
 		const std::string texturePath = json.value("texture", "");
 
-		if (auto texture = Texture::Load(texturePath))
+		if (auto texture = Texture::LoadFromJson(texturePath))
 		{
 			SetTexture(texture);
 		}

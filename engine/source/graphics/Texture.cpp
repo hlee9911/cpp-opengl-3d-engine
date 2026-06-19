@@ -30,11 +30,28 @@ namespace eng
 		GLint internalFormat = GL_RGB;
 		GLenum format = GL_RGB;
 
-		if (numChannels == 4)
+		switch (numChannels)
 		{
-			internalFormat = GL_RGBA;
-			format = GL_RGBA;
+			case 1:
+				internalFormat = GL_RED;
+				format = GL_RED;
+				break;
+
+			case 3:
+				internalFormat = GL_RGB;
+				format = GL_RGB;
+				break;
+
+			case 4:
+				internalFormat = GL_RGBA;
+				format = GL_RGBA;
+				break;
+
+			default:
+				return;
 		}
+
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 		// specify the texture data, and its format
 		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_Width, m_Height, 0, format, GL_UNSIGNED_BYTE, data);
@@ -53,7 +70,7 @@ namespace eng
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	}
 
-	shared<Texture> Texture::Load(const std::string& path)
+	shared<Texture> Texture::LoadFromJson(const std::string& path)
 	{
 		int width, height, numChannels;
 
@@ -87,7 +104,7 @@ namespace eng
 		auto it = m_Textures.find(path);
 		if (it != m_Textures.end()) return it->second; // if texture already loaded, return it
 
-		auto texture = Texture::Load(path);
+		auto texture = Texture::LoadFromJson(path);
 		m_Textures[path] = texture; // cache the loaded texture
 		return texture;
 	}

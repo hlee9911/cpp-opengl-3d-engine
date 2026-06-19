@@ -291,7 +291,7 @@ namespace eng
 		return lights;
 	}
 
-	shared<Scene> Scene::Load(const std::string& path)
+	shared<Scene> Scene::LoadFromJson(const std::string& path)
 	{
 		const std::string contents = Engine::GetInstance().GetFileSystem().LoadAssetFileText(path);
 		if (contents.empty()) return nullptr;
@@ -309,7 +309,7 @@ namespace eng
 
 			for (const auto& obj : objects)
 			{
-				result->LoadObject(obj, nullptr);
+				result->LoadObjectFromJson(obj, nullptr);
 			}
 		}
 
@@ -393,7 +393,7 @@ namespace eng
 		}
 	}
 
-	void Scene::LoadObject(const nlohmann::json& jsonObject, GameObject* parent)
+	void Scene::LoadObjectFromJson(const nlohmann::json& jsonObject, GameObject* parent)
 	{
 		const std::string name = jsonObject.value("name", "Object");
 
@@ -461,14 +461,14 @@ namespace eng
 		{
 			auto scaleObj = jsonObject["scale"];
 			glm::vec3 scale;
-			scale.x = scaleObj.value("x", 1.0f);
-			scale.y = scaleObj.value("y", 1.0f);
-			scale.z = scaleObj.value("z", 1.0f);
+			scale.x = scaleObj.value("x", 1.5f);
+			scale.y = scaleObj.value("y", 1.5f);
+			scale.z = scaleObj.value("z", 1.5f);
 			gameObject->SetScale(scale);
 		}
 
 		// load properties
-		gameObject->LoadProperties(jsonObject);
+		gameObject->LoadPropertiesFromJson(jsonObject);
 
 		// load components
 		if (jsonObject.contains("components") && jsonObject["components"].is_array())
@@ -480,7 +480,7 @@ namespace eng
 				Component* component = ComponentFactory::GetInstance().CreateComponent(type);
 				if (component)
 				{
-					component->LoadProperties(comp);
+					component->LoadPropertiesFromJson(comp);
 					gameObject->AddComponenet(component);
 				}
 			}
@@ -492,7 +492,7 @@ namespace eng
 			const auto& children = jsonObject["children"];
 			for (const auto& child : children)
 			{
-				LoadObject(child, gameObject);
+				LoadObjectFromJson(child, gameObject);
 			}
 		}
 

@@ -14,7 +14,7 @@ namespace eng
 	{
 	public:
 		virtual ~Component() noexcept = default;
-		virtual void LoadProperties(const nlohmann::json& json);
+		virtual void LoadPropertiesFromJson(const nlohmann::json& json);
 		virtual void Init();
 		virtual void Update(float deltaTime);
 		virtual size_t GetTypeId() const = 0;

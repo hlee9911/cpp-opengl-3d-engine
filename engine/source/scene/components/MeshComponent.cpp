@@ -14,14 +14,14 @@ namespace eng
 
 	}
 
-	void MeshComponent::LoadProperties(const nlohmann::json& json)
+	void MeshComponent::LoadPropertiesFromJson(const nlohmann::json& json)
 	{
 		// loading material
 		if (json.contains("material"))
 		{
 			auto& matObj = json["material"];
 			const std::string path = matObj.value("path", "");
-			auto mat = Material::Load(path);
+			auto mat = Material::LoadFromJson(path);
 			if (mat && matObj.contains("params"))
 			{
 				auto& paramsObj = matObj["params"];
@@ -69,7 +69,7 @@ namespace eng
 					{
 						std::string name = p.value("name", "");
 						std::string texPath = p.value("path", "");
-						auto texture = Texture::Load(texPath);
+						auto texture = Texture::LoadFromJson(texPath);
 
 						mat->SetTextureParam(name, texture);
 					}

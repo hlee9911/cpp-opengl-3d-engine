@@ -5,7 +5,7 @@
 
 namespace eng
 {
-	void ButtonComponent::LoadProperties(const nlohmann::json& json)
+	void ButtonComponent::LoadPropertiesFromJson(const nlohmann::json& json)
 	{
 		//if (json.contains("rect"))
 		//{

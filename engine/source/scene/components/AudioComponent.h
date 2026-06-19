@@ -16,7 +16,7 @@ namespace eng
 		COMPONENT(AudioComponent)
 
 	public:
-		void LoadProperties(const nlohmann::json& json) override;
+		void LoadPropertiesFromJson(const nlohmann::json& json) override;
 		void Update(float deltaTime) override;
 
 		void RegisterAudio(const std::string& name, shared<Audio>& clip);

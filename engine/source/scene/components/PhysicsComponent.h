@@ -20,7 +20,7 @@ namespace eng
 		PhysicsComponent() noexcept = default;
 		PhysicsComponent(const shared<RigidBody>& body) noexcept;
 
-		virtual void LoadProperties(const nlohmann::json& json) override;
+		virtual void LoadPropertiesFromJson(const nlohmann::json& json) override;
 		void Init() override;
 		void Update(float deltaTime) override;
 

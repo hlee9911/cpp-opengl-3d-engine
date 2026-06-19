@@ -6,7 +6,7 @@
 
 namespace eng
 {
-	void TextComponent::LoadProperties(const nlohmann::json& json)
+	void TextComponent::LoadPropertiesFromJson(const nlohmann::json& json)
 	{
 		const std::string text = json.value("text", "");
 		SetText(text);

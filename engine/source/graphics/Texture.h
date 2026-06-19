@@ -18,7 +18,7 @@ namespace eng
 		const int GetWidth() const noexcept { return m_Width; }
 		const int GetHeight() const noexcept { return m_Height; }
 
-		static shared<Texture> Load(const std::string& path);
+		static shared<Texture> LoadFromJson(const std::string& path);
 
 	private:
 		int m_Width = 0;

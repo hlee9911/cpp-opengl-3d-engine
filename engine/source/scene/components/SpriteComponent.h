@@ -18,7 +18,7 @@ namespace eng
 		COMPONENT(SpriteComponent)
 
 	public:
-		void LoadProperties(const nlohmann::json& json) override;
+		void LoadPropertiesFromJson(const nlohmann::json& json) override;
 		void Update(float deltaTime) override;
 
 		void SetTexture(const shared<Texture>& texture) noexcept { m_Texture = texture; }

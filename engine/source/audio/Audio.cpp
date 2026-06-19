@@ -70,7 +70,7 @@ namespace eng
 		return 0.0f;
 	}
 
-	shared<Audio> Audio::Load(const std::string& path)
+	shared<Audio> Audio::LoadFromJson(const std::string& path)
 	{
 		// create an audio object and initialize it with the file data
 		auto buffer = Engine::GetInstance().GetFileSystem().LoadAssetFile(path);

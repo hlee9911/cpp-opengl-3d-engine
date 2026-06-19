@@ -14,7 +14,7 @@ namespace eng
 		COMPONENT_WITH_PARENT(ButtonComponent, UIElementComponent)
 
 	public:
-		void LoadProperties(const nlohmann::json& json) override;
+		void LoadPropertiesFromJson(const nlohmann::json& json) override;
 		void Render(CanvasComponent* canvas) override;
 		bool HitTest(const glm::vec2& pos) override;
 		void OnPointerEnter() override;

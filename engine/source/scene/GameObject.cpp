@@ -25,7 +25,7 @@ namespace eng
 
 	}
 
-	void GameObject::LoadProperties(const nlohmann::json& json)
+	void GameObject::LoadPropertiesFromJson(const nlohmann::json& json)
 	{
 
 	}
@@ -255,7 +255,7 @@ namespace eng
 		return m_Scale;
 	}
 
-	const glm::vec2& GameObject::GetScale2D() const noexcept
+	const glm::vec2 GameObject::GetScale2D() const noexcept
 	{
 		return glm::vec2(m_Scale);
 	}

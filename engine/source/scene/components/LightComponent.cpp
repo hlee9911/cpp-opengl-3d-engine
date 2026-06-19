@@ -2,7 +2,7 @@
 
 namespace eng
 {
-	void LightComponent::LoadProperties(const nlohmann::json& json)
+	void LightComponent::LoadPropertiesFromJson(const nlohmann::json& json)
 	{
 		if (json.contains("color"))
 		{

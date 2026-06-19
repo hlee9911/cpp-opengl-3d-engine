@@ -23,11 +23,11 @@ namespace eng
 		void SetTextureParam(const std::string& name, const shared<Texture>& texture);
 		void SetBoolParam(const std::string& name, bool value) noexcept;
 
-		const glm::vec3& GetFloat3Params(const std::string& name) noexcept;
+		const glm::vec3 GetFloat3Params(const std::string& name) const noexcept;
 
 		void Bind();
 
-		static shared<Material> Load(const std::string& path);
+		static shared<Material> LoadFromJson(const std::string& path);
 
 	private:
 		shared<ShaderProgram> m_ShaderProgram;

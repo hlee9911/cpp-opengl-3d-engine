@@ -12,4 +12,8 @@ public:
 		eng::CollisionObject* obj,
 		const glm::vec3& pos,
 		const glm::vec3& norm) override;
+
+private:
+	float m_JumpForce = 17.5f;
+
 };

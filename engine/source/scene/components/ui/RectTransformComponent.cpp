@@ -3,7 +3,7 @@
 
 namespace eng
 {
-	void RectTransformComponent::LoadProperties(const nlohmann::json& json)
+	void RectTransformComponent::LoadPropertiesFromJson(const nlohmann::json& json)
 	{
 		// load size
 		if (json.contains("size"))

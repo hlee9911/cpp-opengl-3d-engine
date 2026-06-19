@@ -3,7 +3,7 @@
 
 namespace eng
 {
-	void AudioComponent::LoadProperties(const nlohmann::json& json)
+	void AudioComponent::LoadPropertiesFromJson(const nlohmann::json& json)
 	{
 		if (json.contains("audio"))
 		{
@@ -12,7 +12,7 @@ namespace eng
 			{
 				std::string name = clip.value("name", "noname");
 				std::string filePath = clip.value("path", "");
-				auto audio = Audio::Load(filePath);
+				auto audio = Audio::LoadFromJson(filePath);
 				if (audio)
 				{
 					float volume = clip.value("volume", 1.0f);

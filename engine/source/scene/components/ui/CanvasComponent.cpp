@@ -8,7 +8,7 @@
 
 namespace eng
 {
-	void CanvasComponent::LoadProperties(const nlohmann::json& json)
+	void CanvasComponent::LoadPropertiesFromJson(const nlohmann::json& json)
 	{
 		bool active = json.value("active", true);
 		SetActive(active);

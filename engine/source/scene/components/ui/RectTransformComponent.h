@@ -11,7 +11,7 @@ namespace eng
 		COMPONENT(RectTransformComponent)
 
 	public:
-		void LoadProperties(const nlohmann::json& json) override;
+		void LoadPropertiesFromJson(const nlohmann::json& json) override;
 
 		const glm::vec2& GetSize() const noexcept { return m_Size; }
 		void SetSize(const glm::vec2& size) noexcept { m_Size = size; }

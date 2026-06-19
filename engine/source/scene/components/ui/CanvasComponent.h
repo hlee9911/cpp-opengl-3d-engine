@@ -18,7 +18,7 @@ namespace eng
 		COMPONENT(CanvasComponent)
 
 	public:
-		void LoadProperties(const nlohmann::json& json) override;
+		void LoadPropertiesFromJson(const nlohmann::json& json) override;
 		void Update(float deltaTime) override;
 		void Init() override;
 		void Render(UIElementComponent* element);
