@@ -3073,18 +3073,18 @@
           "name": "HubUpperPlatform",
           "isActive": 1,
           "position": {
-            "x": 23.0,
-            "y": 5.0,
-            "z": 17.5
+            "x": 18.0,
+            "y": 8.0,
+            "z": 19.5
           },
           "components": [
             {
               "type": "MeshComponent",
               "mesh": {
                 "type": "box",
-                "x": 5.0,
+                "x": 8.0,
                 "y": 2.0,
-                "z": 10.0
+                "z": 7.0
               },
               "material": {
                 "path": "materials/textile.mat",
@@ -3104,9 +3104,9 @@
               "type": "PhysicsComponent",
               "collider": {
                 "type": "box",
-                "x": 5.0,
-                "y": 1.0,
-                "z": 10.0
+                "x": 8.0,
+                "y": 2.0,
+                "z": 7.0
               },
               "body": {
                 "mass": 0,
@@ -3120,18 +3120,18 @@
           "name": "HubColumn_1",
           "isActive": 1,
           "position": {
-            "x": 21.1,
-            "y": 3.25,
-            "z": 13.0
+            "x": 15.0,
+            "y": 4.75,
+            "z": 17.0
           },
           "components": [
             {
               "type": "MeshComponent",
               "mesh": {
                 "type": "box",
-                "x": 0.6,
-                "y": 1.5,
-                "z": 0.6
+                "x": 1.0,
+                "y": 4.5,
+                "z": 1.0
               },
               "material": {
                 "path": "materials/textile.mat",
@@ -3151,9 +3151,9 @@
               "type": "PhysicsComponent",
               "collider": {
                 "type": "box",
-                "x": 0.6,
-                "y": 1.5,
-                "z": 0.6
+                "x": 1.0,
+                "y": 4.5,
+                "z": 1.0
               },
               "body": {
                 "mass": 0,
@@ -3167,18 +3167,18 @@
           "name": "HubColumn_2",
           "isActive": 1,
           "position": {
-            "x": 24.9,
-            "y": 3.25,
-            "z": 13.0
+            "x": 21.0,
+            "y": 4.75,
+            "z": 17.0
           },
           "components": [
             {
               "type": "MeshComponent",
               "mesh": {
                 "type": "box",
-                "x": 0.6,
-                "y": 1.5,
-                "z": 0.6
+                "x": 1.0,
+                "y": 4.5,
+                "z": 1.0
               },
               "material": {
                 "path": "materials/textile.mat",
@@ -3198,9 +3198,9 @@
               "type": "PhysicsComponent",
               "collider": {
                 "type": "box",
-                "x": 0.6,
-                "y": 1.5,
-                "z": 0.6
+                "x": 1.0,
+                "y": 4.5,
+                "z": 1.0
               },
               "body": {
                 "mass": 0,
@@ -3214,8 +3214,8 @@
           "name": "HubColumn_3",
           "isActive": 1,
           "position": {
-            "x": 21.1,
-            "y": 3.25,
+            "x": 15.0,
+            "y": 4.75,
             "z": 22.0
           },
           "components": [
@@ -3223,9 +3223,9 @@
               "type": "MeshComponent",
               "mesh": {
                 "type": "box",
-                "x": 0.6,
-                "y": 1.5,
-                "z": 0.6
+                "x": 1.0,
+                "y": 4.5,
+                "z": 1.0
               },
               "material": {
                 "path": "materials/textile.mat",
@@ -3245,9 +3245,9 @@
               "type": "PhysicsComponent",
               "collider": {
                 "type": "box",
-                "x": 0.6,
-                "y": 1.5,
-                "z": 0.6
+                "x": 1.0,
+                "y": 4.5,
+                "z": 1.0
               },
               "body": {
                 "mass": 0,
@@ -3261,8 +3261,8 @@
           "name": "HubColumn_4",
           "isActive": 1,
           "position": {
-            "x": 24.9,
-            "y": 3.25,
+            "x": 21.0,
+            "y": 4.75,
             "z": 22.0
           },
           "components": [
@@ -3270,9 +3270,9 @@
               "type": "MeshComponent",
               "mesh": {
                 "type": "box",
-                "x": 0.6,
-                "y": 1.5,
-                "z": 0.6
+                "x": 1.0,
+                "y": 4.5,
+                "z": 1.0
               },
               "material": {
                 "path": "materials/textile.mat",
@@ -3292,9 +3292,9 @@
               "type": "PhysicsComponent",
               "collider": {
                 "type": "box",
-                "x": 0.6,
-                "y": 1.5,
-                "z": 0.6
+                "x": 1.0,
+                "y": 4.5,
+                "z": 1.0
               },
               "body": {
                 "mass": 0,
@@ -3308,16 +3308,16 @@
           "name": "HubStairLower_1",
           "isActive": 1,
           "position": {
-            "x": 14.0,
+            "x": 18.0,
             "y": 0.75,
-            "z": 26.1
+            "z": 9.9
           },
           "components": [
             {
               "type": "MeshComponent",
               "mesh": {
                 "type": "box",
-                "x": 4.0,
+                "x": 5.0,
                 "y": 0.3,
                 "z": 0.69
               },
@@ -3339,7 +3339,7 @@
               "type": "PhysicsComponent",
               "collider": {
                 "type": "box",
-                "x": 4.0,
+                "x": 5.0,
                 "y": 0.3,
                 "z": 0.69
               },
@@ -3355,16 +3355,16 @@
           "name": "HubStairLower_2",
           "isActive": 1,
           "position": {
-            "x": 14.0,
+            "x": 18.0,
             "y": 1.15,
-            "z": 25.45
+            "z": 10.55
           },
           "components": [
             {
               "type": "MeshComponent",
               "mesh": {
                 "type": "box",
-                "x": 4.0,
+                "x": 5.0,
                 "y": 0.3,
                 "z": 0.69
               },
@@ -3386,7 +3386,7 @@
               "type": "PhysicsComponent",
               "collider": {
                 "type": "box",
-                "x": 4.0,
+                "x": 5.0,
                 "y": 0.3,
                 "z": 0.69
               },
@@ -3402,16 +3402,16 @@
           "name": "HubStairLower_3",
           "isActive": 1,
           "position": {
-            "x": 14.0,
+            "x": 18.0,
             "y": 1.55,
-            "z": 24.8
+            "z": 11.2
           },
           "components": [
             {
               "type": "MeshComponent",
               "mesh": {
                 "type": "box",
-                "x": 4.0,
+                "x": 5.0,
                 "y": 0.3,
                 "z": 0.69
               },
@@ -3433,7 +3433,7 @@
               "type": "PhysicsComponent",
               "collider": {
                 "type": "box",
-                "x": 4.0,
+                "x": 5.0,
                 "y": 0.3,
                 "z": 0.69
               },
@@ -3449,16 +3449,16 @@
           "name": "HubStairLower_4",
           "isActive": 1,
           "position": {
-            "x": 14.0,
+            "x": 18.0,
             "y": 1.95,
-            "z": 24.15
+            "z": 11.85
           },
           "components": [
             {
               "type": "MeshComponent",
               "mesh": {
                 "type": "box",
-                "x": 4.0,
+                "x": 5.0,
                 "y": 0.3,
                 "z": 0.69
               },
@@ -3480,7 +3480,7 @@
               "type": "PhysicsComponent",
               "collider": {
                 "type": "box",
-                "x": 4.0,
+                "x": 5.0,
                 "y": 0.3,
                 "z": 0.69
               },
@@ -3496,16 +3496,16 @@
           "name": "HubStairLower_5",
           "isActive": 1,
           "position": {
-            "x": 14.0,
+            "x": 18.0,
             "y": 2.35,
-            "z": 23.5
+            "z": 12.5
           },
           "components": [
             {
               "type": "MeshComponent",
               "mesh": {
                 "type": "box",
-                "x": 4.0,
+                "x": 5.0,
                 "y": 0.3,
                 "z": 0.69
               },
@@ -3527,7 +3527,7 @@
               "type": "PhysicsComponent",
               "collider": {
                 "type": "box",
-                "x": 4.0,
+                "x": 5.0,
                 "y": 0.3,
                 "z": 0.69
               },
@@ -3543,18 +3543,18 @@
           "name": "HubStairUpper_1",
           "isActive": 1,
           "position": {
-            "x": 17.35,
-            "y": 2.788,
-            "z": 18.0
+            "x": 24.0,
+            "y": 2.814,
+            "z": 15.2
           },
           "components": [
             {
               "type": "MeshComponent",
               "mesh": {
                 "type": "box",
-                "x": 0.49,
+                "x": 3.0,
                 "y": 0.3,
-                "z": 2.5
+                "z": 0.64
               },
               "material": {
                 "path": "materials/textile.mat",
@@ -3574,9 +3574,9 @@
               "type": "PhysicsComponent",
               "collider": {
                 "type": "box",
-                "x": 0.49,
+                "x": 3.0,
                 "y": 0.3,
-                "z": 2.5
+                "z": 0.64
               },
               "body": {
                 "mass": 0,
@@ -3590,18 +3590,18 @@
           "name": "HubStairUpper_2",
           "isActive": 1,
           "position": {
-            "x": 17.8,
-            "y": 3.225,
-            "z": 18.0
+            "x": 24.0,
+            "y": 3.279,
+            "z": 15.8
           },
           "components": [
             {
               "type": "MeshComponent",
               "mesh": {
                 "type": "box",
-                "x": 0.49,
+                "x": 3.0,
                 "y": 0.3,
-                "z": 2.5
+                "z": 0.64
               },
               "material": {
                 "path": "materials/textile.mat",
@@ -3621,9 +3621,9 @@
               "type": "PhysicsComponent",
               "collider": {
                 "type": "box",
-                "x": 0.49,
+                "x": 3.0,
                 "y": 0.3,
-                "z": 2.5
+                "z": 0.64
               },
               "body": {
                 "mass": 0,
@@ -3637,18 +3637,18 @@
           "name": "HubStairUpper_3",
           "isActive": 1,
           "position": {
-            "x": 18.25,
-            "y": 3.663,
-            "z": 18.0
+            "x": 24.0,
+            "y": 3.743,
+            "z": 16.4
           },
           "components": [
             {
               "type": "MeshComponent",
               "mesh": {
                 "type": "box",
-                "x": 0.49,
+                "x": 3.0,
                 "y": 0.3,
-                "z": 2.5
+                "z": 0.64
               },
               "material": {
                 "path": "materials/textile.mat",
@@ -3668,9 +3668,9 @@
               "type": "PhysicsComponent",
               "collider": {
                 "type": "box",
-                "x": 0.49,
+                "x": 3.0,
                 "y": 0.3,
-                "z": 2.5
+                "z": 0.64
               },
               "body": {
                 "mass": 0,
@@ -3684,18 +3684,18 @@
           "name": "HubStairUpper_4",
           "isActive": 1,
           "position": {
-            "x": 18.7,
-            "y": 4.1,
-            "z": 18.0
+            "x": 24.0,
+            "y": 4.207,
+            "z": 17.0
           },
           "components": [
             {
               "type": "MeshComponent",
               "mesh": {
                 "type": "box",
-                "x": 0.49,
+                "x": 3.0,
                 "y": 0.3,
-                "z": 2.5
+                "z": 0.64
               },
               "material": {
                 "path": "materials/textile.mat",
@@ -3715,9 +3715,9 @@
               "type": "PhysicsComponent",
               "collider": {
                 "type": "box",
-                "x": 0.49,
+                "x": 3.0,
                 "y": 0.3,
-                "z": 2.5
+                "z": 0.64
               },
               "body": {
                 "mass": 0,
@@ -3731,18 +3731,18 @@
           "name": "HubStairUpper_5",
           "isActive": 1,
           "position": {
-            "x": 19.15,
-            "y": 4.537,
-            "z": 18.0
+            "x": 24.0,
+            "y": 4.671,
+            "z": 17.6
           },
           "components": [
             {
               "type": "MeshComponent",
               "mesh": {
                 "type": "box",
-                "x": 0.49,
+                "x": 3.0,
                 "y": 0.3,
-                "z": 2.5
+                "z": 0.64
               },
               "material": {
                 "path": "materials/textile.mat",
@@ -3762,9 +3762,9 @@
               "type": "PhysicsComponent",
               "collider": {
                 "type": "box",
-                "x": 0.49,
+                "x": 3.0,
                 "y": 0.3,
-                "z": 2.5
+                "z": 0.64
               },
               "body": {
                 "mass": 0,
@@ -3778,18 +3778,18 @@
           "name": "HubStairUpper_6",
           "isActive": 1,
           "position": {
-            "x": 19.6,
-            "y": 4.975,
-            "z": 18.0
+            "x": 24.0,
+            "y": 5.136,
+            "z": 18.2
           },
           "components": [
             {
               "type": "MeshComponent",
               "mesh": {
                 "type": "box",
-                "x": 0.49,
+                "x": 3.0,
                 "y": 0.3,
-                "z": 2.5
+                "z": 0.64
               },
               "material": {
                 "path": "materials/textile.mat",
@@ -3809,9 +3809,9 @@
               "type": "PhysicsComponent",
               "collider": {
                 "type": "box",
-                "x": 0.49,
+                "x": 3.0,
                 "y": 0.3,
-                "z": 2.5
+                "z": 0.64
               },
               "body": {
                 "mass": 0,
@@ -3825,18 +3825,18 @@
           "name": "HubStairUpper_7",
           "isActive": 1,
           "position": {
-            "x": 20.05,
-            "y": 5.412,
-            "z": 18.0
+            "x": 24.0,
+            "y": 5.6,
+            "z": 18.8
           },
           "components": [
             {
               "type": "MeshComponent",
               "mesh": {
                 "type": "box",
-                "x": 0.49,
+                "x": 3.0,
                 "y": 0.3,
-                "z": 2.5
+                "z": 0.64
               },
               "material": {
                 "path": "materials/textile.mat",
@@ -3856,9 +3856,9 @@
               "type": "PhysicsComponent",
               "collider": {
                 "type": "box",
-                "x": 0.49,
+                "x": 3.0,
                 "y": 0.3,
-                "z": 2.5
+                "z": 0.64
               },
               "body": {
                 "mass": 0,
@@ -3872,18 +3872,18 @@
           "name": "HubStairUpper_8",
           "isActive": 1,
           "position": {
-            "x": 20.5,
-            "y": 5.85,
-            "z": 18.0
+            "x": 24.0,
+            "y": 6.064,
+            "z": 19.4
           },
           "components": [
             {
               "type": "MeshComponent",
               "mesh": {
                 "type": "box",
-                "x": 0.49,
+                "x": 3.0,
                 "y": 0.3,
-                "z": 2.5
+                "z": 0.64
               },
               "material": {
                 "path": "materials/textile.mat",
@@ -3903,9 +3903,291 @@
               "type": "PhysicsComponent",
               "collider": {
                 "type": "box",
-                "x": 0.49,
+                "x": 3.0,
                 "y": 0.3,
-                "z": 2.5
+                "z": 0.64
+              },
+              "body": {
+                "mass": 0,
+                "friction": 0.5,
+                "type": "static"
+              }
+            }
+          ]
+        },
+        {
+          "name": "HubStairUpper_9",
+          "isActive": 1,
+          "position": {
+            "x": 24.0,
+            "y": 6.529,
+            "z": 20.0
+          },
+          "components": [
+            {
+              "type": "MeshComponent",
+              "mesh": {
+                "type": "box",
+                "x": 3.0,
+                "y": 0.3,
+                "z": 0.64
+              },
+              "material": {
+                "path": "materials/textile.mat",
+                "params": {
+                  "float3": [
+                    {
+                      "name": "color",
+                      "value0": 0.5,
+                      "value1": 0.5,
+                      "value2": 0.5
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "PhysicsComponent",
+              "collider": {
+                "type": "box",
+                "x": 3.0,
+                "y": 0.3,
+                "z": 0.64
+              },
+              "body": {
+                "mass": 0,
+                "friction": 0.5,
+                "type": "static"
+              }
+            }
+          ]
+        },
+        {
+          "name": "HubStairUpper_10",
+          "isActive": 1,
+          "position": {
+            "x": 24.0,
+            "y": 6.993,
+            "z": 20.6
+          },
+          "components": [
+            {
+              "type": "MeshComponent",
+              "mesh": {
+                "type": "box",
+                "x": 3.0,
+                "y": 0.3,
+                "z": 0.64
+              },
+              "material": {
+                "path": "materials/textile.mat",
+                "params": {
+                  "float3": [
+                    {
+                      "name": "color",
+                      "value0": 0.5,
+                      "value1": 0.5,
+                      "value2": 0.5
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "PhysicsComponent",
+              "collider": {
+                "type": "box",
+                "x": 3.0,
+                "y": 0.3,
+                "z": 0.64
+              },
+              "body": {
+                "mass": 0,
+                "friction": 0.5,
+                "type": "static"
+              }
+            }
+          ]
+        },
+        {
+          "name": "HubStairUpper_11",
+          "isActive": 1,
+          "position": {
+            "x": 24.0,
+            "y": 7.457,
+            "z": 21.2
+          },
+          "components": [
+            {
+              "type": "MeshComponent",
+              "mesh": {
+                "type": "box",
+                "x": 3.0,
+                "y": 0.3,
+                "z": 0.64
+              },
+              "material": {
+                "path": "materials/textile.mat",
+                "params": {
+                  "float3": [
+                    {
+                      "name": "color",
+                      "value0": 0.5,
+                      "value1": 0.5,
+                      "value2": 0.5
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "PhysicsComponent",
+              "collider": {
+                "type": "box",
+                "x": 3.0,
+                "y": 0.3,
+                "z": 0.64
+              },
+              "body": {
+                "mass": 0,
+                "friction": 0.5,
+                "type": "static"
+              }
+            }
+          ]
+        },
+        {
+          "name": "HubStairUpper_12",
+          "isActive": 1,
+          "position": {
+            "x": 24.0,
+            "y": 7.921,
+            "z": 21.8
+          },
+          "components": [
+            {
+              "type": "MeshComponent",
+              "mesh": {
+                "type": "box",
+                "x": 3.0,
+                "y": 0.3,
+                "z": 0.64
+              },
+              "material": {
+                "path": "materials/textile.mat",
+                "params": {
+                  "float3": [
+                    {
+                      "name": "color",
+                      "value0": 0.5,
+                      "value1": 0.5,
+                      "value2": 0.5
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "PhysicsComponent",
+              "collider": {
+                "type": "box",
+                "x": 3.0,
+                "y": 0.3,
+                "z": 0.64
+              },
+              "body": {
+                "mass": 0,
+                "friction": 0.5,
+                "type": "static"
+              }
+            }
+          ]
+        },
+        {
+          "name": "HubStairUpper_13",
+          "isActive": 1,
+          "position": {
+            "x": 24.0,
+            "y": 8.386,
+            "z": 22.4
+          },
+          "components": [
+            {
+              "type": "MeshComponent",
+              "mesh": {
+                "type": "box",
+                "x": 3.0,
+                "y": 0.3,
+                "z": 0.64
+              },
+              "material": {
+                "path": "materials/textile.mat",
+                "params": {
+                  "float3": [
+                    {
+                      "name": "color",
+                      "value0": 0.5,
+                      "value1": 0.5,
+                      "value2": 0.5
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "PhysicsComponent",
+              "collider": {
+                "type": "box",
+                "x": 3.0,
+                "y": 0.3,
+                "z": 0.64
+              },
+              "body": {
+                "mass": 0,
+                "friction": 0.5,
+                "type": "static"
+              }
+            }
+          ]
+        },
+        {
+          "name": "HubStairUpper_Connector",
+          "isActive": 1,
+          "position": {
+            "x": 20.0,
+            "y": 8.85,
+            "z": 24.4
+          },
+          "components": [
+            {
+              "type": "MeshComponent",
+              "mesh": {
+                "type": "box",
+                "x": 12.0,
+                "y": 0.3,
+                "z": 3.5
+              },
+              "material": {
+                "path": "materials/textile.mat",
+                "params": {
+                  "float3": [
+                    {
+                      "name": "color",
+                      "value0": 0.5,
+                      "value1": 0.5,
+                      "value2": 0.5
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "type": "PhysicsComponent",
+              "collider": {
+                "type": "box",
+                "x": 12.0,
+                "y": 0.3,
+                "z": 3.5
               },
               "body": {
                 "mass": 0,

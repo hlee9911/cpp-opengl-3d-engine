@@ -345,6 +345,11 @@ namespace eng
 		return result;
 	}
 
+	shared<Scene> Scene::LoadFromLua(const std::string& path)
+	{
+		return shared<Scene>();
+	}
+
 	/// <summary>
 	/// Collects light data from the scene recursively, starting from the given GameObject. If the GameObject has a LightComponent, 
 	/// its data is added to the output list. The function then continues to check all child GameObjects.
@@ -498,5 +503,10 @@ namespace eng
 
 		// for post-load setup
 		gameObject->Init();
+	}
+
+	void Scene::LoadObjectFromLua(sol::state& lua, const std::string& path, GameObject* parent)
+	{
+
 	}
 }
