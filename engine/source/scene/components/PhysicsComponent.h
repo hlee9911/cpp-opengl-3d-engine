@@ -21,11 +21,12 @@ namespace eng
 		PhysicsComponent(const shared<RigidBody>& body) noexcept;
 
 		virtual void LoadPropertiesFromJson(const nlohmann::json& json) override;
-		void Init() override;
-		void Update(float deltaTime) override;
+		virtual void LoadPropertiesFromLua(const sol::table& table) override;
+		virtual void Init() override;
+		virtual void Update(float deltaTime) override;
 
-		void OnEnable() override;
-		void OnDisable() override;
+		virtual void OnEnable() override;
+		virtual void OnDisable() override;
 
 		void SetRigidBody(const shared<RigidBody>& body) noexcept { m_RigidBody = body; }
 		const shared<RigidBody>& GetRigidBody() const noexcept { return m_RigidBody; }

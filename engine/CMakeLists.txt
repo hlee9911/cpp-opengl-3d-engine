@@ -101,6 +101,8 @@ set(PROJECT_SOURCE_FILES
 	source/profiler/Profiler.cpp
 	source/profiler/MemoryManager.h
 	source/profiler/MemoryManager.cpp
+	source/lua/LuaLoaderUtil.h
+	source/lua/LuaLoaderUtil.cpp
 )
 
 # Group files according to files organization

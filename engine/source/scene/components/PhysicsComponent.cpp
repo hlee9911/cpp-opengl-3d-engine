@@ -87,6 +87,88 @@ namespace eng
 		}
 	}
 
+	void PhysicsComponent::LoadPropertiesFromLua(const sol::table& table)
+	{
+		// load collider properties
+		shared<Collider> collider;
+		if (LuaLoaderUtil::LuaHasKey(table, "collider"))
+		{
+			sol::object colliderObjRaw = table.get<sol::object>("collider");
+			if (LuaLoaderUtil::LuaIsTable(colliderObjRaw))
+			{
+				sol::table colliderObj = colliderObjRaw.as<sol::table>();
+				std::string type = LuaLoaderUtil::LuaValueOrStr(colliderObj, "type", "");
+
+				if (type == "box")
+				{
+					glm::vec3 extents(
+						LuaLoaderUtil::LuaValueOr<float>(colliderObj, "x", 1.0f),
+						LuaLoaderUtil::LuaValueOr<float>(colliderObj, "y", 1.0f),
+						LuaLoaderUtil::LuaValueOr<float>(colliderObj, "z", 1.0f)
+					);
+					collider = std::make_shared<BoxCollider>(extents);
+				}
+				else if (type == "sphere")
+				{
+					float radius = LuaLoaderUtil::LuaValueOr<float>(colliderObj, "r", 1.0f);
+					collider = std::make_shared<SphereCollider>(radius);
+				}
+				else if (type == "capsule")
+				{
+					float radius = LuaLoaderUtil::LuaValueOr<float>(colliderObj, "r", 1.0f);
+					float height = LuaLoaderUtil::LuaValueOr<float>(colliderObj, "h", 1.0f);
+					collider = std::make_shared<CapsuleCollider>(radius, height);
+				}
+				else if (type == "cone")
+				{
+					float radius = LuaLoaderUtil::LuaValueOr<float>(colliderObj, "r", 0.5f);
+					float height = LuaLoaderUtil::LuaValueOr<float>(colliderObj, "h", 1.0f);
+					collider = std::make_shared<ConeCollider>(radius, height);
+				}
+				else if (type == "cylinder")
+				{
+					float radius = LuaLoaderUtil::LuaValueOr<float>(colliderObj, "r", 0.5f);
+					float height = LuaLoaderUtil::LuaValueOr<float>(colliderObj, "h", 1.0f);
+					collider = std::make_shared<CylinderCollider>(radius, height);
+				}
+
+				if (!collider) return;
+
+				// load rigidBody properties
+				shared<RigidBody> rigidBody;
+				if (LuaLoaderUtil::LuaHasKey(table, "body"))
+				{
+					sol::object bodyObjRaw = table.get<sol::object>("body");
+					if (LuaLoaderUtil::LuaIsTable(bodyObjRaw))
+					{
+						sol::table bodyObj = bodyObjRaw.as<sol::table>();
+
+						float mass = LuaLoaderUtil::LuaValueOr<float>(bodyObj, "mass", 0.0f);
+						float friction = LuaLoaderUtil::LuaValueOr<float>(bodyObj, "friction", 0.5f);
+						std::string typeStr = LuaLoaderUtil::LuaValueOrStr(bodyObj, "type", "static");
+
+						BodyType bodyType = BodyType::Static;
+						if (typeStr == "dynamic")
+						{
+							bodyType = BodyType::Dynamic;
+						}
+						else if (typeStr == "kinematic")
+						{
+							bodyType = BodyType::Kinematic;
+						}
+
+						rigidBody = std::make_shared<RigidBody>(bodyType, collider, mass, friction);
+					}
+				}
+
+				if (rigidBody)
+				{
+					SetRigidBody(rigidBody);
+				}
+			}
+		}
+	}
+
 	void PhysicsComponent::Init()
 	{
 		if (!m_RigidBody) return;

@@ -7,6 +7,7 @@
 
 #include <nlohmann/json.hpp>
 #include <sol/sol.hpp>
+#include <sol/forward.hpp>
 
 #include "scene/GameObject.h"
 #include "Core.h"
@@ -69,7 +70,7 @@ namespace eng
 		void CollectLightsRecursive(GameObject* obj, List<LightData>& out);
 
 		void LoadObjectFromJson(const nlohmann::json& jsonObject, GameObject* parent);
-		void LoadObjectFromLua(sol::state& lua, const std::string& path, GameObject* parent);
+		void LoadObjectFromLua(const sol::table& tableObject, GameObject* parent);
 
 	private:
 		List<unique<GameObject>> m_GameObjects;

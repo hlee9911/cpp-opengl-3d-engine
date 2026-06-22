@@ -7,7 +7,7 @@ class TestObject : public eng::GameObject
 public:
 	TestObject() noexcept;
 
-	void Update(float deltaTime) override;
+	virtual void Update(float deltaTime) override;
 
 private:
 	

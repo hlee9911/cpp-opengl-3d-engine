@@ -16,7 +16,8 @@ namespace eng
 		COMPONENT_WITH_PARENT(TextComponent, UIElementComponent)
 
 	public:
-		void LoadPropertiesFromJson(const nlohmann::json& json) override;
+		virtual void LoadPropertiesFromJson(const nlohmann::json& json) override;
+		virtual void LoadPropertiesFromLua(const sol::table& table) override;
 		void Render(CanvasComponent* canvas) override;
 
 		void SetText(const std::string& text) noexcept { m_Text = text; }

@@ -70,7 +70,7 @@ namespace eng
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	}
 
-	shared<Texture> Texture::LoadFromJson(const std::string& path)
+	shared<Texture> Texture::Load(const std::string& path)
 	{
 		int width, height, numChannels;
 
@@ -104,7 +104,7 @@ namespace eng
 		auto it = m_Textures.find(path);
 		if (it != m_Textures.end()) return it->second; // if texture already loaded, return it
 
-		auto texture = Texture::LoadFromJson(path);
+		auto texture = Texture::Load(path);
 		m_Textures[path] = texture; // cache the loaded texture
 		return texture;
 	}

@@ -13,7 +13,7 @@ namespace eng
 		// Load texture
 		const std::string texturePath = json.value("texture", "");
 
-		if (auto texture = Texture::LoadFromJson(texturePath))
+		if (auto texture = Texture::Load(texturePath))
 		{
 			SetTexture(texture);
 		}
@@ -73,6 +73,93 @@ namespace eng
 				pivotObj.value("y", 0.5f)
 			);
 			SetPivot(pivot);
+		}
+	}
+
+	void SpriteComponent::LoadPropertiesFromLua(const sol::table& table)
+	{
+		// Load texture
+		const std::string texturePath = LuaLoaderUtil::LuaValueOrStr(table, "texture", "");
+		if (auto texture = Texture::Load(texturePath))
+		{
+			SetTexture(texture);
+		}
+
+		// Load color
+		if (LuaLoaderUtil::LuaHasKey(table, "color"))
+		{
+			sol::object colorObjRaw = table.get<sol::object>("color");
+			if (LuaLoaderUtil::LuaIsTable(colorObjRaw))
+			{
+				sol::table colorObj = colorObjRaw.as<sol::table>();
+				glm::vec4 color(
+					LuaLoaderUtil::LuaValueOr<float>(colorObj, "r", 1.0f),
+					LuaLoaderUtil::LuaValueOr<float>(colorObj, "g", 1.0f),
+					LuaLoaderUtil::LuaValueOr<float>(colorObj, "b", 1.0f),
+					LuaLoaderUtil::LuaValueOr<float>(colorObj, "a", 1.0f)
+				);
+				SetColor(color);
+			}
+		}
+
+		// Load size
+		if (LuaLoaderUtil::LuaHasKey(table, "size"))
+		{
+			sol::object sizeObjRaw = table.get<sol::object>("size");
+			if (LuaLoaderUtil::LuaIsTable(sizeObjRaw))
+			{
+				sol::table sizeObj = sizeObjRaw.as<sol::table>();
+				glm::vec2 size(
+					LuaLoaderUtil::LuaValueOr<float>(sizeObj, "x", 100.0f),
+					LuaLoaderUtil::LuaValueOr<float>(sizeObj, "y", 100.0f)
+				);
+				SetSize(size);
+			}
+		}
+
+		// Load LowerLeftUV
+		if (LuaLoaderUtil::LuaHasKey(table, "lowerLeftUV"))
+		{
+			sol::object uvObjRaw = table.get<sol::object>("lowerLeftUV");
+			if (LuaLoaderUtil::LuaIsTable(uvObjRaw))
+			{
+				sol::table uvObj = uvObjRaw.as<sol::table>();
+				glm::vec2 lowerLeftUV(
+					LuaLoaderUtil::LuaValueOr<float>(uvObj, "u", 0.0f),
+					LuaLoaderUtil::LuaValueOr<float>(uvObj, "v", 0.0f)
+				);
+				SetLowerLeftUV(lowerLeftUV);
+			}
+		}
+
+		// Load UpperRightUV
+		if (LuaLoaderUtil::LuaHasKey(table, "upperRightUV"))
+		{
+			sol::object uvObjRaw = table.get<sol::object>("upperRightUV");
+			if (LuaLoaderUtil::LuaIsTable(uvObjRaw))
+			{
+				sol::table uvObj = uvObjRaw.as<sol::table>();
+				glm::vec2 upperRightUV(
+					LuaLoaderUtil::LuaValueOr<float>(uvObj, "u", 1.0f),
+					LuaLoaderUtil::LuaValueOr<float>(uvObj, "v", 1.0f)
+				);
+				SetUpperRightUV(upperRightUV);
+			}
+		}
+
+		// Load pivot
+		if (LuaLoaderUtil::LuaHasKey(table, "pivot"))
+		{
+			sol::object pivotObjRaw = table.get<sol::object>("pivot");
+			if (LuaLoaderUtil::LuaIsTable(pivotObjRaw))
+			{
+				sol::table pivotObj = pivotObjRaw.as<sol::table>();
+				glm::vec2 pivot(
+					LuaLoaderUtil::LuaValueOr<float>(pivotObj, "x", 0.5f),
+					LuaLoaderUtil::LuaValueOr<float>(pivotObj, "y", 0.5f)
+				);
+				SetPivot(pivot);
+			}
 		}
 	}
 

@@ -4,6 +4,7 @@
 #include "Engine.h"
 
 #include <nlohmann/json.hpp>
+#include <sol/sol.hpp>
 
 namespace eng
 {
@@ -168,8 +169,128 @@ namespace eng
 				{
 					std::string name = p.value("name", "");
 					std::string texPath = p.value("path", "");
-					auto texture = Texture::LoadFromJson(texPath);
+					auto texture = Texture::Load(texPath);
 					result->SetTextureParam(name, texture);
+				}
+			}
+		}
+
+		return result;
+	}
+
+	// load the mat(lua-formatted one) file
+	shared<Material> Material::LoadFromLua(const sol::table& table)
+	{
+		shared<Material> result;
+
+		if (LuaLoaderUtil::LuaHasKey(table, "shader"))
+		{
+			sol::object shaderObjRaw = table.get<sol::object>("shader");
+			if (LuaLoaderUtil::LuaIsTable(shaderObjRaw))
+			{
+				sol::table shaderObj = shaderObjRaw.as<sol::table>();
+
+				std::string vertexPath = LuaLoaderUtil::LuaValueOrStr(shaderObj, "vertex", "");
+				std::string fragmentPath = LuaLoaderUtil::LuaValueOrStr(shaderObj, "fragment", "");
+
+				auto& fs = Engine::GetInstance().GetFileSystem();
+				auto vertexSrc = fs.LoadAssetFileText(vertexPath);
+				auto fragmentSrc = fs.LoadAssetFileText(fragmentPath);
+
+				auto& graphicsAPI = Engine::GetInstance().GetGraphicsAPI();
+				auto shaderProgram = graphicsAPI.CreateShaderProgram(vertexSrc, fragmentSrc);
+
+				if (!shaderProgram) return nullptr;
+
+				result = std::make_shared<Material>();
+				result->SetShaderProgram(shaderProgram);
+			}
+		}
+
+		if (LuaLoaderUtil::LuaHasKey(table, "params"))
+		{
+			sol::object paramsObjRaw = table.get<sol::object>("params");
+			if (!LuaLoaderUtil::LuaIsTable(paramsObjRaw)) return result;
+
+			sol::table paramsObj = paramsObjRaw.as<sol::table>();
+
+			// Float1
+			if (LuaLoaderUtil::LuaHasKey(paramsObj, "float"))
+			{
+				sol::object floatArrRaw = paramsObj.get<sol::object>("float");
+				if (LuaLoaderUtil::LuaIsTable(floatArrRaw))
+				{
+					sol::table floatArr = floatArrRaw.as<sol::table>();
+					for (auto& kv : floatArr)
+					{
+						if (!LuaLoaderUtil::LuaIsTable(kv.second)) continue;
+						sol::table p = kv.second.as<sol::table>();
+
+						std::string name = LuaLoaderUtil::LuaValueOrStr(p, "name", "");
+						float value = LuaLoaderUtil::LuaValueOr<float>(p, "value", 0.0f);
+						result->SetFloatParam(name, value);
+					}
+				}
+			}
+
+			// Float2
+			if (LuaLoaderUtil::LuaHasKey(paramsObj, "float2"))
+			{
+				sol::object float2ArrRaw = paramsObj.get<sol::object>("float2");
+				if (LuaLoaderUtil::LuaIsTable(float2ArrRaw))
+				{
+					sol::table float2Arr = float2ArrRaw.as<sol::table>();
+					for (auto& kv : float2Arr)
+					{
+						if (!LuaLoaderUtil::LuaIsTable(kv.second)) continue;
+						sol::table p = kv.second.as<sol::table>();
+
+						std::string name = LuaLoaderUtil::LuaValueOrStr(p, "name", "");
+						float v0 = LuaLoaderUtil::LuaValueOr<float>(p, "value0", 0.0f);
+						float v1 = LuaLoaderUtil::LuaValueOr<float>(p, "value1", 0.0f);
+						result->SetFloatParam(name, v0, v1);
+					}
+				}
+			}
+
+			// Float3
+			if (LuaLoaderUtil::LuaHasKey(paramsObj, "float3"))
+			{
+				sol::object float3ArrRaw = paramsObj.get<sol::object>("float3");
+				if (LuaLoaderUtil::LuaIsTable(float3ArrRaw))
+				{
+					sol::table float3Arr = float3ArrRaw.as<sol::table>();
+					for (auto& kv : float3Arr)
+					{
+						if (!LuaLoaderUtil::LuaIsTable(kv.second)) continue;
+						sol::table p = kv.second.as<sol::table>();
+
+						std::string name = LuaLoaderUtil::LuaValueOrStr(p, "name", "");
+						float v0 = LuaLoaderUtil::LuaValueOr<float>(p, "value0", 0.0f);
+						float v1 = LuaLoaderUtil::LuaValueOr<float>(p, "value1", 0.0f);
+						float v2 = LuaLoaderUtil::LuaValueOr<float>(p, "value2", 0.0f);
+						result->SetFloatParam(name, glm::vec3(v0, v1, v2));
+					}
+				}
+			}
+
+			// Textures
+			if (LuaLoaderUtil::LuaHasKey(paramsObj, "textures"))
+			{
+				sol::object texturesArrRaw = paramsObj.get<sol::object>("textures");
+				if (LuaLoaderUtil::LuaIsTable(texturesArrRaw))
+				{
+					sol::table texturesArr = texturesArrRaw.as<sol::table>();
+					for (auto& kv : texturesArr)
+					{
+						if (!LuaLoaderUtil::LuaIsTable(kv.second)) continue;
+						sol::table p = kv.second.as<sol::table>();
+
+						std::string name = LuaLoaderUtil::LuaValueOrStr(p, "name", "");
+						std::string texPath = LuaLoaderUtil::LuaValueOrStr(p, "path", "");
+						auto texture = Texture::Load(texPath);
+						result->SetTextureParam(name, texture);
+					}
 				}
 			}
 		}

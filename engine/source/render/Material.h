@@ -3,7 +3,11 @@
 #include <memory>
 #include <unordered_map>
 #include <string>
+
 #include <glm/vec3.hpp>
+
+#include <sol/sol.hpp>
+#include <sol/forward.hpp>
 
 #include "Core.h"
 
@@ -28,6 +32,9 @@ namespace eng
 		void Bind();
 
 		static shared<Material> LoadFromJson(const std::string& path);
+
+		[[deprecated("Use LoadFromJson() instead.")]]
+		static shared<Material> LoadFromLua(const sol::table& table);
 
 	private:
 		shared<ShaderProgram> m_ShaderProgram;

@@ -33,6 +33,40 @@ namespace eng
 		}
 	}
 
+	void TextComponent::LoadPropertiesFromLua(const sol::table& table)
+	{
+		const std::string text = LuaLoaderUtil::LuaValueOrStr(table, "text", "");
+		SetText(text);
+
+		if (LuaLoaderUtil::LuaHasKey(table, "font"))
+		{
+			sol::object fontObjRaw = table.get<sol::object>("font");
+			if (LuaLoaderUtil::LuaIsTable(fontObjRaw))
+			{
+				sol::table fontObj = fontObjRaw.as<sol::table>();
+				std::string path = LuaLoaderUtil::LuaValueOrStr(fontObj, "path", "");
+				int fontSize = LuaLoaderUtil::LuaValueOr<int>(fontObj, "size", 12);
+				SetFont(path, fontSize);
+			}
+		}
+
+		if (LuaLoaderUtil::LuaHasKey(table, "color"))
+		{
+			sol::object colorObjRaw = table.get<sol::object>("color");
+			if (LuaLoaderUtil::LuaIsTable(colorObjRaw))
+			{
+				sol::table colorObj = colorObjRaw.as<sol::table>();
+				glm::vec4 color(
+					LuaLoaderUtil::LuaValueOr<float>(colorObj, "r", 1.0f),
+					LuaLoaderUtil::LuaValueOr<float>(colorObj, "g", 1.0f),
+					LuaLoaderUtil::LuaValueOr<float>(colorObj, "b", 1.0f),
+					LuaLoaderUtil::LuaValueOr<float>(colorObj, "a", 1.0f)
+				);
+				SetColor(color);
+			}
+		}
+	}
+
 	void TextComponent::Render(CanvasComponent* canvas)
 	{
 		if (m_Text.empty() || !m_Font || !canvas) return;

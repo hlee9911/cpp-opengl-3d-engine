@@ -10,6 +10,8 @@
 #include <glm/vec3.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/mat4x4.hpp>
+#include <sol/sol.hpp>
+#include <sol/forward.hpp>
 
 namespace eng
 {
@@ -21,6 +23,7 @@ namespace eng
 		virtual ~GameObject() noexcept = default;
 		virtual void Init();
 		virtual void LoadPropertiesFromJson(const nlohmann::json& json);
+		virtual void LoadPropertiesFromLua(const sol::table& table);
 		virtual void Update(float deltaTime);
 		
 		const std::string& GetName() const noexcept;

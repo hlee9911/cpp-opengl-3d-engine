@@ -11,7 +11,7 @@ namespace eng
 		COMPONENT(CameraComponent)
 
 	public:
-		void Update(float deltaTime) override;
+		virtual void Update(float deltaTime) override;
 
 		glm::mat4 GetViewMatrix() const;
 		glm::mat4 GetProjectionMatrix(float aspect) const;

@@ -36,6 +36,51 @@ namespace eng
 		}
 	}
 
+	void RectTransformComponent::LoadPropertiesFromLua(const sol::table& table)
+	{
+		// load size
+		if (LuaLoaderUtil::LuaHasKey(table, "size"))
+		{
+			sol::object sizeObjRaw = table.get<sol::object>("size");
+			if (LuaLoaderUtil::LuaIsTable(sizeObjRaw))
+			{
+				sol::table sizeObj = sizeObjRaw.as<sol::table>();
+				SetSize(glm::vec2(
+					LuaLoaderUtil::LuaValueOr<float>(sizeObj, "x", 1.0f),
+					LuaLoaderUtil::LuaValueOr<float>(sizeObj, "y", 1.0f)
+				));
+			}
+		}
+
+		// load anchor
+		if (LuaLoaderUtil::LuaHasKey(table, "anchor"))
+		{
+			sol::object anchorObjRaw = table.get<sol::object>("anchor");
+			if (LuaLoaderUtil::LuaIsTable(anchorObjRaw))
+			{
+				sol::table anchorObj = anchorObjRaw.as<sol::table>();
+				SetAnchor(glm::vec2(
+					LuaLoaderUtil::LuaValueOr<float>(anchorObj, "x", 0.0f),
+					LuaLoaderUtil::LuaValueOr<float>(anchorObj, "y", 0.0f)
+				));
+			}
+		}
+
+		// load pivot
+		if (LuaLoaderUtil::LuaHasKey(table, "pivot"))
+		{
+			sol::object pivotObjRaw = table.get<sol::object>("pivot");
+			if (LuaLoaderUtil::LuaIsTable(pivotObjRaw))
+			{
+				sol::table pivotObj = pivotObjRaw.as<sol::table>();
+				SetPivot(glm::vec2(
+					LuaLoaderUtil::LuaValueOr<float>(pivotObj, "x", 0.0f),
+					LuaLoaderUtil::LuaValueOr<float>(pivotObj, "y", 0.0f)
+				));
+			}
+		}
+	}
+
 	glm::vec2 RectTransformComponent::GetScreenPosition()
 	{
 		auto parent = GetOwner()->GetParent();

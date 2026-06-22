@@ -7,7 +7,7 @@ class Bullet : public eng::GameObject
 	GAMEOBJECT(Bullet)
 
 public:
-	void Update(float deltaTime) override;
+	virtual void Update(float deltaTime) override;
 
 private:
 	float m_LifeTime = 2.0f;

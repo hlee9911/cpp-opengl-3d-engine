@@ -14,6 +14,12 @@ namespace eng
 		SetActive(active);
 	}
 
+	void CanvasComponent::LoadPropertiesFromLua(const sol::table& table)
+	{
+		bool active = LuaLoaderUtil::LuaValueOr<bool>(table, "active", true);
+		SetActive(active);
+	}
+
 	void CanvasComponent::Update(float deltaTime)
 	{
 		if (!m_Active) return;

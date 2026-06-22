@@ -50,6 +50,54 @@ namespace eng
 		}
 	}
 
+	void ButtonComponent::LoadPropertiesFromLua(const sol::table& table)
+	{
+		if (LuaLoaderUtil::LuaHasKey(table, "color"))
+		{
+			sol::object colorObjRaw = table.get<sol::object>("color");
+			if (LuaLoaderUtil::LuaIsTable(colorObjRaw))
+			{
+				sol::table colorObj = colorObjRaw.as<sol::table>();
+				SetColor(glm::vec4(
+					LuaLoaderUtil::LuaValueOr<float>(colorObj, "r", 1.0f),
+					LuaLoaderUtil::LuaValueOr<float>(colorObj, "g", 1.0f),
+					LuaLoaderUtil::LuaValueOr<float>(colorObj, "b", 1.0f),
+					LuaLoaderUtil::LuaValueOr<float>(colorObj, "a", 1.0f)
+				));
+			}
+		}
+
+		if (LuaLoaderUtil::LuaHasKey(table, "hovered"))
+		{
+			sol::object colorObjRaw = table.get<sol::object>("hovered");
+			if (LuaLoaderUtil::LuaIsTable(colorObjRaw))
+			{
+				sol::table colorObj = colorObjRaw.as<sol::table>();
+				SetHoveredColor(glm::vec4(
+					LuaLoaderUtil::LuaValueOr<float>(colorObj, "r", 1.0f),
+					LuaLoaderUtil::LuaValueOr<float>(colorObj, "g", 1.0f),
+					LuaLoaderUtil::LuaValueOr<float>(colorObj, "b", 1.0f),
+					LuaLoaderUtil::LuaValueOr<float>(colorObj, "a", 1.0f)
+				));
+			}
+		}
+
+		if (LuaLoaderUtil::LuaHasKey(table, "pressed"))
+		{
+			sol::object colorObjRaw = table.get<sol::object>("pressed");
+			if (LuaLoaderUtil::LuaIsTable(colorObjRaw))
+			{
+				sol::table colorObj = colorObjRaw.as<sol::table>();
+				SetPressedColor(glm::vec4(
+					LuaLoaderUtil::LuaValueOr<float>(colorObj, "r", 1.0f),
+					LuaLoaderUtil::LuaValueOr<float>(colorObj, "g", 1.0f),
+					LuaLoaderUtil::LuaValueOr<float>(colorObj, "b", 1.0f),
+					LuaLoaderUtil::LuaValueOr<float>(colorObj, "a", 1.0f)
+				));
+			}
+		}
+	}
+
 	void ButtonComponent::Render(CanvasComponent* canvas)
 	{
 		if (!canvas) return;

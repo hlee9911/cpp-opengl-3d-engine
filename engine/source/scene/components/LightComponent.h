@@ -13,7 +13,8 @@ namespace eng
 
 	public:
 		virtual void LoadPropertiesFromJson(const nlohmann::json& json) override;
-		void Update(float deltaTime) override;
+		virtual void LoadPropertiesFromLua(const sol::table& table) override;
+		virtual void Update(float deltaTime) override;
 
 		void SetColor(const glm::vec3& color) noexcept { m_Color = color; }
 		const glm::vec3& GetColor() const noexcept { return m_Color; }

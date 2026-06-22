@@ -30,6 +30,11 @@ namespace eng
 
 	}
 
+	void GameObject::LoadPropertiesFromLua(const sol::table& table)
+	{
+
+	}
+
 	void GameObject::Update(float deltaTime)
 	{
 		if (!m_Active) return;

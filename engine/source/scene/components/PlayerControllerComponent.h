@@ -11,8 +11,8 @@ namespace eng
 		COMPONENT(PlayerControllerComponent)
 
 	public:
-		void Init() override;
-		void Update(float deltaTime) override;
+		virtual void Init() override;
+		virtual void Update(float deltaTime) override;
 
 		bool IsOnGround() const;
 

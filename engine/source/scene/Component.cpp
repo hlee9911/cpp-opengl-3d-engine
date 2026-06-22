@@ -9,6 +9,11 @@ namespace eng
 
 	}
 
+	void Component::LoadPropertiesFromLua(const sol::table& table)
+	{
+
+	}
+
 	void Component::Init()
 	{
 		
