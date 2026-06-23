@@ -11,9 +11,9 @@ namespace eng
     // One timed section
     struct ProfileSample
     {
-        float lastMs = 0.0f;        // raw value from most recent frame (internal)
-        float avgMs = 0.0f;         // short smooth average (internal)
-        float displayMs = 0.0f;     // value shown in Debug UI (updates every 1s)
+        float lastMs = 0.0f; // raw value from most recent frame (internal)
+        float avgMs = 0.0f; // short smooth average (internal)
+        float displayMs = 0.0f; // value shown in Debug UI (updates every 1s)
     };
 
     class Profiler
@@ -65,7 +65,7 @@ namespace eng
         float m_FrameMsAccum = 0.0f;
         int m_FrameCountAccum = 0;
 
-        // Per-section accumulators for 1-second averaging
+        // Per section accumulators for 1 second averaging
         struct SampleAccumulator
         {
             float totalMs = 0.0f;

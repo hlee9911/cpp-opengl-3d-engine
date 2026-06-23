@@ -41,10 +41,10 @@ namespace eng
 
 		static bool LuaIsTable(const sol::object& obj);
 
-		// similar to jsonObject["x"]-style vec3 extraction with default fallback
+		// similar to jsonObject["x"]-style vec3 extraction
 		static glm::vec3 LuaToVec3(const sol::table& t, float defX = 0.0f, float defY = 0.0f, float defZ = 0.0f);
 
-		// similar to jsonObject["x"]-style vec2 extraction with default fallback
+		// similar to jsonObject["x"]-style vec2 extraction
 		static glm::vec2 LuaToVec2(const sol::table& t, float defX = 0.0f, float defY = 0.0f);
 
 		static glm::quat LuaToQuat(const sol::table& t);

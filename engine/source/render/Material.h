@@ -31,10 +31,7 @@ namespace eng
 
 		void Bind();
 
-		static shared<Material> LoadFromJson(const std::string& path);
-
-		[[deprecated("Use LoadFromJson() instead.")]]
-		static shared<Material> LoadFromLua(const sol::table& table);
+		static shared<Material> Load(const std::string& path);
 
 	private:
 		shared<ShaderProgram> m_ShaderProgram;

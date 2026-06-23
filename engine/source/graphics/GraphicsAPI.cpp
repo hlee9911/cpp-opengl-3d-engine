@@ -3,8 +3,6 @@
 #include "render/Material.h"
 #include "render/Mesh.h"
 
-#include <iostream>
-
 namespace eng
 {
 	bool GraphicsAPI::Init()

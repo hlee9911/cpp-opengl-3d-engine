@@ -82,7 +82,7 @@ void Player::Update(float deltaTime)
 
 			// create a bullet and set its position and direction based on the gun's position and forward direction
 			auto bullet = m_Scene->CreateGameObject<Bullet>("Bullet");
-			auto bulletMaterial = eng::Material::LoadFromJson("materials/suzanne.mat");
+			auto bulletMaterial = eng::Material::Load("materials/suzanne.mat");
 			bulletMaterial->SetFloatParam("color", glm::vec3(0.0f, 0.0f, 0.0f));
 			float bulletRadius = 0.2f;
 			auto bulletMesh = eng::Mesh::CreateSphere(bulletRadius, 32, 32);

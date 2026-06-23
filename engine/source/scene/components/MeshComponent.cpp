@@ -21,7 +21,7 @@ namespace eng
 		{
 			auto& matObj = json["material"];
 			const std::string path = matObj.value("path", "");
-			auto mat = Material::LoadFromJson(path);
+			auto mat = Material::Load(path);
 			if (mat && matObj.contains("params"))
 			{
 				auto& paramsObj = matObj["params"];
@@ -135,7 +135,7 @@ namespace eng
 			{
 				sol::table matObj = matObjRaw.as<sol::table>();
 				const std::string path = LuaLoaderUtil::LuaValueOrStr(matObj, "path", "");
-				auto mat = Material::LoadFromJson(path);
+				auto mat = Material::Load(path);
 
 				if (mat && LuaLoaderUtil::LuaHasKey(matObj, "params"))
 				{

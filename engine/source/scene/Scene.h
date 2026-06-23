@@ -6,6 +6,7 @@
 #include <utility>
 
 #include <nlohmann/json.hpp>
+
 #include <sol/sol.hpp>
 #include <sol/forward.hpp>
 
