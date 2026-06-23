@@ -5,8 +5,9 @@
 ![Build](https://img.shields.io/badge/build-CMake-green.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
-An early-stage modern C++17 custom built 3D game engine for Windows. 
-Written using C++17, OpenGL, Dear ImGui, and Lua.
+An early-stage C++17 custom built 3D game engine for Windows. 
+
+Written using C++17, OpenGL, GLSL, Dear ImGui, and Lua.
 
 ---
 
@@ -34,7 +35,8 @@ Written using C++17, OpenGL, Dear ImGui, and Lua.
 ### Features to be implemented in the future:
 - Shadow Mapping
 - Multiplatform Support (Mac, Linux)
-- ECS style Architecture
+- Vulkan Support
+- ECS-style Architecture
 
 ---
 
@@ -83,7 +85,7 @@ cpp-opengl-3d-engine/
 
 * **assets**: audio, fonts, materials, models, scenes, shaders, textures.
 * **engine**: core, graphics, components, input, physics, render, …
-* **source**: game-related objects
+* **source**: game-related objects.
 
 ## Building the Project
 
