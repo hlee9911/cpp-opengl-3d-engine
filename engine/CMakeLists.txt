@@ -101,6 +101,8 @@ set(PROJECT_SOURCE_FILES
 	source/profiler/Profiler.cpp
 	source/profiler/MemoryManager.h
 	source/profiler/MemoryManager.cpp
+	source/lua/LuaLoaderUtil.h
+	source/lua/LuaLoaderUtil.cpp
 )
 
 # Group files according to files organization
@@ -177,6 +179,29 @@ target_link_libraries(imgui PUBLIC
     glfw
 )
 
+# Add Lua library
+set(LUA_DIR thirdparty/lua-5.3.6/src)
+
+file(GLOB LUA_SOURCES
+    ${LUA_DIR}/*.c
+)
+
+list(REMOVE_ITEM LUA_SOURCES
+    ${LUA_DIR}/lua.c
+    ${LUA_DIR}/luac.c
+)
+
+add_library(lua STATIC ${LUA_SOURCES})
+
+target_include_directories(lua PUBLIC
+    ${LUA_DIR}
+)
+
+# Add sol2 library
+target_include_directories(${PROJECT_NAME} PUBLIC
+    thirdparty/sol2-3.3.0/include
+)
+
 if(UNIX AND NOT APPLE)
   target_link_libraries(miniaudio INTERFACE dl pthread m)
 endif()
@@ -226,6 +251,7 @@ target_link_libraries(${PROJECT_NAME}
     LinearMath
 	miniaudio
 	imgui
+	lua
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

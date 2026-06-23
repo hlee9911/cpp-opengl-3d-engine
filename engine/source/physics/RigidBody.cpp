@@ -154,6 +154,9 @@ namespace eng
 			m_Body->getMotionState()->setWorldTransform(tr);
 		}
 		m_Body->setWorldTransform(tr);
+
+		// wake the body so the physics simulation updates immediately
+		m_Body->activate(true);
 	}
 
 	glm::vec3 RigidBody::GetPosition() const
@@ -177,6 +180,9 @@ namespace eng
 			m_Body->getMotionState()->setWorldTransform(tr);
 		}
 		m_Body->setWorldTransform(tr);
+
+		// wake the body so the physics simulation updates immediately
+		m_Body->activate(true);
 	}
 
 	glm::quat RigidBody::GetRotation() const

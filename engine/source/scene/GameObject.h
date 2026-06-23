@@ -11,6 +11,9 @@
 #include <glm/gtc/quaternion.hpp>
 #include <glm/mat4x4.hpp>
 
+#include <sol/sol.hpp>
+#include <sol/forward.hpp>
+
 namespace eng
 {
 	class Scene;
@@ -20,7 +23,8 @@ namespace eng
 	public:
 		virtual ~GameObject() noexcept = default;
 		virtual void Init();
-		virtual void LoadProperties(const nlohmann::json& json);
+		virtual void LoadPropertiesFromJson(const nlohmann::json& json);
+		virtual void LoadPropertiesFromLua(const sol::table& table);
 		virtual void Update(float deltaTime);
 		
 		const std::string& GetName() const noexcept;
@@ -35,7 +39,7 @@ namespace eng
 
 		void MarkForDestroy();
 
-		void SetActive(bool active) noexcept { m_Active = active; }
+		void SetActive(bool active);
 		bool IsActive() const noexcept { return m_Active; }
 
 		void AddComponenet(Component* component);
@@ -80,7 +84,7 @@ namespace eng
 		void SetRotation2D(float rot) noexcept;
 
 		const glm::vec3& GetScale() const noexcept;
-		const glm::vec2& GetScale2D() const noexcept;
+		const glm::vec2 GetScale2D() const noexcept;
 		void SetScale(const glm::vec3& scale) noexcept;
 		void SetScale2D(const glm::vec2& scale) noexcept;
 

@@ -10,6 +10,6 @@ namespace eng
 		COMPONENT(AudioListenerComponent)
 	
 	public:
-		void Update(float deltaTime) override;
+		virtual void Update(float deltaTime) override;
 	};
 }

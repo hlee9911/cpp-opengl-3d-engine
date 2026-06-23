@@ -11,8 +11,8 @@ namespace eng
 		COMPONENT(PlayerControllerComponent)
 
 	public:
-		void Init() override;
-		void Update(float deltaTime) override;
+		virtual void Init() override;
+		virtual void Update(float deltaTime) override;
 
 		bool IsOnGround() const;
 
@@ -30,8 +30,8 @@ namespace eng
 
 	private:
 		float m_Sensitivity = 27.5f;
-		float m_WalkSpeed = 10.0f;
-		float m_SprintSpeed = 17.5f;
+		float m_WalkSpeed = 15.0f;
+		float m_SprintSpeed = 22.5f;
 		float m_JumpForce = 5.0f;
 		float m_xRot = 0.0f; // pitch
 		float m_yRot = 0.0f; // yaw

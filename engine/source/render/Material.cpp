@@ -42,7 +42,7 @@ namespace eng
 		m_BoolParams[name] = value;
 	}
 
-	const glm::vec3& Material::GetFloat3Params(const std::string& name) noexcept
+	const glm::vec3 Material::GetFloat3Params(const std::string& name) const noexcept
 	{
 		auto result = m_Float3Params.find(name);
 		if (result != m_Float3Params.end())

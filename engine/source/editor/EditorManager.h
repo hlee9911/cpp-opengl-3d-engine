@@ -53,6 +53,8 @@ namespace eng
 		bool GetEditorCursorEnabled() const { return m_EditorCursorEnabled; }
 		void SetEditorCursorEnabled(bool editorCursorEnabled) { m_EditorCursorEnabled = editorCursorEnabled; }
 
+		void SetSelectedGameObjectNULL();
+
 	private:
 
 		void RenderViewportWindow(int windowWidth, int windowHeight, unsigned int framebufferTexture);

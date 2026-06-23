@@ -45,3 +45,4 @@
 #include "editor/EditorManager.h"
 #include "profiler/Profiler.h"
 #include "profiler/MemoryManager.h"
+#include "lua/LuaLoaderUtil.h"

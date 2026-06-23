@@ -62,7 +62,9 @@ void Player::Update(float deltaTime)
 	
 	auto& input = eng::Engine::GetInstance().GetInputManager();
 	auto& editorManager = eng::Engine::GetInstance().GetEditorManager();
-	if (input.IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT) && !editorManager.GetEditorCursorEnabled())
+	auto gun = FindChildByName("Gun");
+	if (input.IsMouseButtonPressed(GLFW_MOUSE_BUTTON_LEFT) && 
+		!editorManager.GetEditorCursorEnabled() && gun && gun->IsActive())
 	{
 		if (m_AnimationComponent && !m_AnimationComponent->IsPlaying())
 		{

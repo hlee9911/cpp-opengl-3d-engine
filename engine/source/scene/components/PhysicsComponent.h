@@ -20,9 +20,13 @@ namespace eng
 		PhysicsComponent() noexcept = default;
 		PhysicsComponent(const shared<RigidBody>& body) noexcept;
 
-		virtual void LoadProperties(const nlohmann::json& json) override;
-		void Init() override;
-		void Update(float deltaTime) override;
+		virtual void LoadPropertiesFromJson(const nlohmann::json& json) override;
+		virtual void LoadPropertiesFromLua(const sol::table& table) override;
+		virtual void Init() override;
+		virtual void Update(float deltaTime) override;
+
+		virtual void OnEnable() override;
+		virtual void OnDisable() override;
 
 		void SetRigidBody(const shared<RigidBody>& body) noexcept { m_RigidBody = body; }
 		const shared<RigidBody>& GetRigidBody() const noexcept { return m_RigidBody; }

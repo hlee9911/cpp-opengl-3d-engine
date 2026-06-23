@@ -27,7 +27,7 @@ void JumpPlatform::OnContact(
 		if (controller)
 		{
 			// apply an upward impulse to the character controller to make it jump
-			controller->Jump(glm::vec3(0.0f, 20.0f, 0.0f));
+			controller->Jump(glm::vec3(0.0f, m_JumpForce, 0.0f));
 		}
 	}
 }

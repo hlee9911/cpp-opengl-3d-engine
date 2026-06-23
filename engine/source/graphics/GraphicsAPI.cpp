@@ -3,8 +3,6 @@
 #include "render/Material.h"
 #include "render/Mesh.h"
 
-#include <iostream>
-
 namespace eng
 {
 	bool GraphicsAPI::Init()
@@ -52,7 +50,6 @@ namespace eng
 			char infoLog[512];
 			glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
 			Logger::Error("VERTEX_SHADER_COMPILATION_FAILED: " + std::string(infoLog));
-			// std::cerr << "ERROR::VERTEX_SHADER_COMPILATION_FAILED: \n" << infoLog << std::endl;
 			return nullptr;
 		}
 
@@ -74,7 +71,6 @@ namespace eng
 			char infoLog[512];
 			glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
 			Logger::Error("FRAGMENT_SHADER_COMPILATION_FAILED: " + std::string(infoLog));
-			// std::cerr << "ERROR::FRAGMENT_SHADER_COMPILATION_FAILED: \n" << infoLog << std::endl;
 			return nullptr;
 		}
 
@@ -91,7 +87,6 @@ namespace eng
 			char infoLog[512];
 			glGetProgramInfoLog(shaderProgramID, 512, nullptr, infoLog);
 			Logger::Error("SHADER_PROGRAM_LINKING_FAILED: " + std::string(infoLog));
-			// std::cerr << "ERROR::SHADER_PROGRAM_LINKING_FAILED: \n" << infoLog << std::endl;
 			return nullptr;
 		}
 

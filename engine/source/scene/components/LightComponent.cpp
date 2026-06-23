@@ -2,7 +2,7 @@
 
 namespace eng
 {
-	void LightComponent::LoadProperties(const nlohmann::json& json)
+	void LightComponent::LoadPropertiesFromJson(const nlohmann::json& json)
 	{
 		if (json.contains("color"))
 		{
@@ -13,6 +13,24 @@ namespace eng
 				colorObj.value("b", 1.0f)
 			);
 			SetColor(color);
+		}
+	}
+
+	void LightComponent::LoadPropertiesFromLua(const sol::table& table)
+	{
+		if (LuaLoaderUtil::LuaHasKey(table, "color"))
+		{
+			sol::object colorObjRaw = table.get<sol::object>("color");
+			if (LuaLoaderUtil::LuaIsTable(colorObjRaw))
+			{
+				sol::table colorObj = colorObjRaw.as<sol::table>();
+				glm::vec3 color(
+					LuaLoaderUtil::LuaValueOr<float>(colorObj, "r", 1.0f),
+					LuaLoaderUtil::LuaValueOr<float>(colorObj, "g", 1.0f),
+					LuaLoaderUtil::LuaValueOr<float>(colorObj, "b", 1.0f)
+				);
+				SetColor(color);
+			}
 		}
 	}
 

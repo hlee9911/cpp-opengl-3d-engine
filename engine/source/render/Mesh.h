@@ -1,8 +1,10 @@
 #pragma once
 
 #include <GL/glew.h>
-#include <string>
+
 #include <glm/vec3.hpp>
+
+#include <string>
 
 #include "graphics/VertexLayout.h"
 #include "Core.h"

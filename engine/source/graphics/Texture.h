@@ -1,7 +1,11 @@
 #pragma once
 
 #include <GL/glew.h>
+
 #include <string>
+
+#include <sol/sol.hpp>
+#include <sol/forward.hpp>
 
 #include "Core.h"
 

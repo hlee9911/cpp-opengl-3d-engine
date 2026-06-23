@@ -1,8 +1,10 @@
 #pragma once
 
 #include "Core.h"
+#include "lua/LuaLoaderUtil.h"
 
 #include <nlohmann/json.hpp>
+
 #include <cstddef>
 #include <string>
 
@@ -14,12 +16,16 @@ namespace eng
 	{
 	public:
 		virtual ~Component() noexcept = default;
-		virtual void LoadProperties(const nlohmann::json& json);
+		virtual void LoadPropertiesFromJson(const nlohmann::json& json);
+		virtual void LoadPropertiesFromLua(const sol::table& table);
 		virtual void Init();
 		virtual void Update(float deltaTime);
 		virtual size_t GetTypeId() const = 0;
 
 		GameObject* GetOwner() noexcept { return m_Owner; }
+
+		virtual void OnEnable();
+		virtual void OnDisable();
 
 		// each distinct T gets a unique, stable ID
 		template<typename T>

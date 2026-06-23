@@ -21,7 +21,7 @@ bool Game::Init()
 // using scene.sc to load scene properties 
 #if 0
 	auto& fs = eng::Engine::GetInstance().GetFileSystem();
-	auto texture = eng::Texture::Load("brick.png");
+	auto texture = eng::Texture::LoadFromJson("brick.png");
 
 	m_Scene = new eng::Scene();
 	eng::Engine::GetInstance().SetScene(m_Scene);
@@ -39,7 +39,7 @@ bool Game::Init()
 	//auto shaderProgram = graphicsAPI.CreateShaderProgram(
 	//	vertexShaderSource, fragmentShaderSource);
 
-	auto material = eng::Material::Load("materials/brick.mat");
+	auto material = eng::Material::LoadFromJson("materials/brick.mat");
 	//material->SetShaderProgram(shaderProgram); // set the shader program to the material, and its ready for rendering
 	//material->SetTextureParam("brickTexture", texture);
 
@@ -162,8 +162,8 @@ bool Game::Init()
 	objectC->SetRotation(glm::vec3(1.0f, 0.0f, 1.0f));
 	objectC->SetScale(glm::vec3(1.5f, 1.5f, 1.5f));
 
-	//auto suzanneMesh = eng::Mesh::Load("models/Suzanne.gltf");
-	//auto suzanneMaterial = eng::Material::Load("materials/suzanne.mat");
+	//auto suzanneMesh = eng::Mesh::LoadFromJson("models/Suzanne.gltf");
+	//auto suzanneMaterial = eng::Material::LoadFromJson("materials/suzanne.mat");
 
 	// auto suzanneObj = m_Scene->CreateGameObject("Suzanne");
 	// suzanneObj->AddComponenet(new eng::MeshComponent(suzanneMaterial, suzanneMesh));
@@ -211,10 +211,19 @@ bool Game::Init()
 	// camera->SetPosition(glm::vec3(0.0f, 1.0f, 7.0f));
 #endif
 	
-	auto scene = eng::Scene::Load("scenes/scene.sc");
+	// auto scene = eng::Scene::LoadFromJson("scenes/json/scene.sc");
+	// auto scene = eng::Scene::LoadFromJson("scenes/json/scene_arena.sc");
+	auto scene = eng::Scene::LoadFromLua("scenes/lua/scene_arena.lua");
+	// auto scene = eng::Scene::LoadFromLua("scenes/lua/scene.lua");
 	m_Scene = scene;
 	auto& engine = eng::Engine::GetInstance();
 	engine.SetScene(m_Scene);
+
+	if (!m_Scene)
+	{
+		eng::Logger::Error("Failed to load the scene");
+		return false;
+	}
 
 	m_3DRoot = m_Scene->FindObjectByName("3DRoot");
 	if (m_3DRoot)
@@ -272,7 +281,7 @@ bool Game::Init()
 	auto sprite = m_Scene->CreateGameObject("Sprite");
 	auto spriteComponent = new eng::SpriteComponent();
 
-	auto texture = eng::Texture::Load("textures/brick.png");
+	auto texture = eng::Texture::LoadFromJson("textures/brick.png");
 	spriteComponent->SetTexture(texture);
 
 	sprite->AddComponenet(spriteComponent);
@@ -326,6 +335,7 @@ void Game::Update(float deltaTime)
 		if (m_3DRoot && m_3DRoot->IsActive())
 		{
 			engine.GetUIInputSystem().GetActiveCanvas()->SetActive(true);
+			engine.GetEditorManager().SetSelectedGameObjectNULL();
 			engine.SetCursorEnabled(true);
 			m_3DRoot->SetActive(false);
 		}

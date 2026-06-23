@@ -5,47 +5,48 @@
 ![Build](https://img.shields.io/badge/build-CMake-green.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
-A work-in-progress 3D game engine written in modern C++ using OpenGL.
+An early-stage C++17 custom built 3D game engine for Windows. 
 
-This engine implements core real-time rendering systems, scene management, physics integration, and a custom editor/debug UI built with ImGui.
-
----
-
-## ✨ Features
-
-### Rendering
-- OpenGL rendering pipeline
-- GLSL shader system
-- Real-time lighting system
-- Material system
-
-### Engine Systems
-- Scene management
-- FPS-style camera system
-- Fully integrated physics system (Bullet Physics)
-
-### Editor & Debug Tools (ImGui)
-- Console window (logging + runtime output)
-- Properties inspector for GameObjects and components
-- Real-time profiler tools
-- Memory usages visualization tools
-
-### Assets & Data
-- glTF model loading (cgltf)
-- Texture loading (stb_image)
-- JSON-based scene serialization (nlohmann/json)
-- Main menu ui system (freetype)
-- Audio system (miniaudio) 
+Written using C++17, OpenGL, GLSL, Dear ImGui, and Lua.
 
 ---
 
-## 🧰 Prerequisites
+## Features
 
-- C++17 compatible compiler
+### Currently Implemented Features:
+- Basic 3D Rendering
+	- GLSL Shader
+	- Mesh Rendering
+	- Real-Time Lighting System
+	- glTF Model Loading Logic
+- Texture Load System
+- Input Management
+- Serialized Scene Management System (support both JSON/Lua)
+- First Person Camera System
+- Real-Time Physics System
+- Custom Editor and Debug Tools
+	- Properties Window
+	- Console Output Log
+	- Profiling Tools
+- Main Menu UI System
+- Animation System
+- Audio System
+
+### Features to be implemented in the future:
+- Shadow Mapping
+- Multiplatform Support (Mac, Linux)
+- Vulkan Support
+- ECS-style Architecture
+
+---
+
+## Prerequisites
+
+- C++17 compatible compiler (MSVC, GCC, or Clang)
 - OpenGL 4.6
 - CMake 3.10
 
-## 📦 Third-party libraries
+## Third-party libraries
 
 - [bullet3-3.25](https://github.com/bulletphysics/bullet3)
 - [cgltf](https://github.com/jkuhlmann/cgltf)
@@ -57,10 +58,12 @@ This engine implements core real-time rendering systems, scene management, physi
 - [nlohmann/json 3.12.0](https://github.com/nlohmann/json)
 - [miniaudio](https://github.com/mackron/miniaudio)
 - [stb_image](https://github.com/nothings/stb)
+- [lua-5.3.6](https://www.lua.org/)
+- [sol2-3.3.0](https://github.com/ThePhD/sol2)
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 ```
 cpp-opengl-3d-engine/
 ├── CMakeLists.txt
@@ -80,7 +83,11 @@ cpp-opengl-3d-engine/
 └── source/
 ```
 
-## ⚡ Building the Project
+* **assets**: audio, fonts, materials, models, scenes, shaders, textures.
+* **engine**: core, graphics, components, input, physics, render, …
+* **source**: game-related objects.
+
+## Building the Project
 
 ```bash
 git clone https://github.com/hlee9911/cpp-opengl-3d-engine.git
@@ -90,18 +97,18 @@ cd build
 cmake -S .. -B .
 ```
 
-## 📸 Screenshots
+## Screenshots
 
 (To be added later)
 
-## 🚧 Status
+## Status
 
-The engine is currently in active development.
+This project is currently in active development.
 
-## 📜 License
+## License
 
 This project is licensed under the terms of the [MIT License](LICENSE.md).
 
 ---
 
-@ 2026 Hon Lee
+@2026 Hon Lee

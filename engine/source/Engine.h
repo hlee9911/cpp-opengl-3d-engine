@@ -5,13 +5,13 @@
 #include "graphics/Texture.h"
 #include "graphics/FrameBuffer.h"
 #include "render/RenderQueue.h"
-#include "scene/Scene.h"
 #include "io/FileSystem.h"
 #include "physics/PhysicsManager.h"
 #include "audio/AudioManager.h"
 #include "font/FontManager.h"
 #include "editor/EditorManager.h"
 #include "scene/components/ui/UIInputSystem.h"
+#include "scene/Scene.h"
 #include "Core.h"
 
 #include <chrono>

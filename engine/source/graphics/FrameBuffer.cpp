@@ -75,8 +75,7 @@ namespace eng
 			m_DepthStencilRBO);
 
 		// Validation
-		if (glCheckFramebufferStatus(GL_FRAMEBUFFER)
-			!= GL_FRAMEBUFFER_COMPLETE)
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		{
 			Logger::Error("Framebuffer creation failed");
 
@@ -93,44 +92,31 @@ namespace eng
 	{
 		if (m_DepthStencilRBO)
 		{
-			glDeleteRenderbuffers(
-				1,
-				&m_DepthStencilRBO);
-
+			glDeleteRenderbuffers(1, &m_DepthStencilRBO);
 			m_DepthStencilRBO = 0;
 		}
 
 		if (m_ColorTexture)
 		{
-			glDeleteTextures(
-				1,
-				&m_ColorTexture);
-
+			glDeleteTextures(1, &m_ColorTexture);
 			m_ColorTexture = 0;
 		}
 
 		if (m_FBO)
 		{
-			glDeleteFramebuffers(
-				1,
-				&m_FBO);
-
+			glDeleteFramebuffers(1, &m_FBO);
 			m_FBO = 0;
 		}
 	}
 
 	void FrameBuffer::Bind()
 	{
-		glBindFramebuffer(
-			GL_FRAMEBUFFER,
-			m_FBO);
+		glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
 	}
 
 	void FrameBuffer::Unbind()
 	{
-		glBindFramebuffer(
-			GL_FRAMEBUFFER,
-			0);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	bool FrameBuffer::Resize(
@@ -142,17 +128,14 @@ namespace eng
 			return false;
 		}
 
-		if (width == m_Width &&
-			height == m_Height)
+		if (width == m_Width && height == m_Height)
 		{
 			return true;
 		}
 
 		Destroy();
 
-		return Init(
-			width,
-			height);
+		return Init(width, height);
 	}
 
 }

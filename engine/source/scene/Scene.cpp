@@ -13,6 +13,7 @@
 #include "scene/components/ui/TextComponent.h"
 #include "scene/components/ui/ButtonComponent.h"
 #include "scene/components/ui/RectTransformComponent.h"
+#include "lua/LuaLoaderUtil.h"
 #include "Engine.h"
 
 namespace eng
@@ -291,7 +292,7 @@ namespace eng
 		return lights;
 	}
 
-	shared<Scene> Scene::Load(const std::string& path)
+	shared<Scene> Scene::LoadFromJson(const std::string& path)
 	{
 		const std::string contents = Engine::GetInstance().GetFileSystem().LoadAssetFileText(path);
 		if (contents.empty()) return nullptr;
@@ -309,7 +310,7 @@ namespace eng
 
 			for (const auto& obj : objects)
 			{
-				result->LoadObject(obj, nullptr);
+				result->LoadObjectFromJson(obj, nullptr);
 			}
 		}
 
@@ -331,6 +332,93 @@ namespace eng
 		for (auto& child : result->m_GameObjects)
 		{
 			// try find the mainCanvas aand then set it on the UI input system
+			if (auto canvasObject = child->FindChildByName(activeCanvasName))
+			{
+				if (auto component = canvasObject->GetComponent<CanvasComponent>())
+				{
+					// if we found the canvas, set it as active in the UI input system and break the loop
+					Engine::GetInstance().GetUIInputSystem().SetActiveCanvas(component);
+					break;
+				}
+			}
+		}
+
+		return result;
+	}
+
+	shared<Scene> Scene::LoadFromLua(const std::string& path)
+	{
+		const std::string contents = Engine::GetInstance().GetFileSystem().LoadAssetFileText(path);
+		if (contents.empty()) return nullptr;
+
+		// each scene load gets its own isolated lua_State so scenes never pollute
+		// each other's globals
+		sol::state lua;
+		lua.open_libraries(sol::lib::base, sol::lib::string, sol::lib::math, sol::lib::table);
+
+		sol::load_result loaded = lua.load(contents, path);
+		if (!loaded.valid())
+		{
+			sol::error err = loaded;
+			Logger::Error("Failed to parse lua scene [" + path + "] :" + err.what());
+			return nullptr;
+		}
+
+		sol::protected_function_result execResult = loaded();
+		if (!execResult.valid())
+		{
+			sol::error err = execResult;
+			Logger::Error("Failed to execute lua scene [" + path + "] :" + err.what());
+			return nullptr;
+		}
+
+		if (execResult.get_type() != sol::type::table)
+		{
+			Logger::Error("Lua scene [" + path + "] did not return a table");
+			return nullptr;
+		}
+
+		sol::table table = execResult;
+		if (table.empty()) return nullptr;
+
+		auto result = std::make_shared<Scene>();
+		const std::string sceneName = LuaLoaderUtil::LuaValueOrStr(table, "name", "noname");
+		(void)sceneName; // parsed but only locally used in the json version too
+
+		if (LuaLoaderUtil::LuaHasKey(table, "objects"))
+		{
+			sol::object objectsObj = table.get<sol::object>("objects");
+			if (LuaLoaderUtil::LuaIsTable(objectsObj))
+			{
+				sol::table objects = objectsObj.as<sol::table>();
+				for (auto& kv : objects)
+				{
+					sol::object value = kv.second;
+					if (!LuaLoaderUtil::LuaIsTable(value)) continue;
+					sol::table obj = value.as<sol::table>();
+					result->LoadObjectFromLua(obj, nullptr);
+				}
+			}
+		}
+
+		if (LuaLoaderUtil::LuaHasKey(table, "camera"))
+		{
+			std::string cameraObjName = LuaLoaderUtil::LuaValueOrStr(table, "camera", "");
+			for (const auto& child : result->m_GameObjects)
+			{
+				if (auto object = child->FindChildByName(cameraObjName))
+				{
+					result->SetMainCamera(object);
+					break;
+				}
+			}
+		}
+
+		std::string activeCanvasName = LuaLoaderUtil::LuaValueOrStr(table, "activeCanvas", "");
+		// iterate over the root objects to find the active canvas
+		for (auto& child : result->m_GameObjects)
+		{
+			// try find the mainCanvas and then set it on the UI input system
 			if (auto canvasObject = child->FindChildByName(activeCanvasName))
 			{
 				if (auto component = canvasObject->GetComponent<CanvasComponent>())
@@ -393,7 +481,7 @@ namespace eng
 		}
 	}
 
-	void Scene::LoadObject(const nlohmann::json& jsonObject, GameObject* parent)
+	void Scene::LoadObjectFromJson(const nlohmann::json& jsonObject, GameObject* parent)
 	{
 		const std::string name = jsonObject.value("name", "Object");
 
@@ -427,6 +515,13 @@ namespace eng
 
 		if (!gameObject) return;
 
+		// check isActive
+		if (jsonObject.contains("isActive"))
+		{
+			bool isActiveObj = jsonObject.value("isActive", 0);
+			gameObject->SetActive(isActiveObj);
+		}
+
 		// load transform
 		if (jsonObject.contains("position"))
 		{
@@ -454,14 +549,14 @@ namespace eng
 		{
 			auto scaleObj = jsonObject["scale"];
 			glm::vec3 scale;
-			scale.x = scaleObj.value("x", 1.0f);
-			scale.y = scaleObj.value("y", 1.0f);
-			scale.z = scaleObj.value("z", 1.0f);
+			scale.x = scaleObj.value("x", 1.5f);
+			scale.y = scaleObj.value("y", 1.5f);
+			scale.z = scaleObj.value("z", 1.5f);
 			gameObject->SetScale(scale);
 		}
 
 		// load properties
-		gameObject->LoadProperties(jsonObject);
+		gameObject->LoadPropertiesFromJson(jsonObject);
 
 		// load components
 		if (jsonObject.contains("components") && jsonObject["components"].is_array())
@@ -473,7 +568,7 @@ namespace eng
 				Component* component = ComponentFactory::GetInstance().CreateComponent(type);
 				if (component)
 				{
-					component->LoadProperties(comp);
+					component->LoadPropertiesFromJson(comp);
 					gameObject->AddComponenet(component);
 				}
 			}
@@ -485,7 +580,130 @@ namespace eng
 			const auto& children = jsonObject["children"];
 			for (const auto& child : children)
 			{
-				LoadObject(child, gameObject);
+				LoadObjectFromJson(child, gameObject);
+			}
+		}
+
+		// for post-load setup
+		gameObject->Init();
+	}
+
+	void Scene::LoadObjectFromLua(const sol::table& tableObject, GameObject* parent)
+	{
+		const std::string name = LuaLoaderUtil::LuaValueOrStr(tableObject, "name", "Object");
+		GameObject* gameObject = nullptr;
+
+		if (LuaLoaderUtil::LuaHasKey(tableObject, "type"))
+		{
+			const std::string type = LuaLoaderUtil::LuaValueOrStr(tableObject, "type", "");
+			if (type == "gltf")
+			{
+				// gltf loading
+				std::string path = LuaLoaderUtil::LuaValueOrStr(tableObject, "path", "");
+				gameObject = GameObject::LoadGLTF(path, this);
+				if (gameObject)
+				{
+					gameObject->SetParent(parent);
+					gameObject->SetName(name);
+					gameObject->SetIsglTFLoadedGameObject(true);
+				}
+			}
+			else
+			{
+				gameObject = CreateGameObject(type, name, parent);
+			}
+		}
+		else
+		{
+			// create object
+			gameObject = CreateGameObject(name, parent);
+		}
+
+		if (!gameObject) return;
+
+		// check isActive
+		if (LuaLoaderUtil::LuaHasKey(tableObject, "isActive"))
+		{
+			int isActiveObj = LuaLoaderUtil::LuaValueOr<int>(tableObject, "isActive", 0);
+			gameObject->SetActive(isActiveObj != 0);
+		}
+
+		// load transform
+		if (LuaLoaderUtil::LuaHasKey(tableObject, "position"))
+		{
+			sol::object posObjRaw = tableObject.get<sol::object>("position");
+			if (LuaLoaderUtil::LuaIsTable(posObjRaw))
+			{
+				sol::table posObj = posObjRaw.as<sol::table>();
+				glm::vec3 pos = LuaLoaderUtil::LuaToVec3(posObj, 0.0f, 0.0f, 0.0f);
+				gameObject->SetStartingPosition(pos);
+				gameObject->SetPosition(pos);
+			}
+		}
+
+		if (LuaLoaderUtil::LuaHasKey(tableObject, "rotation"))
+		{
+			sol::object rotObjRaw = tableObject.get<sol::object>("rotation");
+			if (LuaLoaderUtil::LuaIsTable(rotObjRaw))
+			{
+				sol::table rotObj = rotObjRaw.as<sol::table>();
+				glm::quat rot = LuaLoaderUtil::LuaToQuat(rotObj);
+				gameObject->SetRotation(rot);
+			}
+		}
+
+		if (LuaLoaderUtil::LuaHasKey(tableObject, "scale"))
+		{
+			sol::object scaleObjRaw = tableObject.get<sol::object>("scale");
+			if (LuaLoaderUtil::LuaIsTable(scaleObjRaw))
+			{
+				sol::table scaleObj = scaleObjRaw.as<sol::table>();
+				glm::vec3 scale = LuaLoaderUtil::LuaToVec3(scaleObj, 1.5f, 1.5f, 1.5f);
+				gameObject->SetScale(scale);
+			}
+		}
+
+		// load properties
+		gameObject->LoadPropertiesFromLua(tableObject);
+
+		// load components
+		if (LuaLoaderUtil::LuaHasKey(tableObject, "components"))
+		{
+			sol::object componentsObj = tableObject.get<sol::object>("components");
+			if (LuaLoaderUtil::LuaIsTable(componentsObj))
+			{
+				sol::table components = componentsObj.as<sol::table>();
+				for (auto& kv : components)
+				{
+					sol::object compValue = kv.second;
+					if (!LuaLoaderUtil::LuaIsTable(compValue)) continue;
+					sol::table comp = compValue.as<sol::table>();
+
+					const std::string type = LuaLoaderUtil::LuaValueOrStr(comp, "type", "");
+					Component* component = ComponentFactory::GetInstance().CreateComponent(type);
+					if (component)
+					{
+						component->LoadPropertiesFromLua(comp);
+						gameObject->AddComponenet(component);
+					}
+				}
+			}
+		}
+
+		// load children recursively
+		if (LuaLoaderUtil::LuaHasKey(tableObject, "children"))
+		{
+			sol::object childrenObj = tableObject.get<sol::object>("children");
+			if (LuaLoaderUtil::LuaIsTable(childrenObj))
+			{
+				sol::table children = childrenObj.as<sol::table>();
+				for (auto& kv : children)
+				{
+					sol::object childValue = kv.second;
+					if (!LuaLoaderUtil::LuaIsTable(childValue)) continue;
+					sol::table child = childValue.as<sol::table>();
+					LoadObjectFromLua(child, gameObject);
+				}
 			}
 		}
 

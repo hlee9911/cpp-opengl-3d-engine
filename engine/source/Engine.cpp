@@ -94,6 +94,19 @@ namespace eng
 	}
 
 	/// <summary>
+	/// Called by GLFW when mouse wheel delta has changed
+	/// </summary>
+	/// <param name="window"></param>
+	/// <param name="xoffset"></param>
+	/// <param name="yoffset"></param>
+	void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+	{
+		Engine& engine = Engine::GetInstance();
+		// only track vertical wheel (yoffset) | positive = wheel up, negative = wheel down
+		engine.GetInputManager().AddScrollDelta(static_cast<float>(yoffset));
+	}
+
+	/// <summary>
 	/// This function is called by GLFW when the window is resized, 
 	/// and it updates the OpenGL viewport to match the new window size
 	/// </summary>
@@ -154,7 +167,6 @@ namespace eng
 		if (m_Window == nullptr)
 		{
 			Logger::Error("Error creating window");
-			// std::cout << "Error creating window" << std::endl;
 			glfwTerminate();
 			return false;
 		}
@@ -164,6 +176,7 @@ namespace eng
 		glfwSetMouseButtonCallback(m_Window, mouseButtonCallback);
 		glfwSetCursorPosCallback(m_Window, cursorPositionCallback);
 		glfwSetWindowSizeCallback(m_Window, windowSizeCallback);
+		glfwSetScrollCallback(m_Window, scrollCallback);
 		// glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // hide the cursor and capture it within the window
 
 		glfwMakeContextCurrent(m_Window);
@@ -172,7 +185,6 @@ namespace eng
 		if (glewInit() != GLEW_OK)
 		{
 			Logger::Error("Error initializing GLEW");
-			// std::cout << "Error initializing GLEW" << std::endl;
 			glfwTerminate();
 			return false;
 		}

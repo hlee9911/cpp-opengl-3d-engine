@@ -5,6 +5,7 @@
 
 #include <glm/vec2.hpp>
 #include <glm/vec4.hpp>
+
 #include <string>
 
 namespace eng
@@ -16,7 +17,8 @@ namespace eng
 		COMPONENT_WITH_PARENT(TextComponent, UIElementComponent)
 
 	public:
-		void LoadProperties(const nlohmann::json& json) override;
+		virtual void LoadPropertiesFromJson(const nlohmann::json& json) override;
+		virtual void LoadPropertiesFromLua(const sol::table& table) override;
 		void Render(CanvasComponent* canvas) override;
 
 		void SetText(const std::string& text) noexcept { m_Text = text; }

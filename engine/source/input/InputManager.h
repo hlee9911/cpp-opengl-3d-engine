@@ -40,6 +40,10 @@ namespace eng
 		void SetMousePositionChanged(bool changed) noexcept { m_MousePositionChanged = changed; }
 		bool IsMousePositionChanged() const noexcept { return m_MousePositionChanged; }
 
+		void AddScrollDelta(float delta) noexcept { m_ScrollDelta += delta; }
+		float GetScrollDelta() const noexcept { return m_ScrollDelta; }
+		void ClearScrollDelta() noexcept { m_ScrollDelta = 0.0f; }
+
 		void ClearStates();
 
 	private:
@@ -51,6 +55,8 @@ namespace eng
 		glm::vec2 m_MousePositionOld = glm::vec2(0.0f);
 		glm::vec2 m_MousePositionCurrent = glm::vec2(0.0f);
 		bool m_MousePositionChanged = false;
+
+		float m_ScrollDelta = 0.0f; // Y scroll accumulator for this frame
 
 		friend class Engine;
 	};

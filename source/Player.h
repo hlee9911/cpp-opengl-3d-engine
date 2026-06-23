@@ -7,8 +7,8 @@ class Player : public eng::GameObject
 	GAMEOBJECT(Player)
 
 public:
-	void Init() override;
-	void Update(float deltaTime) override;
+	virtual void Init() override;
+	virtual void Update(float deltaTime) override;
 
 private:
 	eng::AnimationComponent* m_AnimationComponent = nullptr;

@@ -194,7 +194,7 @@ namespace eng
 			 -half.x, half.y, -half.z,  1.0f, 0.0f, 0.0f,  extents.x, extents.y,  0.0f, 0.0f, -1.0f,
 			 half.x, half.y, -half.z,  0.0f, 1.0f, 0.0f,   0.0f, extents.y,  0.0f, 0.0f, -1.0f,
 			 half.x, -half.y, -half.z, 0.0f, 0.0f, 1.0f,   0.0f, 0.0f,  0.0f, 0.0f, -1.0f,
-			 -half.x, -half.y, -half.z,  1.0f, 1.0f, 0.0f, extents.x, 0.0f,  0.0f, 0.0f, -1.0f,
+			 -half.x, -half.y, -half.z,  1.0f, 1.0f, 0.0f, extents.x, 0.0f,  0.0f, 0.0f, -1.0f
 		};
 
 		std::vector<unsigned int> indicies =
@@ -801,7 +801,7 @@ namespace eng
 
 	// deprecated for now
 #if 0
-	shared<Mesh> Mesh::Load(const std::string& path)
+	shared<Mesh> Mesh::LoadFromJson(const std::string& path)
 	{
 		auto contents = Engine::GetInstance().GetFileSystem().LoadAssetFileText(path);
 

@@ -35,7 +35,7 @@ void main()
 	vec3 specular = specularStrength * spec * uLight.color;
 	
 	// create ambient lighting to ensure the object is visible even without direct light
-	const float ambientStrength = 0.4;
+	const float ambientStrength = 0.35;
     vec3 ambient = ambientStrength * uLight.color;
     
 	vec4 texColor = texture(baseColorTexture, vUV);

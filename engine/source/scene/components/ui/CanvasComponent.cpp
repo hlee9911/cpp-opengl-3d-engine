@@ -8,9 +8,15 @@
 
 namespace eng
 {
-	void CanvasComponent::LoadProperties(const nlohmann::json& json)
+	void CanvasComponent::LoadPropertiesFromJson(const nlohmann::json& json)
 	{
 		bool active = json.value("active", true);
+		SetActive(active);
+	}
+
+	void CanvasComponent::LoadPropertiesFromLua(const sol::table& table)
+	{
+		bool active = LuaLoaderUtil::LuaValueOr<bool>(table, "active", true);
 		SetActive(active);
 	}
 

@@ -84,6 +84,7 @@ namespace eng
 		{
 			SetMouseButtonWasReleased(k, false);
 		}
+		ClearScrollDelta();
 	}
 
 }

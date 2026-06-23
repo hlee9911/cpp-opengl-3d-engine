@@ -22,7 +22,7 @@ namespace eng
 		void SetVolume(float volume);
 		float GetVolume() const;
 
-		static shared<Audio> Load(const std::string& path);
+		static shared<Audio> LoadFromJson(const std::string& path);
 
 	private:
 		unique<ma_sound> m_Sound;

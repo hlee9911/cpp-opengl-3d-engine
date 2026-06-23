@@ -143,6 +143,12 @@ namespace eng
 		};
 	}
 
+	void EditorManager::SetSelectedGameObjectNULL()
+	{
+		m_SelectedGameObject = nullptr;
+		m_SelectedIndex = -1;
+	}
+
 	void EditorManager::RenderViewportWindow(
 		int windowWidth, 
 		int windowHeight, 
@@ -252,9 +258,11 @@ namespace eng
 
 		ImGui::Begin(m_PropertiesWindowName.c_str(), nullptr, flags);
 
-		ImGui::TextDisabled("Tab: Next Game Object  |  Shift+Tab: Previous Game Object");
+		ImGui::TextDisabled("Mouse Wheel Down: Next Game Object");
+		ImGui::TextDisabled("Mouse Wheel Up: Previous Game Object");
 		ImGui::TextDisabled("R: Set the player's position to the initial position");
 		ImGui::TextDisabled("V: Toggle Editor Mode (Cursor & Input)");
+		ImGui::TextDisabled("ESC: Return to Main Menu on Game Scene (Exit on Main Menu)");
 		if (m_EditorCursorEnabled)
 		{
 			ImGui::Text("Mode: Editor");
@@ -418,13 +426,39 @@ namespace eng
 		// Dont steal Tab while typing in an ImGui text field
 		if (ImGui::GetIO().WantCaptureKeyboard) return;
 
-		// Tab = next object, Shift+Tab = previous
-		if (input.WasKeyPressed(GLFW_KEY_TAB))
+		//// Tab = next object, Shift+Tab = previous
+		//if (input.WasKeyPressed(GLFW_KEY_TAB))
+		//{
+		//	const bool backward =
+		//		input.IsKeyPressed(GLFW_KEY_LEFT_SHIFT) ||
+		//		input.IsKeyPressed(GLFW_KEY_RIGHT_SHIFT);
+		//	CycleSelection(backward);
+		//}
+
+		// Mouse wheel: wheel down -> next object, wheel up -> previous
+		float scroll = input.GetScrollDelta();
+		if (scroll != 0.0f)
 		{
-			const bool backward =
-				input.IsKeyPressed(GLFW_KEY_LEFT_SHIFT) ||
-				input.IsKeyPressed(GLFW_KEY_RIGHT_SHIFT);
-			CycleSelection(backward);
+			// GLFW scroll yoffset: positive = up, negative = down
+			// wheel down (negative) => next (backward = false)
+			// wheel up   (positive) => previous (backward = true)
+			int steps = static_cast<int>(std::round(scroll));
+			// if fractional or multiple ticks, handle each step
+			while (steps != 0)
+			{
+				if (steps > 0)
+				{
+					CycleSelection(true); // previous
+					--steps;
+				}
+				else
+				{
+					CycleSelection(false); // next
+					++steps;
+				}
+			}
+			// consume the scroll for this frame so we dont repeat
+			input.ClearScrollDelta();
 		}
 
 		// V = toggle cursor so you can use ImGui during gameplay
@@ -446,10 +480,10 @@ namespace eng
 		scene->CollectAllGameObjects(objects);
 
 		// Remove inactive objects so Tab skips hidden stuff
-		objects.erase(
+		/*objects.erase(
 			std::remove_if(objects.begin(), objects.end(),
 				[](GameObject* obj) { return !obj->IsActive(); }),
-			objects.end());
+			objects.end());*/
 
 		// Remove any ui related game objects as well
 		objects.erase(
@@ -496,6 +530,8 @@ namespace eng
 
 	void EditorManager::DrawGameObjectInspector(GameObject* obj)
 	{
+		if (!obj) return;
+
 		// --- Object header ---
 		char buffer[256];
 		strncpy_s(buffer, obj->GetName().c_str(), sizeof(buffer));
@@ -506,9 +542,14 @@ namespace eng
 		}
 
 		bool active = obj->IsActive();
-		if (ImGui::Checkbox("Is Active", &active))
+		auto* playerControllerScript = obj->GetComponent<PlayerControllerComponent>();
+
+		if (!playerControllerScript)
 		{
-			obj->SetActive(active);
+			if (ImGui::Checkbox("Is Active", &active))
+			{
+				obj->SetActive(active);
+			}
 		}
 
 		ImGui::Separator();
@@ -525,6 +566,8 @@ namespace eng
 
 	void EditorManager::DrawTransformInspector(GameObject* obj)
 	{
+		if (!obj) return;
+
 		// Position
 		glm::vec3 pos = obj->GetPosition();
 		if (ImGui::DragFloat3("Position", &pos.x, 0.1f))
@@ -561,6 +604,8 @@ namespace eng
 
 	void EditorManager::DrawComponentInspectors(GameObject* obj)
 	{
+		if (!obj) return;
+
 		// Light
 		if (auto* lightComp = obj->GetComponent<LightComponent>())
 		{

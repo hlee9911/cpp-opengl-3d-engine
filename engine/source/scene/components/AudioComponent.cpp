@@ -3,7 +3,7 @@
 
 namespace eng
 {
-	void AudioComponent::LoadProperties(const nlohmann::json& json)
+	void AudioComponent::LoadPropertiesFromJson(const nlohmann::json& json)
 	{
 		if (json.contains("audio"))
 		{
@@ -12,12 +12,39 @@ namespace eng
 			{
 				std::string name = clip.value("name", "noname");
 				std::string filePath = clip.value("path", "");
-				auto audio = Audio::Load(filePath);
+				auto audio = Audio::LoadFromJson(filePath);
 				if (audio)
 				{
 					float volume = clip.value("volume", 1.0f);
 					audio->SetVolume(volume);
 					RegisterAudio(name, audio);
+				}
+			}
+		}
+	}
+
+	void AudioComponent::LoadPropertiesFromLua(const sol::table& table)
+	{
+		if (LuaLoaderUtil::LuaHasKey(table, "audio"))
+		{
+			sol::object clipsObjRaw = table.get<sol::object>("audio");
+			if (LuaLoaderUtil::LuaIsTable(clipsObjRaw))
+			{
+				sol::table clipsObject = clipsObjRaw.as<sol::table>();
+				for (auto& kv : clipsObject)
+				{
+					if (!LuaLoaderUtil::LuaIsTable(kv.second)) continue;
+					sol::table clip = kv.second.as<sol::table>();
+
+					std::string name = LuaLoaderUtil::LuaValueOrStr(clip, "name", "noname");
+					std::string filePath = LuaLoaderUtil::LuaValueOrStr(clip, "path", "");
+					auto audio = Audio::LoadFromJson(filePath);
+					if (audio)
+					{
+						float volume = LuaLoaderUtil::LuaValueOr<float>(clip, "volume", 1.0f);
+						audio->SetVolume(volume);
+						RegisterAudio(name, audio);
+					}
 				}
 			}
 		}

@@ -1,10 +1,13 @@
 #include "scene/components/PlayerControllerComponent.h"
+#include "scene/components/CameraComponent.h"
 #include "input/InputManager.h"
 #include "Engine.h"
 
 #include <GLFW/glfw3.h>
+
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/vec4.hpp>
+
 #include <iostream>
 #include <string>
 
@@ -12,7 +15,7 @@ namespace eng
 {
 	void PlayerControllerComponent::Init()
 	{
-		m_KinematicController = std::make_unique<KinematicCharacterController>(0.4f, 1.2f, m_Owner->GetWorldPosition());
+		m_KinematicController = std::make_unique<KinematicCharacterController>(1.2f, 0.05f, m_Owner->GetWorldPosition());
 	}
 
 	void PlayerControllerComponent::Update(float deltaTime)
@@ -148,7 +151,18 @@ namespace eng
 		}
 
 		// sync the scene objects position and rotation with the kinematic controller
-		m_Owner->SetPosition(m_KinematicController->GetPosition());
+		// m_Owner->SetPosition(m_KinematicController->GetPosition());
+
+		glm::vec3 capsuleCenter = m_KinematicController->GetPosition();
+		m_Owner->SetPosition(capsuleCenter);
+
+		// camera position offset to match with the eye line
+		auto camera = m_Owner->GetComponent<CameraComponent>();
+		if (camera)
+		{
+			glm::vec3 eyeOffset(0.0f, 0.9f, 0.0f);
+			camera->GetOwner()->SetWorldPosition(capsuleCenter + eyeOffset);
+		}
 	}
 
 	bool PlayerControllerComponent::IsOnGround() const

@@ -3,7 +3,11 @@
 #include <memory>
 #include <unordered_map>
 #include <string>
+
 #include <glm/vec3.hpp>
+
+#include <sol/sol.hpp>
+#include <sol/forward.hpp>
 
 #include "Core.h"
 
@@ -23,7 +27,7 @@ namespace eng
 		void SetTextureParam(const std::string& name, const shared<Texture>& texture);
 		void SetBoolParam(const std::string& name, bool value) noexcept;
 
-		const glm::vec3& GetFloat3Params(const std::string& name) noexcept;
+		const glm::vec3 GetFloat3Params(const std::string& name) const noexcept;
 
 		void Bind();
 

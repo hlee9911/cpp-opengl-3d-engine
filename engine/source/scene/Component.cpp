@@ -4,7 +4,12 @@ namespace eng
 {
 	size_t Component::nextId = 1;
 
-	void Component::LoadProperties(const nlohmann::json& json)
+	void Component::LoadPropertiesFromJson(const nlohmann::json& json)
+	{
+
+	}
+
+	void Component::LoadPropertiesFromLua(const sol::table& table)
 	{
 
 	}
@@ -15,6 +20,16 @@ namespace eng
 	}
 
 	void Component::Update(float deltaTime)
+	{
+
+	}
+
+	void Component::OnEnable()
+	{
+
+	}
+
+	void Component::OnDisable()
 	{
 
 	}

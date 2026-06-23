@@ -62,6 +62,35 @@ namespace eng
 			auto bodyA = reinterpret_cast<CollisionObject*>(manifold->getBody0()->getUserPointer());
 			auto bodyB = reinterpret_cast<CollisionObject*>(manifold->getBody1()->getUserPointer());
 
+			// For player applying force to dynamic objects
+			//auto btA = manifold->getBody0();
+			//auto btB = manifold->getBody1();
+
+			//btRigidBody* rbA = const_cast<btRigidBody*>(
+			//	btRigidBody::upcast(btA)
+			//);
+			//btRigidBody* rbB = const_cast<btRigidBody*>(
+			//	btRigidBody::upcast(btB)
+			//);
+
+			//bool aIsCharacter = btA->getCollisionFlags() & btCollisionObject::CF_CHARACTER_OBJECT;
+			//bool bIsCharacter = btB->getCollisionFlags() & btCollisionObject::CF_CHARACTER_OBJECT;
+
+			//if (aIsCharacter && rbB)
+			//{
+			//	if (!rbB->isStaticObject() && !rbB->isKinematicObject())
+			//		rbB->activate(true);
+
+			//	ApplyPlayerPush(rbB, btA, btB);
+			//}
+			//if (bIsCharacter && rbA)
+			//{
+			//	if (!rbA->isStaticObject() && !rbA->isKinematicObject())
+			//		rbA->activate(true);
+
+			//	ApplyPlayerPush(rbA, btB, btA);
+			//}
+
 			if (!bodyA || !bodyB)
 			{
 				continue;
@@ -97,10 +126,26 @@ namespace eng
 		if (auto rigidBody = body->GetBody())
 		{
 			// add the rigid body to the physics world with appropriate collision filters
-			m_World->addRigidBody(rigidBody,
+			/*m_World->addRigidBody(rigidBody,
 				btBroadphaseProxy::StaticFilter,
+				btBroadphaseProxy::AllFilter);*/
+
+			short group = btBroadphaseProxy::DefaultFilter;
+
+			// set static objects to static fillter
+			if (body->GetBodyType() == BodyType::Static)
+			{
+				group = btBroadphaseProxy::StaticFilter;
+			}
+
+			m_World->addRigidBody(
+				rigidBody,
+				group,
 				btBroadphaseProxy::AllFilter);
+
 			body->SetAddedToWorld(true);
+
+			WakeUpNearbyCollidingRigidBodies();
 		}
 	}
 
@@ -113,6 +158,62 @@ namespace eng
 			// remove the rigid body from the physics world
 			m_World->removeRigidBody(rigidBody);
 			body->SetAddedToWorld(false);
+			WakeUpNearbyCollidingRigidBodies();
+		}
+	}
+
+	void PhysicsManager::ApplyPlayerPush(
+		btRigidBody* body,
+		const btCollisionObject* playerObj,
+		const btCollisionObject* otherObj)
+	{
+		if (!body) return;
+
+		if (body->isStaticObject() || body->isKinematicObject()) return;
+
+		// keep body awake during interaction
+		body->activate(true);
+		body->setActivationState(DISABLE_DEACTIVATION);
+
+		btTransform playerT = playerObj->getWorldTransform();
+		btTransform objectT = otherObj->getWorldTransform();
+
+		btVector3 playerPos = playerT.getOrigin();
+		btVector3 objectPos = objectT.getOrigin();
+
+		btVector3 dir = objectPos - playerPos;
+		dir.setY(0);
+
+		if (dir.length2() < 0.0001f) return;
+
+		dir.normalize();
+
+		float invMass = body->getInvMass();
+		if (invMass <= 0.0f) return; // safe guard
+
+		float mass = 1.0f / invMass;
+
+		float strength = 4.0f / mass;
+		strength = std::min(strength, 30.0f);
+
+		btVector3 impulse = dir * strength;
+
+		body->applyCentralImpulse(impulse);
+	}
+
+	void PhysicsManager::WakeUpNearbyCollidingRigidBodies()
+	{
+		// wake up other non static rigid bodies that are colliding with this object
+		for (int i = 0; i < m_World->getNumCollisionObjects(); i++)
+		{
+			auto obj = m_World->getCollisionObjectArray()[i];
+
+			btRigidBody* body = btRigidBody::upcast(obj);
+
+			if (body && !body->isStaticObject())
+			{
+				body->activate(true);
+			}
 		}
 	}
 

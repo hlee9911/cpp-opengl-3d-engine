@@ -80,6 +80,7 @@ namespace eng
     {
         auto it = m_Samples.find(name);
         if (it == m_Samples.end()) return nullptr;
+
         return &it->second;
     }
 
