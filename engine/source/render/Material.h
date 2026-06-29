@@ -19,8 +19,8 @@ namespace eng
 	class Material
 	{
 	public:
-		ShaderProgram* GetShaderProgram() noexcept;
-		void SetShaderProgram(const shared<ShaderProgram>& shaderProgram) noexcept;
+		ShaderProgram* GetShaderProgram() const;
+		void SetShaderProgram(const shared<ShaderProgram>& shaderProgram);
 		void SetFloatParam(const std::string& name, float value) noexcept;
 		void SetFloatParam(const std::string& name, float v0, float v1) noexcept;
 		void SetFloatParam(const std::string& name, const glm::vec3& value) noexcept;

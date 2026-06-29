@@ -23,7 +23,7 @@ namespace eng
 	public:
 		int GetSize() const noexcept { return m_Size; }
 		const GlyphDescription& GetGlyphDescription(char asciiCode) const { return m_Descriptions[static_cast<unsigned char>(asciiCode)]; }
-		const shared<Texture>& GetTexture() const noexcept { return m_Texture; }
+		const shared<Texture>& GetTexture() const { return m_Texture; }
 
 	private:
 		int m_Size = 0;

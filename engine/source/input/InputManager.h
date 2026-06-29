@@ -31,11 +31,11 @@ namespace eng
 		void SetMouseButtonWasReleased(int button, bool released);
 		bool WasMouseButtonReleased(int button) const;
 
-		void SetMousePositionOld(const glm::vec2& pos) noexcept { m_MousePositionOld = pos; }
-		const glm::vec2& GetMousePositionOld() const noexcept { return m_MousePositionOld; }
+		void SetMousePositionOld(const glm::vec2& pos) { m_MousePositionOld = pos; }
+		const glm::vec2& GetMousePositionOld() const { return m_MousePositionOld; }
 
-		void SetMousePositionCurrent(const glm::vec2& pos) noexcept { m_MousePositionCurrent = pos; }
-		const glm::vec2& GetMousePositionCurrent() const noexcept { return m_MousePositionCurrent; }
+		void SetMousePositionCurrent(const glm::vec2& pos) { m_MousePositionCurrent = pos; }
+		const glm::vec2& GetMousePositionCurrent() const { return m_MousePositionCurrent; }
 		
 		void SetMousePositionChanged(bool changed) noexcept { m_MousePositionChanged = changed; }
 		bool IsMousePositionChanged() const noexcept { return m_MousePositionChanged; }

@@ -7,12 +7,12 @@
 
 namespace eng
 {
-	ShaderProgram* Material::GetShaderProgram() noexcept
+	ShaderProgram* Material::GetShaderProgram() const
 	{
 		return m_ShaderProgram.get();
 	}
 
-	void Material::SetShaderProgram(const shared<ShaderProgram>& shaderProgram) noexcept
+	void Material::SetShaderProgram(const shared<ShaderProgram>& shaderProgram)
 	{
 		m_ShaderProgram = shaderProgram;
 	}

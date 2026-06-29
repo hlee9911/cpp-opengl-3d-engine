@@ -44,21 +44,21 @@ namespace eng
 		void SetApplication(Application* app);
 		Application* GetApplication();
 		
-		InputManager& GetInputManager() noexcept;
-		GraphicsAPI& GetGraphicsAPI() noexcept;
-		RenderQueue& GetRenderQueue() noexcept;
-		FileSystem& GetFileSystem() noexcept;
-		TextureManager& GetTextureManager() noexcept;
-		PhysicsManager& GetPhysicsManager() noexcept;
-		AudioManager& GetAudioManager() noexcept;
-		FontManager& GetFontManager() noexcept;
-		UIInputSystem& GetUIInputSystem() noexcept;
-		EditorManager& GetEditorManager() noexcept;
-		FrameBuffer& GetFrameBuffer() noexcept;
+		InputManager& GetInputManager();
+		GraphicsAPI& GetGraphicsAPI();
+		RenderQueue& GetRenderQueue();
+		FileSystem& GetFileSystem();
+		TextureManager& GetTextureManager();
+		PhysicsManager& GetPhysicsManager();
+		AudioManager& GetAudioManager();
+		FontManager& GetFontManager();
+		UIInputSystem& GetUIInputSystem();
+		EditorManager& GetEditorManager();
+		FrameBuffer& GetFrameBuffer();
 
 		// void SetScene(Scene* scene) noexcept { m_CurrentScene.reset(scene); }
-		void SetScene(const shared<Scene>& scene) noexcept { m_CurrentScene = scene; }
-		const shared<Scene>& GetScene() const noexcept { return m_CurrentScene; }
+		void SetScene(const shared<Scene>& scene) { m_CurrentScene = scene; }
+		const shared<Scene>& GetScene() const { return m_CurrentScene; }
 
 	private:
 		unique<Application> m_Application;

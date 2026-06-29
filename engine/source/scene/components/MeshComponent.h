@@ -19,11 +19,11 @@ namespace eng
 		virtual void LoadPropertiesFromLua(const sol::table& table) override;
 		virtual void Update(float deltaTime) override;
 
-		void SetMaterial(const shared<Material>& material) noexcept { m_Material = material; }
-		void SetMesh(const shared<Mesh>& mesh) noexcept { m_Mesh = mesh; }
+		void SetMaterial(const shared<Material>& material) { m_Material = material; }
+		void SetMesh(const shared<Mesh>& mesh) { m_Mesh = mesh; }
 
-		const shared<Material>& GetMaterial() const noexcept { return m_Material; }
-		const shared<Mesh>& GetMesh() const noexcept { return m_Mesh; }
+		const shared<Material>& GetMaterial() const { return m_Material; }
+		const shared<Mesh>& GetMesh() const { return m_Mesh; }
 
 	private:
 		shared<Material> m_Material;
