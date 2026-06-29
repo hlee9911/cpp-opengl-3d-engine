@@ -130,7 +130,7 @@ namespace eng
 		return nullptr;
 	}
 
-	const glm::vec3& GameObject::GetPosition() const noexcept
+	const glm::vec3 GameObject::GetPosition() const noexcept
 	{
 		return m_Position;
 	}
@@ -205,7 +205,7 @@ namespace eng
 		SetStartingPosition(glm::vec3(pos, 0.0f));
 	}
 
-	const glm::quat& GameObject::GetRotation() const noexcept
+	const glm::quat GameObject::GetRotation() const noexcept
 	{
 		return m_Rotation;
 	}
@@ -255,7 +255,7 @@ namespace eng
 		SetRotation(glm::angleAxis(rot, glm::vec3(0.0f, 0.0f, 1.0f)));
 	}
 
-	const glm::vec3& GameObject::GetScale() const noexcept
+	const glm::vec3 GameObject::GetScale() const noexcept
 	{
 		return m_Scale;
 	}
@@ -297,7 +297,6 @@ namespace eng
 	{
 		glm::mat4 mat = glm::mat4(1.0f);
 		
-		// 
 		const auto rotationZ = GetRotation2D();
 		float c = cos(rotationZ);
 		float s = sin(rotationZ);

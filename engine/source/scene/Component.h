@@ -22,7 +22,7 @@ namespace eng
 		virtual void Update(float deltaTime);
 		virtual size_t GetTypeId() const = 0;
 
-		GameObject* GetOwner() noexcept { return m_Owner; }
+		GameObject* GetOwner() const { return m_Owner; }
 
 		virtual void OnEnable();
 		virtual void OnDisable();

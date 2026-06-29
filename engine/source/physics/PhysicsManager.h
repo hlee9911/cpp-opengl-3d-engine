@@ -32,6 +32,8 @@ namespace eng
 
 		btDiscreteDynamicsWorld* GetWorld();
 
+		const float GetGravity() const noexcept { return m_Gravity; }
+
 	private:
 		unique<btBroadphaseInterface> m_Broadphase;
 		unique<btDefaultCollisionConfiguration> m_CollisionConfig;

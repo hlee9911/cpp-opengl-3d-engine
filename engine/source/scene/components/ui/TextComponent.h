@@ -21,15 +21,15 @@ namespace eng
 		virtual void LoadPropertiesFromLua(const sol::table& table) override;
 		void Render(CanvasComponent* canvas) override;
 
-		void SetText(const std::string& text) noexcept { m_Text = text; }
-		const std::string& GetText() const noexcept { return m_Text; }
+		void SetText(const std::string& text) { m_Text = text; }
+		const std::string& GetText() const { return m_Text; }
 		
 		void SetColor(const glm::vec4& color) noexcept { m_Color = color; }
 		const glm::vec4& GetColor() const noexcept { return m_Color; }
 
-		void SetFont(const shared<Font>& font) noexcept { m_Font = font; }
+		void SetFont(const shared<Font>& font) { m_Font = font; }
 		void SetFont(const std::string& path, int size);
-		const shared<Font>& GetFont() const noexcept { return m_Font; }
+		const shared<Font>& GetFont() const { return m_Font; }
 
 		const glm::vec2 GetPivotPos();
 

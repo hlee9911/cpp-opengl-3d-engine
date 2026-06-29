@@ -30,7 +30,7 @@ namespace eng
 
 	void RenderQueue::Draw(GraphicsAPI& graphicsAPI, const CameraData& cameraData, const List<LightData>& lights)
 	{
-		// Render 3D objects
+		// -------------------------- Render 3D objects --------------------------
 		for (auto& command : m_Commands)
 		{
 			graphicsAPI.BindMaterial(command.material);
@@ -54,7 +54,7 @@ namespace eng
 
 		m_Commands.clear();
 
-		// Render 2D objects
+		// -------------------------- Render 2D objects --------------------------
 		graphicsAPI.SetDepthTestEnabled(false); // disable depth testing for 2D rendering
 		graphicsAPI.SetBlendMode(BlendMode::Alpha); // enable alpha blending for 2D rendering
 		const auto shaderProgram2D = graphicsAPI.GetDefault2DShaderProgram();
@@ -84,7 +84,7 @@ namespace eng
 		graphicsAPI.SetDepthTestEnabled(true); // re-enable depth testing for 3D rendering
 		m_Commands2D.clear();
 		
-		// Render UI Objects
+		// -------------------------- Render UI Objects --------------------------
 		graphicsAPI.SetDepthTestEnabled(false); // disable depth testing for UI rendering
 		graphicsAPI.SetBlendMode(BlendMode::Alpha); // enable alpha blending for UI rendering
 		// we render UI objects in batches, so we loop through the commands and render each batch one by one

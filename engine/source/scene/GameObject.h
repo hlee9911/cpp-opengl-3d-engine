@@ -63,7 +63,7 @@ namespace eng
 		GameObject* FindChildByName(const std::string& name);
 		const List<unique<GameObject>>& GetChildren() const noexcept { return m_Children; }
 		
-		const glm::vec3& GetPosition() const noexcept;
+		const glm::vec3 GetPosition() const noexcept;
 		const glm::vec3 GetWorldPosition() const noexcept;
 		const glm::vec3 GetStartingPosition() const noexcept;
 		const glm::vec2 GetPosition2D() const noexcept;
@@ -76,14 +76,14 @@ namespace eng
 		void SetWorldPosition2D(const glm::vec2& pos) noexcept;
 		void SetStartingPosition2D(const glm::vec2& pos) noexcept;
 
-		const glm::quat& GetRotation() const noexcept;
+		const glm::quat GetRotation() const noexcept;
 		const glm::quat GetWorldRotation() const noexcept;
 		const float GetRotation2D() const noexcept;
 		void SetRotation(const glm::quat& rot) noexcept;
 		void SetWorldRotation(const glm::quat& rot) noexcept;
 		void SetRotation2D(float rot) noexcept;
 
-		const glm::vec3& GetScale() const noexcept;
+		const glm::vec3 GetScale() const noexcept;
 		const glm::vec2 GetScale2D() const noexcept;
 		void SetScale(const glm::vec3& scale) noexcept;
 		void SetScale2D(const glm::vec2& scale) noexcept;

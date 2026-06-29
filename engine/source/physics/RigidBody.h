@@ -25,8 +25,8 @@ namespace eng
 	public:
 		RigidBody(BodyType type, const shared<Collider>& collider, float mass, float friction) noexcept;
 		~RigidBody() noexcept;
-		btRigidBody* GetBody() const noexcept { return m_Body.get(); }
-		void SetAddedToWorld(bool added) noexcept { m_AddedToWorld = added; }
+		btRigidBody* GetBody() const { return m_Body.get(); }
+		void SetAddedToWorld(bool added) { m_AddedToWorld = added; }
 		bool IsAddedToWorld() const noexcept { return m_AddedToWorld; }
 
 		float GetMass() const noexcept { return m_Mass; }
@@ -35,7 +35,7 @@ namespace eng
 		float GetFriction() const noexcept { return m_Friction; }
 		void SetFriction(float friction);
 
-		BodyType GetBodyType() const noexcept { return m_BodyType; }
+		BodyType GetBodyType() const { return m_BodyType; }
 		void SetBodyType(BodyType type);
 
 		void SetPosition(const glm::vec3& position);

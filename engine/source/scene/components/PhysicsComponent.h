@@ -28,8 +28,8 @@ namespace eng
 		virtual void OnEnable() override;
 		virtual void OnDisable() override;
 
-		void SetRigidBody(const shared<RigidBody>& body) noexcept { m_RigidBody = body; }
-		const shared<RigidBody>& GetRigidBody() const noexcept { return m_RigidBody; }
+		void SetRigidBody(const shared<RigidBody>& body) { m_RigidBody = body; }
+		const shared<RigidBody>& GetRigidBody() const { return m_RigidBody; }
 
 	private:
 		shared<RigidBody> m_RigidBody;

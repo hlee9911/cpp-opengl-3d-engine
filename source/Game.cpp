@@ -211,8 +211,11 @@ bool Game::Init()
 	// camera->SetPosition(glm::vec3(0.0f, 1.0f, 7.0f));
 #endif
 	
+	// Loading JSON formatted scene
 	// auto scene = eng::Scene::LoadFromJson("scenes/json/scene.sc");
 	// auto scene = eng::Scene::LoadFromJson("scenes/json/scene_arena.sc");
+
+	// Loading Lua formatted scene
 	auto scene = eng::Scene::LoadFromLua("scenes/lua/scene_arena.lua");
 	// auto scene = eng::Scene::LoadFromLua("scenes/lua/scene.lua");
 	m_Scene = scene;

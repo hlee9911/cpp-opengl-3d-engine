@@ -22,8 +22,8 @@ namespace eng
 		virtual void LoadPropertiesFromLua(const sol::table& table) override;
 		virtual void Update(float deltaTime) override;
 
-		void SetTexture(const shared<Texture>& texture) noexcept { m_Texture = texture; }
-		const shared<Texture>& GetTexture() const noexcept { return m_Texture; }
+		void SetTexture(const shared<Texture>& texture) { m_Texture = texture; }
+		const shared<Texture>& GetTexture() const { return m_Texture; }
 
 		void SetColor(const glm::vec4& color) noexcept { m_Color = color; }
 		const glm::vec4& GetColor() const noexcept { return m_Color; }

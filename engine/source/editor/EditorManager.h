@@ -50,8 +50,8 @@ namespace eng
 		GameObject* GetSelectedGameObject() const { return m_SelectedGameObject; }
 		void SetSelectedGameObject(GameObject* obj) { m_SelectedGameObject = obj; }
 
-		bool GetEditorCursorEnabled() const { return m_EditorCursorEnabled; }
-		void SetEditorCursorEnabled(bool editorCursorEnabled) { m_EditorCursorEnabled = editorCursorEnabled; }
+		bool GetEditorCursorEnabled() const noexcept { return m_EditorCursorEnabled; }
+		void SetEditorCursorEnabled(bool editorCursorEnabled) noexcept { m_EditorCursorEnabled = editorCursorEnabled; }
 
 		void SetSelectedGameObjectNULL();
 

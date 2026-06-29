@@ -12,8 +12,8 @@ namespace eng
 	public:
 		void SetActive(bool Active) noexcept { m_Active = Active; }
 		bool IsActive() const noexcept { return m_Active; }
-		CanvasComponent* GetActiveCanvas() const noexcept { return m_ActiveCanvas; }
-		void SetActiveCanvas(CanvasComponent* Canvas) noexcept { m_ActiveCanvas = Canvas; }
+		CanvasComponent* GetActiveCanvas() const { return m_ActiveCanvas; }
+		void SetActiveCanvas(CanvasComponent* Canvas) { m_ActiveCanvas = Canvas; }
 		void Update(float deltaTime);
 
 		List<UIElementComponent*> CollectUI(CanvasComponent* canvas);

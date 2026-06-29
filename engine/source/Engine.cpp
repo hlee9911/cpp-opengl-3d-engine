@@ -422,57 +422,57 @@ namespace eng
 		return m_Application.get();
 	}
 
-	InputManager& Engine::GetInputManager() noexcept
+	InputManager& Engine::GetInputManager()
 	{
 		return m_InputManager;
 	}
 
-	GraphicsAPI& Engine::GetGraphicsAPI() noexcept
+	GraphicsAPI& Engine::GetGraphicsAPI()
 	{
 		return m_GraphicsAPI;
 	}
 
-	RenderQueue& Engine::GetRenderQueue() noexcept
+	RenderQueue& Engine::GetRenderQueue()
 	{
 		return m_RenderQueue;
 	}
 
-	FileSystem& Engine::GetFileSystem() noexcept
+	FileSystem& Engine::GetFileSystem()
 	{
 		return m_FileSystem;
 	}
 
-	TextureManager& Engine::GetTextureManager() noexcept
+	TextureManager& Engine::GetTextureManager()
 	{
 		return m_TextureManager;
 	}
 
-	PhysicsManager& Engine::GetPhysicsManager() noexcept
+	PhysicsManager& Engine::GetPhysicsManager()
 	{
 		return m_PhysicsManager;
 	}
 
-	AudioManager& Engine::GetAudioManager() noexcept
+	AudioManager& Engine::GetAudioManager()
 	{
 		return m_AudioManager;
 	}
 
-	FontManager& Engine::GetFontManager() noexcept
+	FontManager& Engine::GetFontManager()
 	{
 		return m_FontManager;
 	}
 
-	UIInputSystem& Engine::GetUIInputSystem() noexcept
+	UIInputSystem& Engine::GetUIInputSystem()
 	{
 		return m_UIInputSystem;
 	}
 
-	EditorManager& Engine::GetEditorManager() noexcept
+	EditorManager& Engine::GetEditorManager()
 	{
 		return m_EditorManager;
 	}
 
-	FrameBuffer& Engine::GetFrameBuffer() noexcept
+	FrameBuffer& Engine::GetFrameBuffer()
 	{
 		return m_FrameBuffer;
 	}
